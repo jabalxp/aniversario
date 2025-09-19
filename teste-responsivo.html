@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Responsividade - Lembrete de Aniversários</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .device-info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .test-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        
+        .test-link {
+            background: #2196f3;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+        }
+        
+        .test-link:hover {
+            background: #1976d2;
+        }
+        
+        .screen-sizes {
+            margin-top: 20px;
+        }
+        
+        .size-info {
+            background: #f8f9fa;
+            padding: 10px;
+            margin: 5px 0;
+            border-left: 4px solid #2196f3;
+        }
+        
+        @media (max-width: 768px) {
+            .test-links {
+                flex-direction: column;
+            }
+            
+            .test-link {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🔧 Teste de Responsividade</h1>
+        
+        <div class="device-info">
+            <h3>Informações do Dispositivo:</h3>
+            <p><strong>Largura da tela:</strong> <span id="screen-width"></span>px</p>
+            <p><strong>Altura da tela:</strong> <span id="screen-height"></span>px</p>
+            <p><strong>Largura da janela:</strong> <span id="window-width"></span>px</p>
+            <p><strong>Altura da janela:</strong> <span id="window-height"></span>px</p>
+            <p><strong>User Agent:</strong> <span id="user-agent"></span></p>
+        </div>
+        
+        <div class="test-links">
+            <a href="index.html" class="test-link">🏠 Página Principal</a>
+            <a href="agendar.html" class="test-link">📅 Página Agendar</a>
+            <a href="changelog.html" class="test-link">📝 Changelog</a>
+        </div>
+        
+        <div class="screen-sizes">
+            <h3>Breakpoints Implementados:</h3>
+            <div class="size-info">
+                <strong>Desktop Grande:</strong> > 1024px
+            </div>
+            <div class="size-info">
+                <strong>Desktop/Laptop:</strong> 769px - 1024px
+            </div>
+            <div class="size-info">
+                <strong>Tablet:</strong> 600px - 768px
+            </div>
+            <div class="size-info">
+                <strong>Smartphone Médio:</strong> 481px - 600px
+            </div>
+            <div class="size-info">
+                <strong>Smartphone:</strong> 376px - 480px
+            </div>
+            <div class="size-info">
+                <strong>Smartphone Pequeno:</strong> 321px - 375px (iPhone SE)
+            </div>
+            <div class="size-info">
+                <strong>Muito Pequeno:</strong> ≤ 320px
+            </div>
+        </div>
+        
+        <h3>✅ Melhorias Implementadas:</h3>
+        <ul>
+            <li>Inputs responsivos com tamanhos adequados para cada dispositivo</li>
+            <li>Padding e fontes ajustadas automaticamente</li>
+            <li>Compatibilidade específica com iOS Safari</li>
+            <li>Prevenção de zoom automático em iOS</li>
+            <li>Suporte para modo paisagem</li>
+            <li>Inputs nunca saem da tela</li>
+            <li>Botões com tamanho adequado para toque</li>
+        </ul>
+    </div>
+
+    <script>
+        function updateDeviceInfo() {
+            document.getElementById('screen-width').textContent = screen.width;
+            document.getElementById('screen-height').textContent = screen.height;
+            document.getElementById('window-width').textContent = window.innerWidth;
+            document.getElementById('window-height').textContent = window.innerHeight;
+            document.getElementById('user-agent').textContent = navigator.userAgent.substring(0, 100) + '...';
+        }
+        
+        updateDeviceInfo();
+        window.addEventListener('resize', updateDeviceInfo);
+    </script>
+</body>
+</html>

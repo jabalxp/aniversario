@@ -208,6 +208,9 @@ body {
     font-size: 1rem;
     transition: all 0.3s ease;
     background: white;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 .form-group input:focus {
@@ -226,6 +229,9 @@ body {
     background: white;
     resize: vertical;
     min-height: 80px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 .form-group textarea:focus {
@@ -917,6 +923,34 @@ body {
 }
 
 /* Responsividade */
+/* Tablets e telas médias */
+@media (max-width: 1024px) {
+    .container {
+        max-width: 95%;
+        padding: 18px;
+    }
+    
+    .header {
+        padding: 25px;
+        margin-bottom: 35px;
+    }
+    
+    .header h1 {
+        font-size: 2.2rem;
+    }
+    
+    .form-group input,
+    .form-group textarea {
+        padding: 11px 14px;
+        font-size: 0.95rem;
+    }
+    
+    .birthday-form {
+        gap: 18px;
+    }
+}
+
+/* iPad e tablets */
 @media (max-width: 768px) {
     .container {
         padding: 15px;
@@ -956,6 +990,18 @@ body {
         flex-direction: column;
         align-items: flex-start;
         gap: 10px;
+    }
+    
+    /* Inputs responsivos para tablets */
+    .form-group input,
+    .form-group textarea {
+        padding: 10px 12px;
+        font-size: 0.9rem;
+        border-radius: 10px;
+    }
+    
+    .birthday-form {
+        gap: 16px;
     }
     
     .birthday-card {
@@ -1011,23 +1057,251 @@ body {
     }
 }
 
+/* Smartphones médios */
+@media (max-width: 600px) {
+    .container {
+        padding: 12px;
+    }
+    
+    .header {
+        padding: 18px;
+        margin-bottom: 25px;
+    }
+    
+    .header h1 {
+        font-size: 1.9rem;
+    }
+    
+    .header p {
+        font-size: 1rem;
+    }
+    
+    .add-birthday-section,
+    .birthdays-section {
+        padding: 18px;
+    }
+    
+    /* Inputs para smartphones médios */
+    .form-group input,
+    .form-group textarea {
+        padding: 9px 12px;
+        font-size: 0.85rem;
+        border-radius: 8px;
+    }
+    
+    .birthday-form {
+        gap: 14px;
+    }
+    
+    .btn-add {
+        padding: 12px 20px;
+        font-size: 0.9rem;
+    }
+    
+    .filters {
+        gap: 8px;
+    }
+    
+    .filter-btn {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+    }
+}
+
+/* Smartphones pequenos */
 @media (max-width: 480px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .header {
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    
     .header h1 {
         font-size: 1.8rem;
     }
     
+    .header p {
+        font-size: 0.95rem;
+    }
+    
+    .add-birthday-section,
+    .birthdays-section {
+        padding: 15px;
+    }
+    
+    /* Inputs otimizados para smartphones pequenos */
+    .form-group {
+        margin-bottom: 12px;
+    }
+    
+    .form-group input,
+    .form-group textarea {
+        padding: 8px 10px;
+        font-size: 0.8rem;
+        border-radius: 6px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .form-group input[type="date"] {
+        padding: 8px 8px;
+    }
+    
+    .form-group textarea {
+        min-height: 70px;
+        resize: none;
+    }
+    
+    .birthday-form {
+        gap: 12px;
+    }
+    
+    .btn-add {
+        padding: 10px 16px;
+        font-size: 0.85rem;
+        width: 100%;
+    }
+    
     .filters {
         justify-content: center;
+        gap: 6px;
+        flex-wrap: wrap;
     }
     
     .filter-btn {
         flex: 1;
         min-width: 0;
         justify-content: center;
+        padding: 6px 10px;
+        font-size: 0.75rem;
     }
     
     .changelog-btn {
         padding: 10px 12px;
         font-size: 0.8rem;
+    }
+    
+    .form-help {
+        font-size: 0.75rem;
+        margin-top: 3px;
+    }
+}
+
+/* iPhone SE e dispositivos muito pequenos */
+@media (max-width: 375px) {
+    .container {
+        padding: 8px;
+    }
+    
+    .header {
+        padding: 12px;
+        margin-bottom: 18px;
+    }
+    
+    .header h1 {
+        font-size: 1.6rem;
+        line-height: 1.2;
+    }
+    
+    .header p {
+        font-size: 0.9rem;
+    }
+    
+    .add-birthday-section,
+    .birthdays-section {
+        padding: 12px;
+    }
+    
+    .form-group input,
+    .form-group textarea {
+        padding: 6px 8px;
+        font-size: 0.75rem;
+        min-height: 40px;
+    }
+    
+    .form-group input[type="date"] {
+        padding: 6px 6px;
+        min-height: 40px;
+    }
+    
+    .form-group textarea {
+        min-height: 60px;
+    }
+    
+    .btn-add {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+        min-height: 40px;
+    }
+    
+    .filter-btn {
+        padding: 5px 8px;
+        font-size: 0.7rem;
+        min-height: 32px;
+    }
+}
+
+/* iOS Safari específico */
+@supports (-webkit-touch-callout: none) {
+    .form-group input,
+    .form-group textarea {
+        -webkit-appearance: none;
+        appearance: none;
+        border-radius: 8px;
+    }
+    
+    .form-group input[type="date"] {
+        -webkit-appearance: none;
+        appearance: none;
+        padding: 8px 10px;
+    }
+    
+    @media (max-width: 480px) {
+        .form-group input,
+        .form-group textarea {
+            font-size: 16px !important; /* Evita zoom automático no iOS */
+        }
+    }
+}
+
+/* Android Chrome específico */
+@media screen and (-webkit-min-device-pixel-ratio: 0) and (min-resolution: 0.001dpcm) {
+    .form-group input[type="date"] {
+        padding: 8px 10px;
+    }
+    
+    @media (max-width: 480px) {
+        .form-group input[type="date"] {
+            padding: 6px 8px;
+        }
+    }
+}
+
+/* Landscape mode para smartphones */
+@media screen and (max-height: 480px) and (orientation: landscape) {
+    .header {
+        padding: 10px 15px;
+        margin-bottom: 15px;
+    }
+    
+    .header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .add-birthday-section,
+    .birthdays-section {
+        padding: 15px;
+    }
+    
+    .form-group {
+        margin-bottom: 10px;
+    }
+    
+    .birthday-form {
+        gap: 10px;
     }
 }

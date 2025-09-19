@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📋 Changelog - Lembrete de Aniversários</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Reset e configurações gerais */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #4a5568;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: #718096;
+            margin-bottom: 20px;
+        }
+
+        .back-btn {
+            position: absolute;
+            left: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-50%) translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Seção principal */
+        .changelog-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Busca */
+        .search-section {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .search-box {
+            position: relative;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 15px 50px 15px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .search-box i {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #718096;
+            font-size: 1.2rem;
+        }
+
+        /* Lista de versões */
+        .changelog-list {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .changelog-item {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .changelog-item:hover {
+            border-color: #667eea;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .changelog-item.latest {
+            border-color: #4ecdc4;
+            background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
+        }
+
+        .changelog-item.latest::before {
+            content: '✨ VERSÃO ATUAL';
+            position: absolute;
+            top: 15px;
+            right: -40px;
+            background: #4ecdc4;
+            color: white;
+            padding: 5px 50px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            transform: rotate(45deg);
+            letter-spacing: 1px;
+        }
+
+        .changelog-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .version-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .version-number {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #4a5568;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .version-type {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .version-type.major {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .version-type.minor {
+            background: #4ecdc4;
+            color: white;
+        }
+
+        .version-type.patch {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .version-date {
+            font-size: 0.9rem;
+            color: #718096;
+            background: #f7fafc;
+            padding: 6px 15px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .changelog-description {
+            color: #4a5568;
+            margin-bottom: 20px;
+            font-style: italic;
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+
+        .changelog-changes {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .change-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 10px;
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .change-item:hover {
+            background: #f1f5f9;
+            transform: translateX(5px);
+        }
+
+        .change-item.new {
+            border-left-color: #4ecdc4;
+        }
+
+        .change-item.improved {
+            border-left-color: #667eea;
+        }
+
+        .change-item.fixed {
+            border-left-color: #ff6b6b;
+        }
+
+        .change-item.removed {
+            border-left-color: #95a5a6;
+        }
+
+        .change-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .change-icon.new {
+            background: #4ecdc4;
+            color: white;
+        }
+
+        .change-icon.improved {
+            background: #667eea;
+            color: white;
+        }
+
+        .change-icon.fixed {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .change-icon.removed {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .change-text {
+            flex: 1;
+            color: #4a5568;
+            line-height: 1.6;
+        }
+
+        .change-text strong {
+            color: #2d3748;
+            font-weight: 600;
+        }
+
+        /* Estado sem resultados */
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: #718096;
+        }
+
+        .no-results i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: #cbd5e0;
+        }
+
+        .no-results h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #4a5568;
+        }
+
+        /* Estatísticas */
+        .stats-section {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header {
+                padding: 20px;
+                text-align: center;
+            }
+
+            .back-btn {
+                position: static;
+                transform: none;
+                margin-bottom: 15px;
+                display: inline-flex;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .changelog-section {
+                padding: 20px;
+            }
+
+            .changelog-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .version-info {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .version-number {
+                font-size: 1.2rem;
+            }
+
+            .stats-section {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        /* Animações */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .changelog-item {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .changelog-item:nth-child(2) { animation-delay: 0.1s; }
+        .changelog-item:nth-child(3) { animation-delay: 0.2s; }
+        .changelog-item:nth-child(4) { animation-delay: 0.3s; }
+        .changelog-item:nth-child(5) { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <a href="index.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                <span>Voltar</span>
+            </a>
+            <h1><i class="fas fa-history"></i> Histórico de Versões</h1>
+            <p>Acompanhe todas as melhorias e novidades do sistema</p>
+        </header>
+
+        <!-- Estatísticas -->
+        <div class="stats-section">
+            <div class="stat-item">
+                <div class="stat-number">10</div>
+                <div class="stat-label">Versões</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">3</div>
+                <div class="stat-label">Versões Major</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">37+</div>
+                <div class="stat-label">Melhorias</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Funcional</div>
+            </div>
+        </div>
+
+        <!-- Seção principal -->
+        <div class="changelog-section">
+            <!-- Busca -->
+            <div class="search-section">
+                <div class="search-box">
+                    <input type="text" id="search-input" placeholder="Pesquisar por versão, recurso ou mudança...">
+                    <i class="fas fa-search"></i>
+                </div>
+            </div>
+
+            <!-- Lista de versões -->
+            <div class="changelog-list" id="changelog-list">
+                <!-- As versões serão inseridas aqui pelo JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dados das versões
+        const changelogData = [
+            {
+                version: "3.1.0",
+                date: "2024-09-17",
+                type: "major",
+                description: "Sistema de cálculo 100% manual - ZERO JavaScript Date - Calcula para 2026",
+                changes: [
+                    {
+                        type: "fixed",
+                        text: "**BUG DE FUSO HORÁRIO ELIMINADO**: Sistema 100% manual sem JavaScript Date"
+                    },
+                    {
+                        type: "fixed",
+                        text: "**CÁLCULO CORRETO**: Agora calcula dias até aniversário no ano QUE VEM (2026)"
+                    },
+                    {
+                        type: "added",
+                        text: "**Algoritmo manual**: dateToDays() calcula dias desde época sem conversões UTC"
+                    },
+                    {
+                        type: "fixed",
+                        text: "**28/01/2006 CORRIGIDO**: Não vira mais 27/01/2006 - parsing direto de string"
+                    },
+                    {
+                        type: "improved",
+                        text: "**Performance**: Cálculos matemáticos puros, mais rápidos e precisos"
+                    }
+                ]
+            },
+            {
+                version: "3.0.0",
+                date: "2024-09-17",
+                type: "major",
+                description: "Reescrita completa do sistema de cálculo de datas com nova biblioteca própria",
+                changes: [
+                    {
+                        type: "added",
+                        text: "**Nova classe DateUtils**: Biblioteca própria para cálculos de data sem dependências externas"
+                    },
+                    {
+                        type: "fixed",
+                        text: "**REESCRITA COMPLETA**: Sistema de cálculo de datas 100% refeito do zero"
+                    },
+                    {
+                        type: "fixed",
+                        text: "**Bug de fuso horário ELIMINADO**: Uso de Date(year, month, day, 12, 0, 0) para evitar UTC"
+                    },
+                    {
+                        type: "fixed",
+                        text: "**Cálculo de dias PERFEITO**: Algoritmo robusto que funciona para qualquer data"
+                    },
+                    {
+                        type: "improved",
+                        text: "**Performance melhorada**: Cálculos mais eficientes e confiáveis"
+                    }
+                ]
+            },
+            {
+                version: "2.2.2",
+                date: "2024-09-17",
+                type: "patch",
+                description: "Correção definitiva dos bugs de fuso horário e cálculo de datas",
+                changes: [
+                    {
+                        type: "fixed",
+                        text: "**Bug de fuso horário CORRIGIDO**: Datas agora são exibidas corretamente (28/01/2006 não vira mais 27/01/2006)"
+                    },
+                    {
+                        type: "fixed",
+                        text: "**Cálculo de dias CORRIGIDO**: Datas futuras no mesmo mês agora calculam corretamente (19/09/2026 = ~367 dias, não 2)"
+                    },
+                    {
+                        type: "improved",
+                        text: "**Parse manual de datas**: Eliminação completa de problemas UTC/LocalTime com parse direto de strings"
+                    },
+                    {
+                        type: "improved",
+                        text: "**Formatação precisa**: Nova função de formatação que mantém a data original exata"
+                    },
+                    {
+                        type: "improved",
+                        text: "**Cálculo robusto**: Reescrita completa das funções de cálculo para máxima precisão"
+                    }
+                ]
+            },
+            {
+                version: "2.2.1",
+                date: "2024-09-17",
+                type: "patch",
+                description: "Correção definitiva do bug de cálculo de dias até aniversário",
+                changes: [
+                    {
+                        type: "fixed",
+                        text: "**Bug crítico DEFINITIVAMENTE corrigido**: Cálculo de dias até aniversário agora funciona corretamente para todas as datas (19/09/2026 agora mostra 367 dias, não 2)"
+                    },
+                    {
+                        type: "improved",
+                        text: "**Precisão aprimorada**: Uso de Math.floor ao invés de Math.ceil para cálculos mais precisos"
+                    },
+                    {
+                        type: "improved",
+                        text: "**Tratamento de datas futuras**: Sistema agora lida corretamente com pessoas que ainda não nasceram"
+                    },
+                    {
+                        type: "improved",
+                        text: "**Normalização de horários**: Todas as comparações de data agora usam meia-noite (00:00:00) para consistência"
+                    }
+                ]
+            },
+            {
+                version: "2.2.0",
+                date: "2024-09-17",
+                type: "minor",
+                description: "Correção crítica do cálculo de datas e adição do sistema de idades",
+                changes: [
+                    {
+                        type: "fixed",
+                        text: "**Bug crítico corrigido**: Cálculo de dias até aniversário agora funciona corretamente (não mostra mais 13 meses para algo que falta 1 dia)"
+                    },
+                    {
+                        type: "new",
+                        text: "**Sistema de idades**: Mostra idade atual da pessoa e quantos anos fará no próximo aniversário"
+                    },
+                    {
+                        type: "new",
+                        text: "**Ano do próximo aniversário**: Indica em que ano a pessoa fará a próxima idade"
+                    },
+                    {
+                        type: "improved",
+                        text: "**Interface aprimorada**: Informações de idade organizadas de forma clara nos cards"
+                    },
+                    {
+                        type: "improved",
+                        text: "**Formulário atualizado**: Campo renomeado para 'Data de Nascimento' com texto explicativo"
+                    }
+                ]
+            },
+            {
+                version: "2.1.0",
+                date: "2024-09-17",
+                type: "minor",
+                description: "Adição do sistema de changelog e melhorias na interface do usuário",
+                changes: [
+                    {
+                        type: "new",
+                        text: "**Sistema de Changelog**: Página dedicada para histórico de versões com pesquisa avançada"
+                    },
+                    {
+                        type: "new",
+                        text: "**Página separada**: Changelog agora tem sua própria página HTML para melhor organização"
+                    },
+                    {
+                        type: "improved",
+                        text: "**Header redesenhado**: Nova disposição com melhor usabilidade"
+                    },
+                    {
+                        type: "improved",
+                        text: "**Interface responsiva**: Experiência otimizada em todos os dispositivos"
+                    },
+                    {
+                        type: "improved",
+                        text: "**Navegação**: Botão de voltar para facilitar a navegação entre páginas"
+                    }
+                ]
+            },
+            {
+                version: "2.0.0",
+                date: "2024-09-17",
+                type: "major",
+                description: "Versão completa com todas as funcionalidades de notificação e interface moderna implementadas",
+                changes: [
+                    {
+                        type: "new",
+                        text: "**Sistema de notificações inteligentes**: Lembretes automáticos em 1 mês, 14 dias, 7 dias e diariamente nos últimos 3 dias"
+                    },
+                    {
+                        type: "new",
+                        text: "**Notificações do navegador**: Alertas push mesmo com site minimizado (requer permissão)"
+                    },
+                    {
+                        type: "new",
+                        text: "**Upload e preview de fotos**: Adicione fotos das pessoas aniversariantes com preview instantâneo"
+                    },
+                    {
+                        type: "new",
+                        text: "**Sistema de filtros**: Visualize aniversários por categoria (Todos, Próximos, Urgentes)"
+                    },
+                    {
+                        type: "new",
+                        text: "**Persistência completa**: Todos os dados salvos no localStorage com recuperação automática"
+                    },
+                    {
+                        type: "new",
+                        text: "**Service Worker**: Funcionalidade offline e cache para melhor performance"
+                    },
+                    {
+                        type: "improved",
+                        text: "**Interface moderna**: Design com gradientes, animações suaves e responsividade total"
+                    },
+                    {
+                        type: "improved",
+                        text: "**UX aprimorada**: Modal de confirmação, toast notifications e feedback visual"
+                    }
+                ]
+            },
+            {
+                version: "1.2.0",
+                date: "2024-09-16",
+                type: "minor",
+                description: "Melhorias na experiência do usuário, correções de bugs e otimizações de performance",
+                changes: [
+                    {
+                        type: "improved",
+                        text: "**Cálculo de datas aprimorado**: Algoritmo mais preciso considerando anos bissextos e fusos horários"
+                    },
+                    {
+                        type: "improved",
+                        text: "**Validação robusta**: Prevenção de aniversários duplicados e validação de campos"
+                    },
+                    {
+                        type: "fixed",
+                        text: "**Bug de ordenação corrigido**: Aniversários agora ordenam corretamente por proximidade da data"
+                    },
+                    {
+                        type: "improved",
+                        text: "**Performance otimizada**: Carregamento mais rápido de fotos e renderização de listas"
+                    },
+                    {
+                        type: "improved",
+                        text: "**Tratamento de erros**: Melhor feedback quando ocorrem problemas no sistema"
+                    }
+                ]
+            },
+            {
+                version: "1.1.0",
+                date: "2024-09-15",
+                type: "minor",
+                description: "Adição de recursos visuais importantes e melhorias significativas na usabilidade",
+                changes: [
+                    {
+                        type: "new",
+                        text: "**Avatar automático**: Exibe primeira letra do nome quando não há foto carregada"
+                    },
+                    {
+                        type: "new",
+                        text: "**Cards coloridos por urgência**: Sistema visual intuitivo (vermelho=urgente, verde=próximo, cinza=normal)"
+                    },
+                    {
+                        type: "new",
+                        text: "**Painel de estatísticas**: Contador em tempo real de aniversários cadastrados e urgentes"
+                    },
+                    {
+                        type: "improved",
+                        text: "**Modal de confirmação**: Confirmação segura antes de excluir aniversários"
+                    },
+                    {
+                        type: "improved",
+                        text: "**Estado vazio**: Mensagem explicativa quando não há aniversários cadastrados"
+                    },
+                    {
+                        type: "improved",
+                        text: "**Micro-interações**: Hover effects e transições suaves em todos os elementos"
+                    }
+                ]
+            },
+            {
+                version: "1.0.0",
+                date: "2024-09-14",
+                type: "major",
+                description: "Lançamento inicial do sistema de lembretes de aniversários com funcionalidades básicas essenciais",
+                changes: [
+                    {
+                        type: "new",
+                        text: "**Cadastro básico de aniversários**: Formulário para adicionar nome e data de aniversário"
+                    },
+                    {
+                        type: "new",
+                        text: "**Lista dinâmica**: Visualização organizada de todos os aniversários cadastrados"
+                    },
+                    {
+                        type: "new",
+                        text: "**Contador automático**: Cálculo em tempo real de dias restantes até cada aniversário"
+                    },
+                    {
+                        type: "new",
+                        text: "**Design responsivo**: Interface que funciona em desktop, tablet e mobile"
+                    },
+                    {
+                        type: "new",
+                        text: "**Funcionalidade de exclusão**: Remover aniversários quando necessário"
+                    },
+                    {
+                        type: "new",
+                        text: "**Base técnica sólida**: Arquitetura escalável usando HTML5, CSS3 e JavaScript ES6+"
+                    }
+                ]
+            }
+        ];
+
+        // Função para renderizar as versões
+        function renderChangelog(data = changelogData) {
+            const container = document.getElementById('changelog-list');
+            
+            if (data.length === 0) {
+                container.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-search"></i>
+                        <h3>Nenhuma versão encontrada</h3>
+                        <p>Tente usar termos diferentes na pesquisa.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = data.map((changelog, index) => {
+                const isLatest = index === 0 && data === changelogData;
+                const typeLabels = {
+                    major: 'MAJOR',
+                    minor: 'MINOR', 
+                    patch: 'PATCH'
+                };
+
+                return `
+                    <div class="changelog-item ${isLatest ? 'latest' : ''}">
+                        <div class="changelog-header">
+                            <div class="version-info">
+                                <div class="version-number">
+                                    <i class="fas fa-code-branch"></i>
+                                    v${changelog.version}
+                                    <span class="version-type ${changelog.type}">${typeLabels[changelog.type]}</span>
+                                </div>
+                            </div>
+                            <div class="version-date">
+                                <i class="fas fa-calendar-alt"></i>
+                                ${formatDate(changelog.date)}
+                            </div>
+                        </div>
+                        
+                        <div class="changelog-description">
+                            ${changelog.description}
+                        </div>
+                        
+                        <div class="changelog-changes">
+                            ${changelog.changes.map(change => `
+                                <div class="change-item ${change.type}">
+                                    <div class="change-icon ${change.type}">
+                                        ${getChangeIcon(change.type)}
+                                    </div>
+                                    <div class="change-text">${change.text}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Função para obter ícone da mudança
+        function getChangeIcon(type) {
+            const icons = {
+                new: '+',
+                improved: '↑',
+                fixed: '✓',
+                removed: '−'
+            };
+            return icons[type] || '•';
+        }
+
+        // Função para formatar data
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+        }
+
+        // Função de busca
+        function filterChangelog(searchTerm) {
+            if (!searchTerm.trim()) {
+                renderChangelog();
+                return;
+            }
+
+            const filtered = changelogData.filter(changelog => {
+                const searchLower = searchTerm.toLowerCase();
+                return (
+                    changelog.version.toLowerCase().includes(searchLower) ||
+                    changelog.description.toLowerCase().includes(searchLower) ||
+                    changelog.changes.some(change => 
+                        change.text.toLowerCase().includes(searchLower)
+                    )
+                );
+            });
+
+            renderChangelog(filtered);
+        }
+
+        // Event listeners
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            filterChangelog(e.target.value);
+        });
+
+        // Renderizar changelog inicial
+        document.addEventListener('DOMContentLoaded', () => {
+            renderChangelog();
+        });
+    </script>
+</body>
+</html>

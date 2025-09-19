@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎂 Lembrete de Aniversários</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="header-text">
+                    <h1><i class="fas fa-birthday-cake"></i> Lembrete de Aniversários</h1>
+                    <p>Nunca mais esqueça um aniversário importante!</p>
+                </div>
+                <div class="header-actions">
+                    <a href="changelog.html" class="changelog-btn" title="Ver Histórico de Versões">
+                        <i class="fas fa-history"></i>
+                        <span>v3.1.0</span>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Notificações -->
+        <div id="notification-banner" class="notification-banner hidden">
+            <div class="notification-content">
+                <i class="fas fa-bell"></i>
+                <span id="notification-text"></span>
+                <button id="close-notification" class="close-btn">×</button>
+            </div>
+        </div>
+
+        <!-- Formulário para adicionar aniversário -->
+        <section class="add-birthday-section">
+            <h2><i class="fas fa-plus-circle"></i> Adicionar Novo Aniversário</h2>
+            <form id="birthday-form" class="birthday-form">
+                <div class="form-group">
+                    <label for="person-name">Nome da Pessoa *</label>
+                    <input type="text" id="person-name" required placeholder="Digite o nome da pessoa">
+                </div>
+
+                <div class="form-group">
+                    <label for="birth-date">Data de Nascimento *</label>
+                    <input type="date" id="birth-date" required>
+                    <small class="form-help">Digite a data de nascimento completa (dia/mês/ano)</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="person-photo">Foto da Pessoa (opcional)</label>
+                    <input type="file" id="person-photo" accept="image/*">
+                    <div class="file-preview">
+                        <img id="photo-preview" class="photo-preview hidden" alt="Preview da foto">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-add">
+                    <i class="fas fa-plus"></i> Adicionar Aniversário
+                </button>
+            </form>
+        </section>
+
+        <!-- Lista de aniversários -->
+        <section class="birthdays-section">
+            <div class="section-header">
+                <h2><i class="fas fa-list"></i> Seus Lembretes</h2>
+                <div class="stats">
+                    <span id="total-birthdays">0 aniversários cadastrados</span>
+                </div>
+            </div>
+
+            <!-- Filtros -->
+            <div class="filters">
+                <button class="filter-btn active" data-filter="all">
+                    <i class="fas fa-calendar"></i> Todos
+                </button>
+                <button class="filter-btn" data-filter="upcoming">
+                    <i class="fas fa-clock"></i> Próximos
+                </button>
+                <button class="filter-btn" data-filter="urgent">
+                    <i class="fas fa-exclamation-triangle"></i> Urgentes
+                </button>
+            </div>
+
+            <div id="birthdays-list" class="birthdays-list">
+                <div class="empty-state">
+                    <i class="fas fa-birthday-cake"></i>
+                    <h3>Nenhum aniversário cadastrado</h3>
+                    <p>Adicione seu primeiro lembrete de aniversário acima!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modal de confirmação -->
+        <div id="confirm-modal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-trash"></i> Confirmar Exclusão</h3>
+                </div>
+                <div class="modal-body">
+                    <p>Tem certeza que deseja excluir este aniversário?</p>
+                    <p><strong id="delete-person-name"></strong></p>
+                </div>
+                <div class="modal-footer">
+                    <button id="cancel-delete" class="btn-cancel">Cancelar</button>
+                    <button id="confirm-delete" class="btn-delete">Excluir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botão para solicitar permissão de notificações -->
+    <div id="notification-permission" class="notification-permission hidden">
+        <div class="permission-content">
+            <i class="fas fa-bell"></i>
+            <h3>Ativar Notificações</h3>
+            <p>Permitir notificações para receber lembretes de aniversários?</p>
+            <div class="permission-buttons">
+                <button id="allow-notifications" class="btn-allow">Permitir</button>
+                <button id="deny-notifications" class="btn-deny">Agora não</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

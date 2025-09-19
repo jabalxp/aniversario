@@ -17,20 +17,16 @@ class DateUtils {
     // Converter data para dias desde uma época (1 de janeiro de 2000)
     static dateToDays(year, month, day) {
         let totalDays = 0;
-        
         // Somar anos desde 2000
         for (let y = 2000; y < year; y++) {
             totalDays += this.isLeapYear(y) ? 366 : 365;
         }
-        
         // Somar meses do ano atual
         for (let m = 1; m < month; m++) {
             totalDays += this.getDaysInMonth(year, m);
         }
-        
-        // Somar dias
-        totalDays += day - 1; // -1 porque começamos do dia 0
-        
+        // Somar dias (NÃO subtrai 1)
+        totalDays += day;
         return totalDays;
     }
     
@@ -110,15 +106,19 @@ class BirthdayManager {
     calculateDaysUntilBirthday(birthDateString) {
         const today = DateUtils.getToday();
         const birthDate = DateUtils.parseDate(birthDateString);
-        
-        // SEMPRE CALCULAR PARA 2026 (ano que vem)
-        const targetYear = 2026;
+        // Verifica se o aniversário deste ano já passou
+        let targetYear = today.year;
+        if (
+            today.month > birthDate.month ||
+            (today.month === birthDate.month && today.day > birthDate.day)
+        ) {
+            targetYear = today.year + 1;
+        }
         const targetBirthday = {
             year: targetYear,
             month: birthDate.month,
             day: birthDate.day
         };
-        
         return DateUtils.daysDifference(today, targetBirthday);
     }
     
@@ -138,15 +138,50 @@ class BirthdayManager {
         return Math.max(0, age);
     }
     
-    // NOVA FUNÇÃO: Calcular idade no próximo aniversário (2026)
+    // NOVA FUNÇÃO: Calcular idade no próximo aniversário
     calculateNextAge(birthDateString) {
+        const today = DateUtils.getToday();
         const birthDate = DateUtils.parseDate(birthDateString);
-        return 2026 - birthDate.year; // Idade que terá em 2026
+        
+        // Determinar o ano do próximo aniversário
+        let targetYear = today.year;
+        if (
+            today.month > birthDate.month ||
+            (today.month === birthDate.month && today.day > birthDate.day)
+        ) {
+            targetYear = today.year + 1;
+        }
+        
+        return targetYear - birthDate.year;
     }
     
-    // NOVA FUNÇÃO: Ano do próximo aniversário (sempre 2026)
+    // NOVA FUNÇÃO: Ano do próximo aniversário
     calculateNextBirthdayYear(birthDateString) {
-        return 2026;
+        const today = DateUtils.getToday();
+        const birthDate = DateUtils.parseDate(birthDateString);
+        
+        // Determinar o ano do próximo aniversário
+        let targetYear = today.year;
+        if (
+            today.month > birthDate.month ||
+            (today.month === birthDate.month && today.day > birthDate.day)
+        ) {
+            targetYear = today.year + 1;
+        }
+        
+        return targetYear;
+    }
+
+    // NOVA FUNÇÃO: Obter data completa do próximo aniversário
+    getNextBirthdayDate(birthDateString) {
+        const birthDate = DateUtils.parseDate(birthDateString);
+        const nextYear = this.calculateNextBirthdayYear(birthDateString);
+        
+        return DateUtils.formatDate({
+            year: nextYear,
+            month: birthDate.month,
+            day: birthDate.day
+        });
     }
 
     // Inicializar event listeners
@@ -336,7 +371,7 @@ class BirthdayManager {
             const days = this.calculateDaysUntilBirthday(birthday.date);
             const currentAge = this.calculateCurrentAge(birthday.date);
             const nextAge = this.calculateNextAge(birthday.date);
-            const nextYear = this.calculateNextBirthdayYear(birthday.date);
+            const nextBirthdayDate = this.getNextBirthdayDate(birthday.date);
             const urgencyClass = this.getUrgencyClass(days);
             const daysText = this.getDaysLeftText(days);
 
@@ -351,7 +386,7 @@ class BirthdayManager {
                         <p class="birthday-date">🎂 ${DateUtils.formatDateString(birthday.date)}</p>
                         <div class="age-info">
                             <span class="current-age">${currentAge} anos</span>
-                            <span class="next-age">Fará ${nextAge} anos em ${nextYear}</span>
+                            <span class="next-age">Fará ${nextAge} anos em ${nextBirthdayDate}</span>
                         </div>
                         <span class="days-left ${urgencyClass}">${daysText}</span>
                     </div>

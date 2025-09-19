@@ -485,6 +485,34 @@
         // Dados das versões
         const changelogData = [
             {
+                version: "3.2.0",
+                date: "2025-09-19",
+                type: "major",
+                description: "Correções críticas de cálculo de idade e próximo aniversário",
+                changes: [
+                    {
+                        type: "fixed",
+                        text: "**BUG DOS 13 MESES CORRIGIDO**: Próximo aniversário agora considera corretamente o ano atual se ainda não passou"
+                    },
+                    {
+                        type: "fixed",
+                        text: "**BUG DO DIA ANTERIOR CORRIGIDO**: Removido subtração incorreta de 1 dia no cálculo dateToDays()"
+                    },
+                    {
+                        type: "fixed",
+                        text: "**IDADE INCORRETA CORRIGIDA**: calculateNextAge() e calculateNextBirthdayYear() agora usam mesma lógica do cálculo de dias"
+                    },
+                    {
+                        type: "improved",
+                        text: "**Data completa do próximo aniversário**: Interface agora mostra 'Fará X anos em DD/MM/AAAA' em vez de apenas o ano"
+                    },
+                    {
+                        type: "added",
+                        text: "**Nova função getNextBirthdayDate()**: Formata data completa do próximo aniversário"
+                    }
+                ]
+            },
+            {
                 version: "3.1.0",
                 date: "2024-09-17",
                 type: "major",

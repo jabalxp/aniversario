@@ -230,6 +230,7 @@ class BirthdayManager {
     addBirthday() {
         const name = document.getElementById('person-name').value.trim();
         const date = document.getElementById('birth-date').value;
+        const description = document.getElementById('person-description').value.trim();
         const photoInput = document.getElementById('person-photo');
 
         if (!name || !date) {
@@ -247,6 +248,7 @@ class BirthdayManager {
             id: Date.now(),
             name: name,
             date: date,
+            description: description || null,
             photo: null,
             createdAt: new Date().toISOString()
         };
@@ -383,6 +385,7 @@ class BirthdayManager {
                     }
                     <div class="birthday-info">
                         <h3>${birthday.name}</h3>
+                        ${birthday.description ? `<p class="birthday-description">${birthday.description}</p>` : ''}
                         <p class="birthday-date">🎂 ${DateUtils.formatDateString(birthday.date)}</p>
                         <div class="age-info">
                             <span class="current-age">${currentAge} anos</span>

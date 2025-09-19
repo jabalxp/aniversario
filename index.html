@@ -4,128 +4,201 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🎂 Lembrete de Aniversários</title>
-    <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script defer src="https://unpkg.com/@vercel/analytics@latest/dist/index.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .menu-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 50px 40px;
+            border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(15px);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .logo {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #4a5568;
+            margin-bottom: 15px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #718096;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .menu-options {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .menu-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            padding: 20px 30px;
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            color: white;
+            text-decoration: none;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(78, 205, 196, 0.3);
+        }
+
+        .menu-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(78, 205, 196, 0.4);
+            background: linear-gradient(135deg, #44a08d, #4ecdc4);
+        }
+
+        .menu-button i {
+            font-size: 1.5rem;
+        }
+
+        .changelog-button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .changelog-button:hover {
+            background: linear-gradient(135deg, #764ba2, #667eea);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .version-info {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #e2e8f0;
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .version-badge {
+            display: inline-block;
+            background: #4ecdc4;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 480px) {
+            .menu-container {
+                padding: 40px 30px;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
+            
+            .logo {
+                font-size: 3rem;
+            }
+            
+            .menu-button {
+                padding: 18px 25px;
+                font-size: 1.1rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <header class="header">
-            <div class="header-content">
-                <div class="header-text">
-                    <h1><i class="fas fa-birthday-cake"></i> Lembrete de Aniversários</h1>
-                    <p>Nunca mais esqueça um aniversário importante!</p>
-                </div>
-                <div class="header-actions">
-                    <a href="changelog.html" class="changelog-btn" title="Ver Histórico de Versões">
-                        <i class="fas fa-history"></i>
-                        <span>v3.1.0</span>
-                    </a>
-                </div>
-            </div>
-        </header>
-
-        <!-- Notificações -->
-        <div id="notification-banner" class="notification-banner hidden">
-            <div class="notification-content">
-                <i class="fas fa-bell"></i>
-                <span id="notification-text"></span>
-                <button id="close-notification" class="close-btn">×</button>
-            </div>
+    <div class="menu-container">
+        <div class="logo">🎂</div>
+        
+        <h1 class="title">Lembrete de Aniversários</h1>
+        <p class="subtitle">
+            Nunca mais esqueça uma data importante! Gerencie aniversários com notificações inteligentes.
+        </p>
+        
+        <div class="menu-options">
+            <a href="agendar.html" class="menu-button">
+                <i class="fas fa-calendar-plus"></i>
+                Agendar Aniversário
+            </a>
+            
+            <a href="changelog.html" class="menu-button changelog-button">
+                <i class="fas fa-list-ul"></i>
+                Changelog
+            </a>
         </div>
-
-        <!-- Formulário para adicionar aniversário -->
-        <section class="add-birthday-section">
-            <h2><i class="fas fa-plus-circle"></i> Adicionar Novo Aniversário</h2>
-            <form id="birthday-form" class="birthday-form">
-                <div class="form-group">
-                    <label for="person-name">Nome da Pessoa *</label>
-                    <input type="text" id="person-name" required placeholder="Digite o nome da pessoa">
-                </div>
-
-                <div class="form-group">
-                    <label for="birth-date">Data de Nascimento *</label>
-                    <input type="date" id="birth-date" required>
-                    <small class="form-help">Digite a data de nascimento completa (dia/mês/ano)</small>
-                </div>
-
-                <div class="form-group">
-                    <label for="person-photo">Foto da Pessoa (opcional)</label>
-                    <input type="file" id="person-photo" accept="image/*">
-                    <div class="file-preview">
-                        <img id="photo-preview" class="photo-preview hidden" alt="Preview da foto">
-                    </div>
-                </div>
-
-                <button type="submit" class="btn-add">
-                    <i class="fas fa-plus"></i> Adicionar Aniversário
-                </button>
-            </form>
-        </section>
-
-        <!-- Lista de aniversários -->
-        <section class="birthdays-section">
-            <div class="section-header">
-                <h2><i class="fas fa-list"></i> Seus Lembretes</h2>
-                <div class="stats">
-                    <span id="total-birthdays">0 aniversários cadastrados</span>
-                </div>
-            </div>
-
-            <!-- Filtros -->
-            <div class="filters">
-                <button class="filter-btn active" data-filter="all">
-                    <i class="fas fa-calendar"></i> Todos
-                </button>
-                <button class="filter-btn" data-filter="upcoming">
-                    <i class="fas fa-clock"></i> Próximos
-                </button>
-                <button class="filter-btn" data-filter="urgent">
-                    <i class="fas fa-exclamation-triangle"></i> Urgentes
-                </button>
-            </div>
-
-            <div id="birthdays-list" class="birthdays-list">
-                <div class="empty-state">
-                    <i class="fas fa-birthday-cake"></i>
-                    <h3>Nenhum aniversário cadastrado</h3>
-                    <p>Adicione seu primeiro lembrete de aniversário acima!</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Modal de confirmação -->
-        <div id="confirm-modal" class="modal hidden">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3><i class="fas fa-trash"></i> Confirmar Exclusão</h3>
-                </div>
-                <div class="modal-body">
-                    <p>Tem certeza que deseja excluir este aniversário?</p>
-                    <p><strong id="delete-person-name"></strong></p>
-                </div>
-                <div class="modal-footer">
-                    <button id="cancel-delete" class="btn-cancel">Cancelar</button>
-                    <button id="confirm-delete" class="btn-delete">Excluir</button>
-                </div>
-            </div>
+        
+        <div class="version-info">
+            <p>Sistema completo de lembretes com notificações</p>
+            <span class="version-badge">v3.3.0</span>
         </div>
     </div>
 
-    <!-- Botão para solicitar permissão de notificações -->
-    <div id="notification-permission" class="notification-permission hidden">
-        <div class="permission-content">
-            <i class="fas fa-bell"></i>
-            <h3>Ativar Notificações</h3>
-            <p>Permitir notificações para receber lembretes de aniversários?</p>
-            <div class="permission-buttons">
-                <button id="allow-notifications" class="btn-allow">Permitir</button>
-                <button id="deny-notifications" class="btn-deny">Agora não</button>
-            </div>
-        </div>
-    </div>
+    <script>
+        // Animação de entrada
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.querySelector('.menu-container');
+            container.style.opacity = '0';
+            container.style.transform = 'translateY(30px)';
+            
+            setTimeout(() => {
+                container.style.transition = 'all 0.8s ease';
+                container.style.opacity = '1';
+                container.style.transform = 'translateY(0)';
+            }, 100);
+        });
 
-    <script src="script.js"></script>
+        // Efeito de hover nos botões
+        document.querySelectorAll('.menu-button').forEach(button => {
+            button.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px) scale(1.02)';
+            });
+            
+            button.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+    </script>
 </body>
 </html>

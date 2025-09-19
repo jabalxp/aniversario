@@ -6,6 +6,7 @@
     <title>📋 Changelog - Lembrete de Aniversários</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script defer src="https://unpkg.com/@vercel/analytics@latest/dist/index.js"></script>
     <style>
         /* Reset e configurações gerais */
         * {
@@ -438,7 +439,7 @@
         <header class="header">
             <a href="index.html" class="back-btn">
                 <i class="fas fa-arrow-left"></i>
-                <span>Voltar</span>
+                <span>Menu</span>
             </a>
             <h1><i class="fas fa-history"></i> Histórico de Versões</h1>
             <p>Acompanhe todas as melhorias e novidades do sistema</p>
@@ -485,6 +486,34 @@
         // Dados das versões
         const changelogData = [
             {
+                version: "3.3.0",
+                date: "2025-09-19",
+                type: "minor",
+                description: "Campo de descrição opcional para pessoas cadastradas",
+                changes: [
+                    {
+                        type: "added",
+                        text: "**CAMPO DESCRIÇÃO OPCIONAL**: Agora é possível adicionar uma descrição para cada pessoa cadastrada"
+                    },
+                    {
+                        type: "improved",
+                        text: "**Interface melhorada**: Novo campo textarea no formulário com placeholder e texto de ajuda"
+                    },
+                    {
+                        type: "improved",
+                        text: "**Exibição nos cards**: Descrição aparece nos cards com visual destacado quando informada"
+                    },
+                    {
+                        type: "added",
+                        text: "**CSS responsivo**: Estilo específico para textarea com resize vertical e fonte consistente"
+                    },
+                    {
+                        type: "added",
+                        text: "**Vercel Analytics**: Adicionado rastreamento de analytics em todas as páginas do site"
+                    }
+                ]
+            },
+            {
                 version: "3.2.0",
                 date: "2025-09-19",
                 type: "major",
@@ -514,7 +543,7 @@
             },
             {
                 version: "3.1.0",
-                date: "2024-09-17",
+                date: "2025-09-17",
                 type: "major",
                 description: "Sistema de cálculo 100% manual - ZERO JavaScript Date - Calcula para 2026",
                 changes: [
@@ -542,7 +571,7 @@
             },
             {
                 version: "3.0.0",
-                date: "2024-09-17",
+                date: "2025-09-17",
                 type: "major",
                 description: "Reescrita completa do sistema de cálculo de datas com nova biblioteca própria",
                 changes: [
@@ -570,7 +599,7 @@
             },
             {
                 version: "2.2.2",
-                date: "2024-09-17",
+                date: "2025-09-17",
                 type: "patch",
                 description: "Correção definitiva dos bugs de fuso horário e cálculo de datas",
                 changes: [
@@ -598,7 +627,7 @@
             },
             {
                 version: "2.2.1",
-                date: "2024-09-17",
+                date: "2025-09-17",
                 type: "patch",
                 description: "Correção definitiva do bug de cálculo de dias até aniversário",
                 changes: [
@@ -622,7 +651,7 @@
             },
             {
                 version: "2.2.0",
-                date: "2024-09-17",
+                date: "2025-09-17",
                 type: "minor",
                 description: "Correção crítica do cálculo de datas e adição do sistema de idades",
                 changes: [
@@ -650,7 +679,7 @@
             },
             {
                 version: "2.1.0",
-                date: "2024-09-17",
+                date: "2025-09-17",
                 type: "minor",
                 description: "Adição do sistema de changelog e melhorias na interface do usuário",
                 changes: [
@@ -678,7 +707,7 @@
             },
             {
                 version: "2.0.0",
-                date: "2024-09-17",
+                date: "2025-09-17",
                 type: "major",
                 description: "Versão completa com todas as funcionalidades de notificação e interface moderna implementadas",
                 changes: [
@@ -718,7 +747,7 @@
             },
             {
                 version: "1.2.0",
-                date: "2024-09-16",
+                date: "2025-09-16",
                 type: "minor",
                 description: "Melhorias na experiência do usuário, correções de bugs e otimizações de performance",
                 changes: [
@@ -746,7 +775,7 @@
             },
             {
                 version: "1.1.0",
-                date: "2024-09-15",
+                date: "2025-09-15",
                 type: "minor",
                 description: "Adição de recursos visuais importantes e melhorias significativas na usabilidade",
                 changes: [
@@ -778,7 +807,7 @@
             },
             {
                 version: "1.0.0",
-                date: "2024-09-14",
+                date: "2025-09-14",
                 type: "major",
                 description: "Lançamento inicial do sistema de lembretes de aniversários com funcionalidades básicas essenciais",
                 changes: [

@@ -3,11 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Agende e gerencie lembretes de aniversários com notificações inteligentes.">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Aniversários">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' rx='15%' fill='%23667eea'/><text x='50%' y='50%' font-size='100' text-anchor='middle' dominant-baseline='central'>🎂</text></svg>">
     <title>🎂 Lembrete de Aniversários</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script defer src="https://unpkg.com/@vercel/analytics@latest/dist/index.js"></script>
 </head>
 <body>
     <div class="container">
@@ -84,6 +90,190 @@
                 </div>
             </div>
 
+            <!-- Configurações de Notificação -->
+            <div class="notification-settings">
+                <div class="settings-header">
+                    <h3><i class="fas fa-bell"></i> Configurações de Notificação</h3>
+                    <button id="toggle-settings" class="toggle-btn">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div id="settings-content" class="settings-content collapsed">
+                    <div class="settings-grid">
+                        <div class="setting-item">
+                            <label>
+                                <input type="checkbox" id="notify-on-day" checked>
+                                <span class="checkmark"></span>
+                                <div class="setting-info">
+                                    <strong>No dia do aniversário</strong>
+                                    <small>Notificar exatamente no dia</small>
+                                </div>
+                            </label>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <label>
+                                <input type="checkbox" id="notify-day-before" checked>
+                                <span class="checkmark"></span>
+                                <div class="setting-info">
+                                    <strong>1 dia antes</strong>
+                                    <small>Lembrete no dia anterior</small>
+                                </div>
+                            </label>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <label>
+                                <input type="checkbox" id="notify-3-days" checked>
+                                <span class="checkmark"></span>
+                                <div class="setting-info">
+                                    <strong>3 dias antes</strong>
+                                    <small>Aviso antecipado</small>
+                                </div>
+                            </label>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <label>
+                                <input type="checkbox" id="notify-1-week" checked>
+                                <span class="checkmark"></span>
+                                <div class="setting-info">
+                                    <strong>1 semana antes</strong>
+                                    <small>Planejamento antecipado</small>
+                                </div>
+                            </label>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <label>
+                                <input type="checkbox" id="notify-2-weeks">
+                                <span class="checkmark"></span>
+                                <div class="setting-info">
+                                    <strong>2 semanas antes</strong>
+                                    <small>Muito antecipado</small>
+                                </div>
+                            </label>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <label>
+                                <input type="checkbox" id="notify-1-month">
+                                <span class="checkmark"></span>
+                                <div class="setting-info">
+                                    <strong>1 mês antes</strong>
+                                    <small>Planejamento longo prazo</small>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-extra">
+                        <div class="setting-item horizontal">
+                            <label>
+                                <input type="checkbox" id="sound-enabled" checked>
+                                <span class="checkmark"></span>
+                                <strong>Som nas notificações</strong>
+                            </label>
+                        </div>
+                        
+                        <div class="setting-item horizontal">
+                            <label>
+                                <input type="checkbox" id="persistent-notifications" checked>
+                                <span class="checkmark"></span>
+                                <strong>Notificações persistentes</strong>
+                                <small>Permanecem na tela até serem fechadas</small>
+                            </label>
+                        </div>
+                        
+                        <div class="setting-item horizontal">
+                            <label>
+                                <input type="checkbox" id="background-notifications" checked>
+                                <span class="checkmark"></span>
+                                <strong>Notificações em segundo plano</strong>
+                                <small>Receber alertas mesmo com o site fechado</small>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-actions">
+                        <button id="test-notification" class="btn-test">
+                            <i class="fas fa-play"></i> Testar Notificação
+                        </button>
+                        <button id="save-settings" class="btn-save">
+                            <i class="fas fa-save"></i> Salvar Configurações
+                        </button>
+                    </div>
+
+                    <!-- Guia para dispositivos móveis -->
+                    <div class="mobile-guide">
+                        <h4><i class="fas fa-mobile-alt"></i> 📱 Como Usar no Celular</h4>
+                        <div class="guide-steps">
+                            <div class="step">
+                                <span class="step-number">1</span>
+                                <div class="step-content">
+                                    <strong>Android (Chrome/Edge):</strong>
+                                    <small>Funciona automaticamente! Permita notificações quando solicitado.</small>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <span class="step-number">2</span>
+                                <div class="step-content">
+                                    <strong>iPhone/iPad:</strong>
+                                    <small>Para melhor funcionamento: Safari → Compartilhar → "Adicionar à Tela de Início"</small>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <span class="step-number">3</span>
+                                <div class="step-content">
+                                    <strong>Instalar como App:</strong>
+                                    <small>Chrome: Menu → "Instalar app". Funcionará como aplicativo nativo!</small>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <span class="step-number">4</span>
+                                <div class="step-content">
+                                    <strong>Configurações do Sistema:</strong>
+                                    <small>Vá em Configurações → Notificações → [Navegador] e ative as permissões.</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="compatibility-info">
+                            <h5>🔍 Compatibilidade:</h5>
+                            <div class="compatibility-grid">
+                                <div class="compat-item good">
+                                    <span class="compat-icon">✅</span>
+                                    <div>
+                                        <strong>Android Chrome</strong>
+                                        <small>100% funcional</small>
+                                    </div>
+                                </div>
+                                <div class="compat-item good">
+                                    <span class="compat-icon">✅</span>
+                                    <div>
+                                        <strong>Samsung Internet</strong>
+                                        <small>100% funcional</small>
+                                    </div>
+                                </div>
+                                <div class="compat-item partial">
+                                    <span class="compat-icon">⚠️</span>
+                                    <div>
+                                        <strong>iPhone Safari</strong>
+                                        <small>Instalar como PWA</small>
+                                    </div>
+                                </div>
+                                <div class="compat-item partial">
+                                    <span class="compat-icon">⚠️</span>
+                                    <div>
+                                        <strong>Firefox Mobile</strong>
+                                        <small>Limitações</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Filtros -->
             <div class="filters">
                 <button class="filter-btn active" data-filter="all">
@@ -138,5 +328,8 @@
     </div>
 
     <script src="script.js"></script>
+    
+    <!-- Vercel Analytics -->
+    <script type="module" src="analytics.js"></script>
 </body>
 </html>

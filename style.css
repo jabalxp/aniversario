@@ -280,6 +280,345 @@ body {
     box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
 }
 
+/* Configurações de Notificação */
+.notification-settings {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e2e8f0;
+    margin-bottom: 20px;
+}
+
+.settings-header h3 {
+    color: #4a5568;
+    font-size: 1.2rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.settings-header h3 i {
+    color: #667eea;
+}
+
+.toggle-btn {
+    background: none;
+    border: none;
+    color: #667eea;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    padding: 5px;
+    border-radius: 50%;
+}
+
+.toggle-btn:hover {
+    background: rgba(102, 126, 234, 0.1);
+}
+
+.toggle-btn.rotated {
+    transform: rotate(180deg);
+}
+
+.settings-content {
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.settings-content.collapsed {
+    max-height: 0;
+    opacity: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.settings-content:not(.collapsed) {
+    max-height: 800px;
+    opacity: 1;
+}
+
+.settings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.setting-item {
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+    padding: 15px;
+    transition: all 0.3s ease;
+}
+
+.setting-item:hover {
+    background: rgba(255, 255, 255, 0.8);
+    transform: translateY(-2px);
+}
+
+.setting-item label {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    cursor: pointer;
+    margin: 0;
+}
+
+.setting-item.horizontal label {
+    align-items: center;
+}
+
+.setting-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.setting-info strong {
+    color: #4a5568;
+    font-weight: 600;
+}
+
+.setting-info small {
+    color: #718096;
+    font-size: 0.85rem;
+}
+
+/* Custom Checkbox */
+.setting-item input[type="checkbox"] {
+    display: none;
+}
+
+.checkmark {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #e2e8f0;
+    border-radius: 4px;
+    position: relative;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.setting-item.horizontal .checkmark {
+    margin-top: 0;
+}
+
+.setting-item input[type="checkbox"]:checked + .checkmark {
+    background: #667eea;
+    border-color: #667eea;
+}
+
+.setting-item input[type="checkbox"]:checked + .checkmark::after {
+    content: "✓";
+    position: absolute;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    top: -2px;
+    left: 3px;
+}
+
+.settings-extra {
+    border-top: 1px solid #e2e8f0;
+    padding-top: 20px;
+    margin-bottom: 20px;
+}
+
+.settings-extra .setting-item {
+    background: rgba(102, 126, 234, 0.05);
+    border: 1px solid rgba(102, 126, 234, 0.1);
+}
+
+.settings-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.btn-test, .btn-save {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-test {
+    background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
+    color: #2d3436;
+}
+
+.btn-test:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(253, 203, 110, 0.4);
+}
+
+.btn-save {
+    background: linear-gradient(135deg, #4ecdc4, #44a08d);
+    color: white;
+}
+
+.btn-save:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(78, 205, 196, 0.4);
+}
+
+/* Guia para dispositivos móveis */
+.mobile-guide {
+    margin-top: 25px;
+    padding: 20px;
+    background: rgba(102, 126, 234, 0.05);
+    border: 1px solid rgba(102, 126, 234, 0.1);
+    border-radius: 12px;
+}
+
+.mobile-guide h4 {
+    color: #4a5568;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.guide-steps {
+    margin-bottom: 20px;
+}
+
+.step {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.step:hover {
+    background: rgba(255, 255, 255, 0.9);
+    transform: translateX(5px);
+}
+
+.step-number {
+    background: #667eea;
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 600;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.step-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.step-content strong {
+    color: #4a5568;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.step-content small {
+    color: #718096;
+    font-size: 0.8rem;
+    line-height: 1.3;
+}
+
+.compatibility-info {
+    border-top: 1px solid rgba(102, 126, 234, 0.1);
+    padding-top: 15px;
+}
+
+.compatibility-info h5 {
+    color: #4a5568;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.compatibility-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+}
+
+.compat-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    transition: all 0.3s ease;
+}
+
+.compat-item.good {
+    background: rgba(72, 187, 120, 0.1);
+    border: 1px solid rgba(72, 187, 120, 0.2);
+}
+
+.compat-item.partial {
+    background: rgba(237, 137, 54, 0.1);
+    border: 1px solid rgba(237, 137, 54, 0.2);
+}
+
+.compat-item:hover {
+    transform: scale(1.02);
+}
+
+.compat-icon {
+    font-size: 1.2rem;
+}
+
+.compat-item div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.compat-item strong {
+    color: #4a5568;
+    font-weight: 600;
+    font-size: 0.8rem;
+}
+
+.compat-item small {
+    color: #718096;
+    font-size: 0.7rem;
+}
+
 /* Filtros */
 .filters {
     display: flex;
@@ -923,6 +1262,92 @@ body {
 }
 
 /* Responsividade */
+/* Notebooks e telas grandes */
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1000px;
+        padding: 25px;
+    }
+    
+    .header {
+        padding: 35px 40px;
+        margin-bottom: 45px;
+    }
+    
+    .header h1 {
+        font-size: 2.8rem;
+    }
+    
+    .header p {
+        font-size: 1.2rem;
+    }
+    
+    .add-birthday-section,
+    .birthdays-section {
+        padding: 30px 35px;
+        margin-bottom: 30px;
+    }
+    
+    .birthday-form {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 25px;
+        align-items: start;
+    }
+    
+    .form-group:nth-child(3),
+    .form-group:nth-child(4) {
+        grid-column: span 2;
+    }
+    
+    .btn-add {
+        grid-column: span 2;
+        max-width: 300px;
+        justify-self: center;
+    }
+    
+    .form-group input,
+    .form-group textarea {
+        padding: 14px 18px;
+        font-size: 1.05rem;
+    }
+    
+    .birthday-card {
+        padding: 25px;
+    }
+}
+
+/* Telas muito grandes (monitores widescreen) */
+@media (min-width: 1400px) {
+    .container {
+        max-width: 1200px;
+        padding: 30px;
+    }
+    
+    .header {
+        padding: 40px 50px;
+    }
+    
+    .header h1 {
+        font-size: 3rem;
+    }
+    
+    .add-birthday-section,
+    .birthdays-section {
+        padding: 35px 45px;
+    }
+    
+    .birthday-form {
+        gap: 30px;
+    }
+    
+    .form-group input,
+    .form-group textarea {
+        padding: 16px 20px;
+        font-size: 1.1rem;
+    }
+}
+
 /* Tablets e telas médias */
 @media (max-width: 1024px) {
     .container {
@@ -999,12 +1424,33 @@ body {
         font-size: 0.9rem;
         border-radius: 10px;
     }
-    
+
     .birthday-form {
         gap: 16px;
     }
-    
-    .birthday-card {
+
+    /* Configurações responsivas para tablets */
+    .notification-settings {
+        padding: 18px;
+    }
+
+    .settings-grid {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 12px;
+    }
+
+    .setting-item {
+        padding: 12px;
+    }
+
+    .settings-actions {
+        gap: 12px;
+    }
+
+    .btn-test, .btn-save {
+        padding: 10px 16px;
+        font-size: 0.85rem;
+    }    .birthday-card {
         flex-direction: column;
         text-align: center;
         gap: 15px;
@@ -1057,36 +1503,294 @@ body {
     }
 }
 
+/* Smartphones grandes (Poco X6 Pro, Galaxy S24+, iPhone 15 Pro Max, etc.) */
+@media (max-width: 430px) and (min-width: 391px) {
+    .container {
+        padding: 16px;
+    }
+    
+    .header {
+        padding: 22px;
+        margin-bottom: 28px;
+    }
+    
+    .header h1 {
+        font-size: 2.1rem;
+        line-height: 1.3;
+    }
+    
+    .header p {
+        font-size: 1.05rem;
+        line-height: 1.4;
+    }
+    
+    .add-birthday-section,
+    .birthdays-section {
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .section-header h2 {
+        font-size: 1.4rem;
+        margin-bottom: 12px;
+    }
+    
+    /* Inputs otimizados para Poco X6 Pro */
+    .form-group {
+        margin-bottom: 16px;
+    }
+    
+    .form-group input,
+    .form-group textarea {
+        padding: 12px 14px;
+        font-size: 0.95rem;
+        border-radius: 10px;
+        min-height: 48px; /* Tamanho ideal para toque */
+    }
+    
+    .form-group input[type="date"] {
+        padding: 12px 12px;
+        min-height: 48px;
+    }
+    
+    .form-group textarea {
+        min-height: 85px;
+        padding: 12px 14px;
+    }
+    
+    .form-group label {
+        font-size: 0.95rem;
+        margin-bottom: 10px;
+        font-weight: 500;
+    }
+    
+    .birthday-form {
+        gap: 16px;
+    }
+    
+    .btn-add {
+        padding: 14px 20px;
+        font-size: 1rem;
+        min-height: 50px;
+        border-radius: 12px;
+        margin-top: 8px;
+    }
+    
+    .filters {
+        gap: 10px;
+        margin-bottom: 18px;
+    }
+    
+    .filter-btn {
+        padding: 10px 14px;
+        font-size: 0.9rem;
+        min-height: 42px;
+        border-radius: 10px;
+    }
+    
+    .birthday-card {
+        padding: 18px;
+        margin-bottom: 14px;
+        border-radius: 12px;
+    }
+    
+    .form-help {
+        font-size: 0.8rem;
+        margin-top: 6px;
+        line-height: 1.3;
+    }
+}
+
 /* Smartphones médios */
 @media (max-width: 600px) {
+    .container {
+        padding: 14px;
+    }
+    
+    .header {
+        padding: 20px;
+        margin-bottom: 26px;
+    }
+    
+    .header h1 {
+        font-size: 1.95rem;
+        line-height: 1.25;
+    }
+    
+    .header p {
+        font-size: 1rem;
+        line-height: 1.4;
+    }
+    
+    .add-birthday-section,
+    .birthdays-section {
+        padding: 18px;
+        margin-bottom: 18px;
+    }
+    
+    .section-header h2 {
+        font-size: 1.3rem;
+        margin-bottom: 10px;
+    }
+    
+    /* Inputs para smartphones médios */
+    .form-group {
+        margin-bottom: 15px;
+    }
+    
+    .form-group input,
+    .form-group textarea {
+        padding: 10px 12px;
+        font-size: 0.9rem;
+        border-radius: 9px;
+        min-height: 44px;
+    }
+    
+    .form-group input[type="date"] {
+        padding: 10px 10px;
+        min-height: 44px;
+    }
+    
+    .form-group textarea {
+        min-height: 80px;
+        resize: none;
+    }
+    
+    .form-group label {
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+    }
+    
+    .birthday-form {
+        gap: 15px;
+    }
+    
+    .btn-add {
+        padding: 12px 18px;
+        font-size: 0.95rem;
+        min-height: 46px;
+        margin-top: 6px;
+    }
+    
+    .filters {
+        gap: 8px;
+        margin-bottom: 16px;
+    }
+    
+    .filter-btn {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+        min-height: 38px;
+    }
+    
+    .birthday-card {
+        padding: 16px;
+        margin-bottom: 12px;
+    }
+    
+    .form-help {
+        font-size: 0.78rem;
+        margin-top: 5px;
+    }
+
+    /* Configurações responsivas para smartphones médios */
+    .notification-settings {
+        padding: 16px;
+        margin-bottom: 25px;
+    }
+
+    .settings-header h3 {
+        font-size: 1.1rem;
+    }
+
+    .settings-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .setting-item {
+        padding: 10px;
+    }
+
+    .setting-info strong {
+        font-size: 0.9rem;
+    }
+
+    .setting-info small {
+        font-size: 0.8rem;
+    }
+
+    .btn-test, .btn-save {
+        padding: 10px 14px;
+        font-size: 0.8rem;
+        flex: 1;
+        min-width: 120px;
+    }
+}
+
+/* Smartphones pequenos */
+@media (max-width: 480px) {
     .container {
         padding: 12px;
     }
     
     .header {
         padding: 18px;
-        margin-bottom: 25px;
+        margin-bottom: 24px;
     }
     
     .header h1 {
-        font-size: 1.9rem;
+        font-size: 1.85rem;
+        line-height: 1.2;
     }
     
     .header p {
-        font-size: 1rem;
+        font-size: 0.98rem;
+        line-height: 1.35;
     }
     
     .add-birthday-section,
     .birthdays-section {
-        padding: 18px;
+        padding: 16px;
+        margin-bottom: 16px;
     }
     
-    /* Inputs para smartphones médios */
+    .section-header h2 {
+        font-size: 1.25rem;
+        margin-bottom: 10px;
+    }
+    
+    /* Inputs otimizados para smartphones pequenos */
+    .form-group {
+        margin-bottom: 14px;
+    }
+    
     .form-group input,
     .form-group textarea {
-        padding: 9px 12px;
+        padding: 9px 11px;
         font-size: 0.85rem;
         border-radius: 8px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        min-height: 42px;
+    }
+    
+    .form-group input[type="date"] {
+        padding: 9px 9px;
+        min-height: 42px;
+    }
+    
+    .form-group textarea {
+        min-height: 75px;
+        resize: none;
+        padding: 9px 11px;
+    }
+    
+    .form-group label {
+        font-size: 0.88rem;
+        margin-bottom: 7px;
+        font-weight: 500;
     }
     
     .birthday-form {
@@ -1094,100 +1798,155 @@ body {
     }
     
     .btn-add {
-        padding: 12px 20px;
+        padding: 11px 16px;
         font-size: 0.9rem;
-    }
-    
-    .filters {
-        gap: 8px;
-    }
-    
-    .filter-btn {
-        padding: 8px 12px;
-        font-size: 0.8rem;
-    }
-}
-
-/* Smartphones pequenos */
-@media (max-width: 480px) {
-    .container {
-        padding: 10px;
-    }
-    
-    .header {
-        padding: 15px;
-        margin-bottom: 20px;
-    }
-    
-    .header h1 {
-        font-size: 1.8rem;
-    }
-    
-    .header p {
-        font-size: 0.95rem;
-    }
-    
-    .add-birthday-section,
-    .birthdays-section {
-        padding: 15px;
-    }
-    
-    /* Inputs otimizados para smartphones pequenos */
-    .form-group {
-        margin-bottom: 12px;
-    }
-    
-    .form-group input,
-    .form-group textarea {
-        padding: 8px 10px;
-        font-size: 0.8rem;
-        border-radius: 6px;
         width: 100%;
-        max-width: 100%;
-        box-sizing: border-box;
-    }
-    
-    .form-group input[type="date"] {
-        padding: 8px 8px;
-    }
-    
-    .form-group textarea {
-        min-height: 70px;
-        resize: none;
-    }
-    
-    .birthday-form {
-        gap: 12px;
-    }
-    
-    .btn-add {
-        padding: 10px 16px;
-        font-size: 0.85rem;
-        width: 100%;
+        min-height: 44px;
+        border-radius: 10px;
+        margin-top: 4px;
     }
     
     .filters {
         justify-content: center;
-        gap: 6px;
+        gap: 7px;
         flex-wrap: wrap;
+        margin-bottom: 14px;
     }
     
     .filter-btn {
         flex: 1;
         min-width: 0;
         justify-content: center;
-        padding: 6px 10px;
-        font-size: 0.75rem;
+        padding: 7px 10px;
+        font-size: 0.8rem;
+        min-height: 36px;
+        border-radius: 8px;
     }
     
     .changelog-btn {
-        padding: 10px 12px;
-        font-size: 0.8rem;
+        padding: 9px 11px;
+        font-size: 0.82rem;
+        min-height: 38px;
+    }
+    
+    .birthday-card {
+        padding: 15px;
+        margin-bottom: 11px;
+        border-radius: 10px;
     }
     
     .form-help {
+        font-size: 0.76rem;
+        margin-top: 4px;
+        line-height: 1.25;
+    }
+
+    /* Configurações responsivas para smartphones pequenos */
+    .notification-settings {
+        padding: 12px;
+        margin-bottom: 20px;
+    }
+
+    .settings-header {
+        padding-bottom: 12px;
+        margin-bottom: 15px;
+    }
+
+    .settings-header h3 {
+        font-size: 1rem;
+    }
+
+    .toggle-btn {
+        font-size: 1.1rem;
+        padding: 4px;
+    }
+
+    .settings-grid {
+        gap: 8px;
+        margin-bottom: 15px;
+    }
+
+    .setting-item {
+        padding: 8px;
+    }
+
+    .setting-info strong {
+        font-size: 0.85rem;
+    }
+
+    .setting-info small {
         font-size: 0.75rem;
-        margin-top: 3px;
+    }
+
+    .checkmark {
+        width: 18px;
+        height: 18px;
+    }
+
+    .settings-actions {
+        gap: 10px;
+        flex-direction: column;
+        padding-top: 15px;
+    }
+
+    .btn-test, .btn-save {
+        padding: 8px 12px;
+        font-size: 0.75rem;
+        width: 100%;
+        min-height: 40px;
+        justify-content: center;
+    }
+
+    .settings-extra {
+        padding-top: 15px;
+        margin-bottom: 15px;
+    }
+
+    /* Guia móvel responsivo */
+    .mobile-guide {
+        margin-top: 20px;
+        padding: 15px;
+    }
+
+    .mobile-guide h4 {
+        font-size: 1rem;
+    }
+
+    .step {
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
+    .step-number {
+        width: 22px;
+        height: 22px;
+        font-size: 0.75rem;
+    }
+
+    .step-content strong {
+        font-size: 0.85rem;
+    }
+
+    .step-content small {
+        font-size: 0.75rem;
+    }
+
+    .compatibility-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+
+    .compat-item {
+        padding: 6px 8px;
+        font-size: 0.75rem;
+    }
+
+    .compat-item strong {
+        font-size: 0.75rem;
+    }
+
+    .compat-item small {
+        font-size: 0.65rem;
     }
 }
 

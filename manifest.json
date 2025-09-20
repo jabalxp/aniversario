@@ -1,0 +1,68 @@
+{
+  "name": "Lembrete de Aniversários",
+  "short_name": "Aniversários",
+  "description": "Nunca mais esqueça uma data importante! Sistema completo de lembretes com notificações inteligentes.",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#667eea",
+  "theme_color": "#667eea",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "pt-BR",
+  "categories": ["productivity", "lifestyle", "utilities"],
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='15%' fill='%23667eea'/><text x='50%' y='50%' font-size='280' text-anchor='middle' dominant-baseline='central'>🎂</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='15%' fill='%23667eea'/><text x='50%' y='50%' font-size='280' text-anchor='middle' dominant-baseline='central'>🎂</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 390 844'><rect width='390' height='844' fill='%23f7fafc'/><rect x='20' y='100' width='350' height='200' rx='15' fill='%23667eea'/><text x='195' y='180' font-size='24' text-anchor='middle' fill='white'>Lembrete de</text><text x='195' y='220' font-size='24' text-anchor='middle' fill='white'>Aniversários</text></svg>",
+      "sizes": "390x844",
+      "type": "image/svg+xml",
+      "form_factor": "narrow",
+      "label": "Tela principal do app"
+    }
+  ],
+  "features": [
+    "Cross-platform notifications",
+    "Background sync",
+    "Offline functionality"
+  ],
+  "prefer_related_applications": false,
+  "shortcuts": [
+    {
+      "name": "Agendar Novo",
+      "short_name": "Novo",
+      "description": "Adicionar novo aniversário",
+      "url": "/agendar.html",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%234ecdc4' d='M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z'/></svg>",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "launch_handler": {
+    "client_mode": "navigate-new"
+  },
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "protocol_handlers": [
+    {
+      "protocol": "web+birthday",
+      "url": "/agendar.html?name=%s"
+    }
+  ]
+}

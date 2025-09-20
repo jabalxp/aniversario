@@ -21,21 +21,64 @@
         <header class="header">
             <div class="header-content">
                 <div class="header-text">
-                    <h1><i class="fas fa-birthday-cake"></i> Lembrete de Aniversários</h1>
-                    <p>Nunca mais esqueça um aniversário importante!</p>
+                    <h1><i class="fas fa-birthday-cake"></i> <span data-i18n="app_title">Lembrete de Aniversários</span></h1>
+                    <p data-i18n="app_subtitle">Nunca mais esqueça um aniversário importante!</p>
                 </div>
                 <div class="header-actions">
+                    <!-- Seletor de Temas -->
+                    <div class="theme-selector-container">
+                        <select class="theme-selector" id="theme-select">
+                            <option value="light">☀️ Tema Claro</option>
+                            <option value="dark">🌙 Tema Escuro</option>
+                            <option value="colorblind">🎯 Tema Daltônico</option>
+                            <option value="custom">🎨 Personalizado</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Seletor de Idioma -->
+                    <div class="language-selector-container">
+                        <select class="language-selector" id="language-select">
+                            <option value="pt">🇧🇷 Português</option>
+                            <option value="en">🇺🇸 English</option>
+                        </select>
+                    </div>
+                    
                     <a href="index.html" class="changelog-btn" title="Voltar ao Menu Principal" style="margin-right: 10px;">
                         <i class="fas fa-home"></i>
-                        <span>Menu</span>
+                        <span data-i18n="menu_btn">Menu</span>
                     </a>
                     <a href="changelog.html" class="changelog-btn" title="Ver Histórico de Versões">
                         <i class="fas fa-history"></i>
-                        <span>v4.0.0</span>
+                        <span data-i18n="version_btn">v4.0.0</span>
                     </a>
                 </div>
             </div>
         </header>
+
+        <!-- Custom Theme Panel (posição fixa) -->
+        <div class="custom-theme-panel hidden" id="custom-theme-panel">
+            <div class="custom-theme-content">
+                <h4 data-i18n="customize_theme_title">🎨 Personalizar Tema</h4>
+                <div class="color-inputs">
+                    <div class="color-input-group">
+                        <label data-i18n="primary_color_label">Cor Principal:</label>
+                        <input type="color" id="primary-color" value="#805ad5">
+                    </div>
+                    <div class="color-input-group">
+                        <label data-i18n="background_color_label">Cor de Fundo:</label>
+                        <input type="color" id="background-color" value="#ffffff">
+                    </div>
+                    <div class="color-input-group">
+                        <label data-i18n="text_color_label">Cor do Texto:</label>
+                        <input type="color" id="text-color" value="#2d3748">
+                    </div>
+                </div>
+                <div class="custom-theme-actions">
+                    <button class="btn-apply-custom" id="apply-custom" data-i18n="apply_btn">Aplicar</button>
+                    <button class="btn-close-custom" id="close-custom" data-i18n="close_btn">Fechar</button>
+                </div>
+            </div>
+        </div>
 
         <!-- Notificações -->
         <div id="notification-banner" class="notification-banner hidden">
@@ -48,27 +91,27 @@
 
         <!-- Formulário para adicionar aniversário -->
         <section class="add-birthday-section">
-            <h2><i class="fas fa-plus-circle"></i> Adicionar Novo Aniversário</h2>
+            <h2><i class="fas fa-plus-circle"></i> <span data-i18n="add_birthday_title">Adicionar Novo Aniversário</span></h2>
             <form id="birthday-form" class="birthday-form">
                 <div class="form-group">
-                    <label for="person-name">Nome da Pessoa *</label>
-                    <input type="text" id="person-name" required placeholder="Digite o nome da pessoa">
+                    <label for="person-name" data-i18n="person_name_label">Nome da Pessoa *</label>
+                    <input type="text" id="person-name" required data-i18n="person_name_placeholder" placeholder="Digite o nome da pessoa">
                 </div>
 
                 <div class="form-group">
-                    <label for="birth-date">Data de Nascimento *</label>
+                    <label for="birth-date" data-i18n="birth_date_label">Data de Nascimento *</label>
                     <input type="date" id="birth-date" required>
-                    <small class="form-help">Digite a data de nascimento completa (dia/mês/ano)</small>
+                    <small class="form-help" data-i18n="birth_date_help">Digite a data de nascimento completa (dia/mês/ano)</small>
                 </div>
 
                 <div class="form-group">
-                    <label for="person-description">Descrição (opcional)</label>
-                    <textarea id="person-description" placeholder="Ex: Melhor amigo, irmã, colega de trabalho, primo..." rows="3"></textarea>
-                    <small class="form-help">Adicione uma descrição para lembrar quem é esta pessoa</small>
+                    <label for="person-description" data-i18n="description_label">Descrição (opcional)</label>
+                    <textarea id="person-description" data-i18n="description_placeholder" placeholder="Ex: Melhor amigo, irmã, colega de trabalho, primo..." rows="3"></textarea>
+                    <small class="form-help" data-i18n="description_help">Adicione uma descrição para lembrar quem é esta pessoa</small>
                 </div>
 
                 <div class="form-group">
-                    <label for="person-photo">Foto da Pessoa (opcional)</label>
+                    <label for="person-photo" data-i18n="photo_label">Foto da Pessoa (opcional)</label>
                     <input type="file" id="person-photo" accept="image/*">
                     <div class="file-preview">
                         <img id="photo-preview" class="photo-preview hidden" alt="Preview da foto">
@@ -76,7 +119,7 @@
                 </div>
 
                 <button type="submit" class="btn-add">
-                    <i class="fas fa-plus"></i> Adicionar Aniversário
+                    <i class="fas fa-plus"></i> <span data-i18n="add_btn">Adicionar Aniversário</span>
                 </button>
             </form>
         </section>
@@ -84,7 +127,7 @@
         <!-- Lista de aniversários -->
         <section class="birthdays-section">
             <div class="section-header">
-                <h2><i class="fas fa-list"></i> Seus Lembretes</h2>
+                <h2><i class="fas fa-list"></i> <span data-i18n="birthdays_title">Seus Lembretes</span></h2>
                 <div class="stats">
                     <span id="total-birthdays">0 aniversários cadastrados</span>
                 </div>
@@ -93,7 +136,7 @@
             <!-- Configurações de Notificação -->
             <div class="notification-settings">
                 <div class="settings-header">
-                    <h3><i class="fas fa-bell"></i> Configurações de Notificação</h3>
+                    <h3><i class="fas fa-bell"></i> <span data-i18n="notification_settings">Configurações de Notificação</span></h3>
                     <button id="toggle-settings" class="toggle-btn">
                         <i class="fas fa-chevron-down"></i>
                     </button>
@@ -105,8 +148,8 @@
                                 <input type="checkbox" id="notify-on-day" checked>
                                 <span class="checkmark"></span>
                                 <div class="setting-info">
-                                    <strong>No dia do aniversário</strong>
-                                    <small>Notificar exatamente no dia</small>
+                                    <strong data-i18n="notification_on_day">No dia do aniversário</strong>
+                                    <small data-i18n="notification_on_day_desc">Notificar exatamente no dia</small>
                                 </div>
                             </label>
                         </div>
@@ -116,8 +159,8 @@
                                 <input type="checkbox" id="notify-day-before" checked>
                                 <span class="checkmark"></span>
                                 <div class="setting-info">
-                                    <strong>1 dia antes</strong>
-                                    <small>Lembrete no dia anterior</small>
+                                    <strong data-i18n="notification_1_day">1 dia antes</strong>
+                                    <small data-i18n="notification_1_day_desc">Lembrete no dia anterior</small>
                                 </div>
                             </label>
                         </div>
@@ -127,8 +170,8 @@
                                 <input type="checkbox" id="notify-3-days" checked>
                                 <span class="checkmark"></span>
                                 <div class="setting-info">
-                                    <strong>3 dias antes</strong>
-                                    <small>Aviso antecipado</small>
+                                    <strong data-i18n="notification_3_days">3 dias antes</strong>
+                                    <small data-i18n="notification_3_days_desc">Aviso antecipado</small>
                                 </div>
                             </label>
                         </div>
@@ -138,8 +181,8 @@
                                 <input type="checkbox" id="notify-1-week" checked>
                                 <span class="checkmark"></span>
                                 <div class="setting-info">
-                                    <strong>1 semana antes</strong>
-                                    <small>Planejamento antecipado</small>
+                                    <strong data-i18n="notification_1_week">1 semana antes</strong>
+                                    <small data-i18n="notification_1_week_desc">Planejamento antecipado</small>
                                 </div>
                             </label>
                         </div>
@@ -149,8 +192,8 @@
                                 <input type="checkbox" id="notify-2-weeks">
                                 <span class="checkmark"></span>
                                 <div class="setting-info">
-                                    <strong>2 semanas antes</strong>
-                                    <small>Muito antecipado</small>
+                                    <strong data-i18n="notification_2_weeks">2 semanas antes</strong>
+                                    <small data-i18n="notification_2_weeks_desc">Muito antecipado</small>
                                 </div>
                             </label>
                         </div>
@@ -160,8 +203,8 @@
                                 <input type="checkbox" id="notify-1-month">
                                 <span class="checkmark"></span>
                                 <div class="setting-info">
-                                    <strong>1 mês antes</strong>
-                                    <small>Planejamento longo prazo</small>
+                                    <strong data-i18n="notification_1_month">1 mês antes</strong>
+                                    <small data-i18n="notification_1_month_desc">Planejamento longo prazo</small>
                                 </div>
                             </label>
                         </div>
@@ -172,7 +215,7 @@
                             <label>
                                 <input type="checkbox" id="sound-enabled" checked>
                                 <span class="checkmark"></span>
-                                <strong>Som nas notificações</strong>
+                                <strong data-i18n="sound_notifications">Som nas notificações</strong>
                             </label>
                         </div>
                         
@@ -180,8 +223,8 @@
                             <label>
                                 <input type="checkbox" id="persistent-notifications" checked>
                                 <span class="checkmark"></span>
-                                <strong>Notificações persistentes</strong>
-                                <small>Permanecem na tela até serem fechadas</small>
+                                <strong data-i18n="persistent_notifications">Notificações persistentes</strong>
+                                <small data-i18n="persistent_notifications_desc">Permanecem na tela até serem fechadas</small>
                             </label>
                         </div>
                         
@@ -189,83 +232,83 @@
                             <label>
                                 <input type="checkbox" id="background-notifications" checked>
                                 <span class="checkmark"></span>
-                                <strong>Notificações em segundo plano</strong>
-                                <small>Receber alertas mesmo com o site fechado</small>
+                                <strong data-i18n="background_notifications">Notificações em segundo plano</strong>
+                                <small data-i18n="background_notifications_desc">Receber alertas mesmo com o site fechado</small>
                             </label>
                         </div>
                     </div>
                     
                     <div class="settings-actions">
                         <button id="test-notification" class="btn-test">
-                            <i class="fas fa-play"></i> Testar Notificação
+                            <i class="fas fa-play"></i> <span data-i18n="test_notification">Testar Notificação</span>
                         </button>
                         <button id="save-settings" class="btn-save">
-                            <i class="fas fa-save"></i> Salvar Configurações
+                            <i class="fas fa-save"></i> <span data-i18n="save_settings">Salvar Configurações</span>
                         </button>
                     </div>
 
                     <!-- Guia para dispositivos móveis -->
                     <div class="mobile-guide">
-                        <h4><i class="fas fa-mobile-alt"></i> 📱 Como Usar no Celular</h4>
+                        <h4><i class="fas fa-mobile-alt"></i> <span data-i18n="mobile_guide">📱 Como Usar no Celular</span></h4>
                         <div class="guide-steps">
                             <div class="step">
                                 <span class="step-number">1</span>
                                 <div class="step-content">
-                                    <strong>Android (Chrome/Edge):</strong>
-                                    <small>Funciona automaticamente! Permita notificações quando solicitado.</small>
+                                    <strong data-i18n="android_chrome_edge_label">Android (Chrome/Edge):</strong>
+                                    <small data-i18n="android_chrome_edge_desc">Funciona automaticamente! Permita notificações quando solicitado.</small>
                                 </div>
                             </div>
                             <div class="step">
                                 <span class="step-number">2</span>
                                 <div class="step-content">
-                                    <strong>iPhone/iPad:</strong>
-                                    <small>Para melhor funcionamento: Safari → Compartilhar → "Adicionar à Tela de Início"</small>
+                                    <strong data-i18n="iphone_ipad_label">iPhone/iPad:</strong>
+                                    <small data-i18n="safari_install_instruction">Para melhor funcionamento: Safari → Compartilhar → "Adicionar à Tela de Início"</small>
                                 </div>
                             </div>
                             <div class="step">
                                 <span class="step-number">3</span>
                                 <div class="step-content">
-                                    <strong>Instalar como App:</strong>
-                                    <small>Chrome: Menu → "Instalar app". Funcionará como aplicativo nativo!</small>
+                                    <strong data-i18n="install_as_app">Instalar como App:</strong>
+                                    <small data-i18n="install_as_app_desc">Chrome: Menu → "Instalar app". Funcionará como aplicativo nativo!</small>
                                 </div>
                             </div>
                             <div class="step">
                                 <span class="step-number">4</span>
                                 <div class="step-content">
-                                    <strong>Configurações do Sistema:</strong>
-                                    <small>Vá em Configurações → Notificações → [Navegador] e ative as permissões.</small>
+                                    <strong data-i18n="system_settings">Configurações do Sistema:</strong>
+                                    <small data-i18n="system_settings_desc">Vá em Configurações → Notificações → [Navegador] e ative as permissões.</small>
                                 </div>
                             </div>
                         </div>
                         <div class="compatibility-info">
-                            <h5>🔍 Compatibilidade:</h5>
+                            <h5 data-i18n="compatibility">🔍 Compatibilidade:</h5>
                             <div class="compatibility-grid">
                                 <div class="compat-item good">
                                     <span class="compat-icon">✅</span>
                                     <div>
-                                        <strong>Android Chrome</strong>
-                                        <small>100% funcional</small>
+                                        <strong data-i18n="android_chrome_label">Android Chrome</strong>
+                                        <small data-i18n="fully_functional">100% funcional</small>
                                     </div>
                                 </div>
                                 <div class="compat-item good">
                                     <span class="compat-icon">✅</span>
                                     <div>
-                                        <strong>Samsung Internet</strong>
-                                        <small>100% funcional</small>
+                                        <strong data-i18n="samsung_internet">Samsung Internet</strong>
+                                        <small data-i18n="fully_functional">100% funcional</small>
                                     </div>
                                 </div>
                                 <div class="compat-item partial">
                                     <span class="compat-icon">⚠️</span>
                                     <div>
-                                        <strong>iPhone Safari</strong>
-                                        <small>Instalar como PWA</small>
+                                        <strong data-i18n="iphone_safari">iPhone Safari</strong>
+                                        <small data-i18n="install_pwa">Instalar como PWA</small>
                                     </div>
                                 </div>
                                 <div class="compat-item partial">
                                     <span class="compat-icon">⚠️</span>
                                     <div>
-                                        <strong>Firefox Mobile</strong>
-                                        <small>Limitações</small>
+                                        <strong data-i18n="firefox_mobile">Firefox Mobile</strong>
+                                        <small data-i18n="limitations">Limitações</small>
                                     </div>
                                 </div>
                             </div>
@@ -274,41 +317,64 @@
                 </div>
             </div>
 
-            <!-- Filtros -->
+            <!-- Filtros - 5 Botões com Faixas de Dias -->
             <div class="filters">
                 <button class="filter-btn active" data-filter="all">
-                    <i class="fas fa-calendar"></i> Todos
-                </button>
-                <button class="filter-btn" data-filter="upcoming">
-                    <i class="fas fa-clock"></i> Próximos
+                    <i class="fas fa-calendar"></i> 
+                    <span data-i18n="filters_all">Todos</span>
                 </button>
                 <button class="filter-btn" data-filter="urgent">
-                    <i class="fas fa-exclamation-triangle"></i> Urgentes
+                    <i class="fas fa-exclamation-triangle"></i> 
+                    <span data-i18n="filters_urgent">Urgentes</span>
+                    <small>(0-7 dias)</small>
+                </button>
+                <button class="filter-btn" data-filter="soon">
+                    <i class="fas fa-clock"></i> 
+                    <span data-i18n="filters_soon">Em Breve</span>
+                    <small>(8-30 dias)</small>
+                </button>
+                <button class="filter-btn" data-filter="upcoming">
+                    <i class="fas fa-calendar-alt"></i> 
+                    <span data-i18n="filters_upcoming">Próximos</span>
+                    <small>(31-90 dias)</small>
+                </button>
+                <button class="filter-btn" data-filter="distant">
+                    <i class="fas fa-calendar-times"></i> 
+                    <span data-i18n="filters_distant">Distantes</span>
+                    <small>(90+ dias)</small>
                 </button>
             </div>
 
             <div id="birthdays-list" class="birthdays-list">
                 <div class="empty-state">
                     <i class="fas fa-birthday-cake"></i>
-                    <h3>Nenhum aniversário cadastrado</h3>
-                    <p>Adicione seu primeiro lembrete de aniversário acima!</p>
+                    <h3 data-i18n="no_birthdays_title">Nenhum aniversário cadastrado</h3>
+                    <p data-i18n="no_birthdays_desc">Adicione seu primeiro lembrete de aniversário acima!</p>
                 </div>
             </div>
         </section>
+
+        <!-- Botão flutuante para notificações -->
+        <div id="floating-notification-btn" class="floating-notification-btn hidden">
+            <button onclick="birthdayManager.requestNotificationPermission(true)">
+                <i class="fas fa-bell-slash"></i>
+                <span>Ativar Notificações</span>
+            </button>
+        </div>
 
         <!-- Modal de confirmação -->
         <div id="confirm-modal" class="modal hidden">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3><i class="fas fa-trash"></i> Confirmar Exclusão</h3>
+                    <h3><i class="fas fa-trash"></i> <span data-i18n="confirm_delete">Confirmar Exclusão</span></h3>
                 </div>
                 <div class="modal-body">
-                    <p>Tem certeza que deseja excluir este aniversário?</p>
+                    <p><span data-i18n="confirm_delete_msg">Tem certeza que deseja excluir este aniversário?</span></p>
                     <p><strong id="delete-person-name"></strong></p>
                 </div>
                 <div class="modal-footer">
-                    <button id="cancel-delete" class="btn-cancel">Cancelar</button>
-                    <button id="confirm-delete" class="btn-delete">Excluir</button>
+                    <button id="cancel-delete" class="btn-cancel" data-i18n="cancel_btn">Cancelar</button>
+                    <button id="confirm-delete" class="btn-delete" data-i18n="delete_btn">Excluir</button>
                 </div>
             </div>
         </div>

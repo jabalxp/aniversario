@@ -90,7 +90,30 @@ function scheduleNextMidnightCheck() {
     }, msUntilMidnight);
 }
 
-// Verificar aniversários em background
+// Função para detectar se é dispositivo móvel
+function isMobileDevice() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
+// Função para criar notificação otimizada para mobile
+function createMobileOptimizedNotification(title, options) {
+    const mobileOptions = {
+        ...options,
+        requireInteraction: isMobileDevice(), // No mobile, manter visível até interação
+        vibrate: isMobileDevice() ? [200, 100, 200] : undefined, // Vibração apenas no mobile
+        badge: '/icon-192.png', // Ícone menor para badge
+        image: isMobileDevice() ? undefined : options.image, // Remover imagem no mobile para economizar espaço
+        actions: isMobileDevice() ? undefined : options.actions, // Simplificar ações no mobile
+        silent: false, // Sempre com som
+        timestamp: Date.now(),
+        renotify: true, // Permitir re-notificação
+        tag: `birthday-${Date.now()}` // Tag única para evitar agrupamento
+    };
+
+    return self.registration.showNotification(title, mobileOptions);
+}
+
+// Função principal para verificar aniversários
 async function checkBirthdaysInBackground() {
     try {
         console.log('Verificando aniversários em background...');

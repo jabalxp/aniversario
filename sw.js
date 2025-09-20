@@ -1,5 +1,5 @@
 // Service Worker para notificações em background
-const CACHE_NAME = 'birthday-reminders-v3.3.0';
+const CACHE_NAME = 'birthday-reminders-v4.0.0';
 const urlsToCache = [
     '/',
     '/index.html',

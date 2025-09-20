@@ -1,4 +1,108 @@
-# 🎂 Lembrete de Aniversários
+# 🎂 Lembrete de Aniversários v4.0.0
+
+Sistema completo de lembretes de aniversários com notificações inteligentes em background e PWA nativo.
+
+## ✨ Novidades da v4.0.0
+
+### 🔔 **Notificações em Background**
+- **Service Worker avançado** que funciona 24/7
+- **Notificações push nativas** mesmo com site fechado
+- **Verificações automáticas** a cada 15 minutos e à meia-noite
+- **6 tipos diferentes de alertas** configuráveis
+
+### 📱 **PWA Completo**
+- **Instalação como app nativo** em celulares
+- **Funciona offline** com cache inteligente
+- **Ícones personalizados** na tela inicial
+- **Integração total** com o sistema operacional
+
+### 🎯 **Responsividade Total**
+- **Breakpoints específicos** para todos os dispositivos:
+  - 📱 Smartphones (incluindo Poco X6 Pro)
+  - 📲 Tablets e iPads
+  - 💻 Notebooks e desktops
+  - 🖥️ Telas grandes
+- **Inputs que nunca saem da tela**
+- **Tamanhos ideais** para cada dispositivo
+
+### ⚙️ **Configurações Avançadas**
+- **Painel completo** para personalizar alertas
+- **Guia móvel** com instruções para Android/iOS
+- **Tabela de compatibilidade** por navegador
+- **Teste de notificações** integrado
+
+## 🚀 Como Usar
+
+### Instalação Rápida
+```bash
+# Clone o repositório
+git clone [repo-url]
+
+# Instale dependências
+npm install
+
+# Execute localmente
+npm run dev
+```
+
+### No Celular
+1. **Android**: Abra no Chrome → Permita notificações → Opcional: "Instalar app"
+2. **iPhone**: Safari → Compartilhar → "Adicionar à Tela de Início"
+
+## 📋 Funcionalidades
+
+- ✅ **Cadastro de aniversários** com foto e descrição
+- ✅ **Cálculo automático** de dias restantes
+- ✅ **Notificações configuráveis** (1 dia, 3 dias, 1 semana, etc.)
+- ✅ **Filtros inteligentes** (todos, próximos, urgentes)
+- ✅ **Interface responsiva** para todos os dispositivos
+- ✅ **PWA completo** com instalação nativa
+- ✅ **Service Worker** para background
+- ✅ **Analytics integrado** com Vercel
+
+## 🔧 Configurações de Notificação
+
+- **No dia**: Notificação exatamente no aniversário
+- **1 dia antes**: Lembrete no dia anterior
+- **3 dias antes**: Aviso antecipado
+- **1 semana antes**: Planejamento antecipado
+- **2 semanas antes**: Muito antecipado (opcional)
+- **1 mês antes**: Planejamento longo prazo (opcional)
+
+## 📱 Compatibilidade Mobile
+
+| Dispositivo | Status | Observações |
+|-------------|---------|-------------|
+| 🤖 Android Chrome | ✅ 100% | Perfeito |
+| 🤖 Samsung Internet | ✅ 100% | Perfeito |
+| 🍎 iPhone Safari | ⚠️ 90% | Instalar como PWA |
+| 🦊 Firefox Mobile | ⚠️ 80% | Algumas limitações |
+
+## 🛠️ Tecnologias
+
+- **Frontend**: HTML5, CSS3, JavaScript ES6+
+- **PWA**: Service Worker, Web App Manifest
+- **Analytics**: Vercel Analytics
+- **Storage**: LocalStorage
+- **Notifications**: Web Push API
+
+## 📈 Versões Anteriores
+
+- **v3.3.0**: Campo de descrição opcional
+- **v3.1.0**: Sistema de cálculo 100% manual
+- **v3.0.0**: Reescrita completa do sistema de datas
+- **v2.x.x**: Sistema básico de lembretes
+
+---
+
+## 🎉 Como Funciona
+
+1. **Cadastre** aniversários com nome, data e descrição opcional
+2. **Configure** os tipos de alerta desejados
+3. **Permita** notificações no navegador
+4. **Receba** lembretes automáticos mesmo offline!
+
+**Desenvolvido com ❤️ para nunca mais esquecer uma data importante!**
 
 Um site completo para lembrar de aniversários importantes com notificações inteligentes!
 

@@ -123,6 +123,76 @@
             font-size: 1.2rem;
         }
 
+        /* Filtros de Versão */
+        .version-filters {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .filter-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .filter-header h3 {
+            color: #4a5568;
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .version-filter-btn {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            padding: 12px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            min-width: 100px;
+            font-weight: 500;
+            color: #4a5568;
+        }
+
+        .version-filter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .version-filter-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .version-filter-btn small {
+            font-size: 0.75rem;
+            opacity: 0.8;
+            text-align: center;
+        }
+
+        .version-filter-btn i {
+            font-size: 1.2rem;
+        }
+
         /* Lista de versões */
         .changelog-list {
             display: flex;
@@ -273,6 +343,24 @@
             border-left-color: #95a5a6;
         }
 
+        .change-item.added {
+            border-left-color: #4ecdc4;
+        }
+
+        /* Categorias de mudanças */
+        .changelog-category {
+            margin-bottom: 25px;
+        }
+
+        .category-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 15px;
+            padding-left: 10px;
+            border-left: 3px solid #667eea;
+        }
+
         .change-icon {
             width: 24px;
             height: 24px;
@@ -409,6 +497,25 @@
                 flex-direction: column;
                 gap: 15px;
             }
+
+            /* Filtros responsivos */
+            .filter-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .version-filter-btn {
+                min-width: auto;
+                width: 100%;
+                flex-direction: row;
+                justify-content: center;
+                gap: 10px;
+                padding: 15px 20px;
+            }
+
+            .version-filter-btn small {
+                display: none; /* Esconde descrição em mobile */
+            }
         }
 
         /* Animações */
@@ -475,6 +582,30 @@
                 </div>
             </div>
 
+            <!-- Filtros de Tipo de Versão -->
+            <div class="version-filters">
+                <div class="filter-header">
+                    <h3><i class="fas fa-filter"></i> Filtrar por Tipo de Atualização</h3>
+                </div>
+                <div class="filter-buttons">
+                    <button class="version-filter-btn active" data-filter="all">
+                        <i class="fas fa-list"></i> Todas
+                    </button>
+                    <button class="version-filter-btn" data-filter="major">
+                        <i class="fas fa-rocket"></i> MAJOR
+                        <small>Mudanças importantes</small>
+                    </button>
+                    <button class="version-filter-btn" data-filter="minor">
+                        <i class="fas fa-plus-circle"></i> MINOR
+                        <small>Novos recursos</small>
+                    </button>
+                    <button class="version-filter-btn" data-filter="patch">
+                        <i class="fas fa-wrench"></i> PATCH
+                        <small>Correções</small>
+                    </button>
+                </div>
+            </div>
+
             <!-- Lista de versões -->
             <div class="changelog-list" id="changelog-list">
                 <!-- As versões serão inseridas aqui pelo JavaScript -->
@@ -486,7 +617,94 @@
         // Dados das versões
         const changelogData = [
             {
+                version: "3.5.1",
+                versionType: "patch", // Correção de emergência
+                date: "2025-09-19",
+                title: "🚨 Correção de Emergência - Modal de Sincronização",
+                description: "Correção crítica para problema de sobreposição do modal de sincronização",
+                categories: [
+                    {
+                        name: "🔧 Correções Críticas",
+                        changes: [
+                            { type: "fixed", text: "<strong>Modal de Sincronização:</strong> Corrigido problema onde modal ficava atrás de outros elementos" },
+                            { type: "fixed", text: "<strong>Z-index Forçado:</strong> Aplicado z-index máximo (999999) para garantir sobreposição" },
+                            { type: "fixed", text: "<strong>JavaScript Simplificado:</strong> Removida complexidade desnecessária que causava conflitos" },
+                            { type: "improved", text: "<strong>Sistema de Emergência:</strong> Ativação via frase secreta funcionando perfeitamente" }
+                        ]
+                    }
+                ]
+            },
+            {
+                version: "3.5.0",
+                versionType: "minor", // Nova funcionalidade significativa
+                date: "2025-09-19",
+                title: "🚀 Melhorias Significativas de Layout e Sincronização",
+                description: "Grandes melhorias na responsividade mobile e sistema de sincronização completamente reformulado com JSONBin.io",
+                categories: [
+                    {
+                        name: "🎨 Layout e Responsividade",
+                        changes: [
+                            { type: "fixed", text: "<strong>Modal de Sincronização:</strong> Corrigido z-index para sempre aparecer por cima" },
+                            { type: "improved", text: "<strong>Responsividade Mobile:</strong> Formulários agora se ajustam perfeitamente em telas pequenas" },
+                            { type: "fixed", text: "<strong>Inputs Mobile:</strong> Corrigido problema de campos saindo da tela em dispositivos móveis" },
+                            { type: "improved", text: "<strong>Interface Touch:</strong> Melhorado tamanho de botões e campos para dispositivos touch" }
+                        ]
+                    },
+                    {
+                        name: "☁️ Sistema de Sincronização Aprimorado",
+                        changes: [
+                            { type: "new", text: "<strong>JSONBin.io:</strong> Migrado para serviço mais confiável que jsonstore.io" },
+                            { type: "improved", text: "<strong>Duração Estendida:</strong> Códigos de pareamento agora duram 24 horas (antes: 15 min)" },
+                            { type: "improved", text: "<strong>Mensagens Específicas:</strong> Erros agora indicam problema exato (conexão, código expirado, etc.)" },
+                            { type: "new", text: "<strong>Melhor Rastreamento:</strong> Sistema aprimorado para gerenciar Bin IDs" },
+                            { type: "improved", text: "<strong>Fallback Inteligente:</strong> Se cloud falhar, usa localStorage automaticamente" }
+                        ]
+                    },
+                    {
+                        name: "🛠️ Melhorias Técnicas",
+                        changes: [
+                            { type: "improved", text: "<strong>Performance:</strong> Carregamento mais rápido e eficiente" },
+                            { type: "improved", text: "<strong>Confiabilidade:</strong> Melhor tratamento de erros de conexão" },
+                            { type: "improved", text: "<strong>Compatibilidade:</strong> Testado em mais dispositivos e navegadores" }
+                        ]
+                    }
+                ]
+            },
+            {
+                version: "3.4.0",
+                date: "2025-09-19",
+                type: "major",
+                description: "Sistema de sincronização em nuvem com código de pareamento",
+                changes: [
+                    {
+                        type: "added",
+                        text: "**SINCRONIZAÇÃO EM NUVEM**: Sistema completo de pareamento entre dispositivos"
+                    },
+                    {
+                        type: "added",
+                        text: "**CÓDIGO DE PAREAMENTO**: Gere códigos de 6 dígitos para sincronizar dados automaticamente"
+                    },
+                    {
+                        type: "added",
+                        text: "**INTERFACE DE SINCRONIZAÇÃO**: Seção dedicada com status em tempo real e indicadores visuais"
+                    },
+                    {
+                        type: "added",
+                        text: "**TIMER DE EXPIRAÇÃO**: Códigos expiram em 15 minutos por segurança"
+                    },
+                    {
+                        type: "added",
+                        text: "**BACKUP DE EMERGÊNCIA**: Sistema de restauração com frase mágica hardcoded"
+                    },
+                    {
+                        type: "improved",
+                        text: "**UX MELHORADA**: Confirmação antes de sincronizar e feedback visual completo"
+                    }
+                ]
+            },
+            {
                 version: "3.3.0",
+                versionType: "minor", // Novo campo de descrição
                 date: "2025-09-19",
                 type: "minor",
                 description: "Campo de descrição opcional para pessoas cadastradas",
@@ -571,6 +789,7 @@
             },
             {
                 version: "3.0.0",
+                versionType: "major", // Reescrita completa do sistema
                 date: "2025-09-17",
                 type: "major",
                 description: "Reescrita completa do sistema de cálculo de datas com nova biblioteca própria",
@@ -679,6 +898,7 @@
             },
             {
                 version: "2.1.0",
+                versionType: "minor", // Novo sistema de changelog
                 date: "2025-09-17",
                 type: "minor",
                 description: "Adição do sistema de changelog e melhorias na interface do usuário",
@@ -707,6 +927,7 @@
             },
             {
                 version: "2.0.0",
+                versionType: "major", // Versão completa com notificações
                 date: "2025-09-17",
                 type: "major",
                 description: "Versão completa com todas as funcionalidades de notificação e interface moderna implementadas",
@@ -747,6 +968,7 @@
             },
             {
                 version: "1.2.0",
+                versionType: "patch", // Correções e melhorias
                 date: "2025-09-16",
                 type: "minor",
                 description: "Melhorias na experiência do usuário, correções de bugs e otimizações de performance",
@@ -775,6 +997,7 @@
             },
             {
                 version: "1.1.0",
+                versionType: "minor", // Novos recursos visuais
                 date: "2025-09-15",
                 type: "minor",
                 description: "Adição de recursos visuais importantes e melhorias significativas na usabilidade",
@@ -807,6 +1030,7 @@
             },
             {
                 version: "1.0.0",
+                versionType: "major", // Primeira versão
                 date: "2025-09-14",
                 type: "major",
                 description: "Lançamento inicial do sistema de lembretes de aniversários com funcionalidades básicas essenciais",
@@ -862,14 +1086,17 @@
                     patch: 'PATCH'
                 };
 
+                // Use versionType if available, otherwise fall back to type
+                const displayType = changelog.versionType || changelog.type;
+
                 return `
-                    <div class="changelog-item ${isLatest ? 'latest' : ''}">
+                    <div class="changelog-item ${isLatest ? 'latest' : ''}" data-version-type="${displayType}">
                         <div class="changelog-header">
                             <div class="version-info">
                                 <div class="version-number">
                                     <i class="fas fa-code-branch"></i>
                                     v${changelog.version}
-                                    <span class="version-type ${changelog.type}">${typeLabels[changelog.type]}</span>
+                                    <span class="version-type ${displayType}">${typeLabels[displayType]}</span>
                                 </div>
                             </div>
                             <div class="version-date">
@@ -879,18 +1106,11 @@
                         </div>
                         
                         <div class="changelog-description">
-                            ${changelog.description}
+                            ${changelog.title || changelog.description}
                         </div>
                         
                         <div class="changelog-changes">
-                            ${changelog.changes.map(change => `
-                                <div class="change-item ${change.type}">
-                                    <div class="change-icon ${change.type}">
-                                        ${getChangeIcon(change.type)}
-                                    </div>
-                                    <div class="change-text">${change.text}</div>
-                                </div>
-                            `).join('')}
+                            ${renderChanges(changelog)}
                         </div>
                     </div>
                 `;
@@ -901,11 +1121,42 @@
         function getChangeIcon(type) {
             const icons = {
                 new: '+',
+                added: '+',
                 improved: '↑',
                 fixed: '✓',
                 removed: '−'
             };
             return icons[type] || '•';
+        }
+
+        // Função para renderizar mudanças (suporta formato novo e antigo)
+        function renderChanges(changelog) {
+            if (changelog.categories) {
+                // Formato novo com categories
+                return changelog.categories.map(category => `
+                    <div class="changelog-category">
+                        <h4 class="category-title">${category.name}</h4>
+                        ${category.changes.map(change => `
+                            <div class="change-item ${change.type}">
+                                <div class="change-icon ${change.type}">
+                                    ${getChangeIcon(change.type)}
+                                </div>
+                                <div class="change-text">${change.text}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `).join('');
+            } else {
+                // Formato antigo com changes diretas
+                return changelog.changes.map(change => `
+                    <div class="change-item ${change.type}">
+                        <div class="change-icon ${change.type}">
+                            ${getChangeIcon(change.type)}
+                        </div>
+                        <div class="change-text">${change.text}</div>
+                    </div>
+                `).join('');
+            }
         }
 
         // Função para formatar data
@@ -939,6 +1190,39 @@
             renderChangelog(filtered);
         }
 
+        // Função para filtrar por tipo de versão
+        function filterByVersionType(versionType) {
+            if (versionType === 'all') {
+                renderChangelog();
+                return;
+            }
+
+            const filtered = changelogData.filter(changelog => {
+                return changelog.versionType === versionType;
+            });
+
+            renderChangelog(filtered);
+        }
+
+        // Event listeners para filtros de versão
+        function initVersionFilters() {
+            const filterButtons = document.querySelectorAll('.version-filter-btn');
+            
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    button.classList.add('active');
+                    
+                    // Filter changelog
+                    const filterType = button.getAttribute('data-filter');
+                    filterByVersionType(filterType);
+                });
+            });
+        }
+
         // Event listeners
         document.getElementById('search-input').addEventListener('input', (e) => {
             filterChangelog(e.target.value);
@@ -947,6 +1231,7 @@
         // Renderizar changelog inicial
         document.addEventListener('DOMContentLoaded', () => {
             renderChangelog();
+            initVersionFilters();
         });
     </script>
 </body>

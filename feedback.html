@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Envie seu feedback sobre o Lembrete de Aniversários.">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Feedback">
+    <link rel="manifest" href="manifest.json">
+    <title>📝 Feedback - Lembrete de Aniversários</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .feedback-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(15px);
+            max-width: 600px;
+            width: 100%;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .feedback-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .feedback-header .icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .feedback-header h1 {
+            font-size: 2rem;
+            color: #4a5568;
+            margin-bottom: 10px;
+        }
+
+        .feedback-header p {
+            color: #718096;
+            line-height: 1.6;
+        }
+
+        .feedback-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #4a5568;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .feedback-type-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .type-card {
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .type-card:hover {
+            border-color: #667eea;
+            transform: translateY(-3px);
+        }
+
+        .type-card.active {
+            border-color: #667eea;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+        }
+
+        .type-card .icon {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .type-card .label {
+            font-size: 0.85rem;
+            color: #4a5568;
+            font-weight: 500;
+        }
+
+        .rating-stars {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .star {
+            font-size: 2rem;
+            color: #e2e8f0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .star:hover,
+        .star.active {
+            color: #fbbf24;
+            transform: scale(1.2);
+        }
+
+        .btn-submit {
+            padding: 16px 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .back-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #764ba2;
+            transform: translateX(-5px);
+        }
+
+        .success-message {
+            text-align: center;
+            padding: 30px;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        .success-message .icon {
+            font-size: 4rem;
+            color: #48bb78;
+            margin-bottom: 20px;
+        }
+
+        .success-message h2 {
+            color: #4a5568;
+            margin-bottom: 10px;
+        }
+
+        .success-message p {
+            color: #718096;
+        }
+
+        @media (max-width: 600px) {
+            .feedback-container {
+                padding: 25px;
+            }
+
+            .feedback-type-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .feedback-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .star {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="feedback-container">
+        <div class="feedback-header">
+            <div class="icon">📝</div>
+            <h1>Envie seu Feedback</h1>
+            <p>Sua opinião é muito importante para melhorarmos o Lembrete de Aniversários!</p>
+        </div>
+
+        <form class="feedback-form" id="feedback-form" action="https://formspree.io/f/xnnevnnk" method="POST">
+            <div class="form-group">
+                <label><i class="fas fa-tag"></i> Tipo de Feedback</label>
+                <div class="feedback-type-cards">
+                    <div class="type-card active" data-type="Sugestão">
+                        <div class="icon">💡</div>
+                        <div class="label">Sugestão</div>
+                    </div>
+                    <div class="type-card" data-type="Bug/Erro">
+                        <div class="icon">🐛</div>
+                        <div class="label">Bug/Erro</div>
+                    </div>
+                    <div class="type-card" data-type="Elogio">
+                        <div class="icon">⭐</div>
+                        <div class="label">Elogio</div>
+                    </div>
+                </div>
+                <input type="hidden" name="tipo" id="feedback-type" value="Sugestão">
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-star"></i> Avaliação Geral</label>
+                <div class="rating-stars">
+                    <span class="star" data-rating="1">★</span>
+                    <span class="star" data-rating="2">★</span>
+                    <span class="star" data-rating="3">★</span>
+                    <span class="star" data-rating="4">★</span>
+                    <span class="star" data-rating="5">★</span>
+                </div>
+                <input type="hidden" name="avaliacao" id="rating" value="0 estrelas">
+            </div>
+
+            <div class="form-group">
+                <label for="feedback-name"><i class="fas fa-user"></i> Seu Nome (opcional)</label>
+                <input type="text" name="nome" id="feedback-name" placeholder="Como podemos te chamar?">
+            </div>
+
+            <div class="form-group">
+                <label for="feedback-email"><i class="fas fa-envelope"></i> Email (opcional)</label>
+                <input type="email" name="email" id="feedback-email" placeholder="Para respondermos seu feedback">
+            </div>
+
+            <div class="form-group">
+                <label for="feedback-message"><i class="fas fa-comment"></i> Sua Mensagem *</label>
+                <textarea name="mensagem" id="feedback-message" placeholder="Descreva sua sugestão, problema encontrado ou elogio..." required></textarea>
+            </div>
+
+            <!-- Campo oculto para redirecionar após envio -->
+            <input type="hidden" name="_next" value="https://aniversario-main.vercel.app/feedback.html?enviado=true">
+            <input type="hidden" name="_subject" value="Novo Feedback - Lembrete de Aniversários">
+
+            <button type="submit" class="btn-submit">
+                <i class="fas fa-paper-plane"></i> Enviar Feedback
+            </button>
+        </form>
+
+        <div class="success-message" id="success-message">
+            <div class="icon">✅</div>
+            <h2>Obrigado pelo seu feedback!</h2>
+            <p>Sua mensagem foi registrada com sucesso. Agradecemos por ajudar a melhorar nosso aplicativo!</p>
+        </div>
+
+        <a href="index.html" class="back-link">
+            <i class="fas fa-arrow-left"></i> Voltar ao Menu Principal
+        </a>
+    </div>
+
+    <script>
+        // Verificar se voltou após envio bem-sucedido
+        if (window.location.search.includes('enviado=true')) {
+            document.getElementById('feedback-form').style.display = 'none';
+            document.getElementById('success-message').classList.add('show');
+        }
+
+        // Seleção do tipo de feedback
+        document.querySelectorAll('.type-card').forEach(card => {
+            card.addEventListener('click', () => {
+                document.querySelectorAll('.type-card').forEach(c => c.classList.remove('active'));
+                card.classList.add('active');
+                document.getElementById('feedback-type').value = card.dataset.type;
+            });
+        });
+
+        // Sistema de estrelas
+        let currentRating = 0;
+        document.querySelectorAll('.star').forEach(star => {
+            star.addEventListener('click', () => {
+                currentRating = parseInt(star.dataset.rating);
+                document.getElementById('rating').value = currentRating + ' estrelas';
+                updateStars(currentRating);
+            });
+
+            star.addEventListener('mouseenter', () => {
+                updateStars(parseInt(star.dataset.rating));
+            });
+        });
+
+        document.querySelector('.rating-stars').addEventListener('mouseleave', () => {
+            updateStars(currentRating);
+        });
+
+        function updateStars(rating) {
+            document.querySelectorAll('.star').forEach((star, index) => {
+                star.classList.toggle('active', index < rating);
+            });
+        }
+
+        // Mostrar loading ao enviar
+        document.getElementById('feedback-form').addEventListener('submit', function() {
+            const submitBtn = document.querySelector('.btn-submit');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+        });
+    </script>
+</body>
+</html>

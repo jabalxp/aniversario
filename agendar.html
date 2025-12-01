@@ -118,6 +118,12 @@
                     </div>
                 </div>
 
+                <div class="form-group">
+                    <label for="person-phone" data-i18n="phone_label">Telefone/WhatsApp (opcional)</label>
+                    <input type="tel" id="person-phone" data-i18n="phone_placeholder" placeholder="+55 11 99999-9999">
+                    <small class="form-help" data-i18n="phone_help">Adicione o número para enviar parabéns pelo WhatsApp</small>
+                </div>
+
                 <button type="submit" class="btn-add">
                     <i class="fas fa-plus"></i> <span data-i18n="add_btn">Adicionar Aniversário</span>
                 </button>
@@ -131,6 +137,60 @@
                 <div class="stats">
                     <span id="total-birthdays">0 aniversários cadastrados</span>
                 </div>
+            </div>
+
+            <!-- Barra de Pesquisa e Ações -->
+            <div class="search-actions-bar">
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="search-input" placeholder="Pesquisar por nome..." class="search-input">
+                    <button id="clear-search" class="clear-search-btn hidden">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="sort-container">
+                    <button id="sort-toggle" class="sort-btn" title="Alternar ordenação">
+                        <i class="fas fa-sort-amount-down"></i>
+                        <span>Proximidade</span>
+                    </button>
+                </div>
+                
+                <div class="actions-dropdown">
+                    <button class="actions-btn" id="actions-toggle">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                    <div class="actions-menu hidden" id="actions-menu">
+                        <button onclick="birthdayManager.showStatisticsModal()">
+                            <i class="fas fa-chart-pie"></i> Estatísticas
+                        </button>
+                        <hr>
+                        <button onclick="birthdayManager.exportBackup()">
+                            <i class="fas fa-download"></i> Exportar Backup (JSON)
+                        </button>
+                        <button onclick="birthdayManager.exportToCSV()">
+                            <i class="fas fa-file-csv"></i> Exportar CSV
+                        </button>
+                        <button onclick="birthdayManager.exportToICS()">
+                            <i class="fas fa-calendar-alt"></i> Exportar Calendário (ICS)
+                        </button>
+                        <hr>
+                        <button onclick="document.getElementById('import-backup').click()">
+                            <i class="fas fa-upload"></i> Importar Backup (JSON)
+                        </button>
+                        <button onclick="document.getElementById('import-csv').click()">
+                            <i class="fas fa-file-csv"></i> Importar CSV
+                        </button>
+                        <button onclick="document.getElementById('import-vcf').click()">
+                            <i class="fas fa-address-book"></i> Importar Contactos (VCF)
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Inputs de arquivo ocultos -->
+                <input type="file" id="import-backup" accept=".json" class="hidden" onchange="birthdayManager.importBackup(this.files[0]); this.value='';">
+                <input type="file" id="import-csv" accept=".csv" class="hidden" onchange="birthdayManager.importFromCSV(this.files[0]); this.value='';">
+                <input type="file" id="import-vcf" accept=".vcf" class="hidden" onchange="birthdayManager.importFromVCF(this.files[0]); this.value='';">
             </div>
 
             <!-- Configurações de Notificação -->

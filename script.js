@@ -80,6 +80,8 @@ class BirthdayManager {
     constructor() {
         this.birthdays = this.loadBirthdays();
         this.notificationSettings = this.loadNotificationSettings();
+        this.currentSort = 'proximity'; // proximity | alphabetical
+        this.currentSearch = '';
         this.setupAdvancedNotifications();
         this.initializeEventListeners();
         this.checkNotificationPermissionStatus();
@@ -91,6 +93,15 @@ class BirthdayManager {
         
         // Gerenciar botão flutuante
         this.manageFloatingButton();
+        
+        // Verificar confetti para aniversariantes do dia
+        setTimeout(() => this.checkAndShowConfetti(), 500);
+        
+        // Inicializar swipe para mobile
+        this.initializeSwipeGestures();
+        
+        // Inicializar indicador offline
+        this.initializeOfflineIndicator();
         
         // Solicitar permissão após 5 segundos
         setTimeout(() => {
@@ -213,6 +224,70 @@ class BirthdayManager {
         // Preview da foto
         document.getElementById('person-photo').addEventListener('change', this.previewPhoto);
 
+        // Pesquisa
+        const searchInput = document.getElementById('search-input');
+        const clearSearchBtn = document.getElementById('clear-search');
+        
+        if (searchInput) {
+            let searchTimeout;
+            searchInput.addEventListener('input', (e) => {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    this.currentSearch = e.target.value;
+                    this.displayBirthdays();
+                    
+                    // Mostrar/ocultar botão de limpar
+                    if (clearSearchBtn) {
+                        clearSearchBtn.classList.toggle('hidden', !e.target.value);
+                    }
+                }, 300);
+            });
+        }
+        
+        if (clearSearchBtn) {
+            clearSearchBtn.addEventListener('click', () => {
+                searchInput.value = '';
+                this.currentSearch = '';
+                this.displayBirthdays();
+                clearSearchBtn.classList.add('hidden');
+            });
+        }
+
+        // Toggle de ordenação
+        const sortToggle = document.getElementById('sort-toggle');
+        if (sortToggle) {
+            sortToggle.addEventListener('click', () => {
+                this.currentSort = this.currentSort === 'proximity' ? 'alphabetical' : 'proximity';
+                const icon = sortToggle.querySelector('i');
+                const text = sortToggle.querySelector('span');
+                
+                if (this.currentSort === 'alphabetical') {
+                    icon.className = 'fas fa-sort-alpha-down';
+                    text.textContent = 'A-Z';
+                } else {
+                    icon.className = 'fas fa-sort-amount-down';
+                    text.textContent = 'Proximidade';
+                }
+                
+                this.displayBirthdays();
+            });
+        }
+
+        // Menu de ações (dropdown)
+        const actionsToggle = document.getElementById('actions-toggle');
+        const actionsMenu = document.getElementById('actions-menu');
+        
+        if (actionsToggle && actionsMenu) {
+            actionsToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                actionsMenu.classList.toggle('hidden');
+            });
+            
+            document.addEventListener('click', () => {
+                actionsMenu.classList.add('hidden');
+            });
+        }
+
         // Filtros - 5 botões funcionais
         document.querySelectorAll('.filter-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -294,6 +369,7 @@ class BirthdayManager {
         const name = document.getElementById('person-name').value.trim();
         const date = document.getElementById('birth-date').value;
         const description = document.getElementById('person-description').value.trim();
+        const phone = document.getElementById('person-phone')?.value.trim() || null;
         const photoInput = document.getElementById('person-photo');
         const addButton = document.querySelector('.btn-add');
 
@@ -318,6 +394,7 @@ class BirthdayManager {
             name: name,
             date: date,
             description: description || null,
+            phone: phone,
             photo: null,
             createdAt: new Date().toISOString()
         };
@@ -447,35 +524,33 @@ class BirthdayManager {
             return;
         }
 
-        // Filtrar aniversários
-        let filteredBirthdays = this.birthdays;
+        // Aplicar pesquisa
+        let filteredBirthdays = this.currentSearch ? 
+            this.searchBirthdays(this.currentSearch) : 
+            this.birthdays;
+
+        // Filtrar por categoria
         if (filter === 'urgent') {
-            // Urgente: 0-7 dias
-            filteredBirthdays = this.birthdays.filter(b => this.calculateDaysUntilBirthday(b.date) <= 7);
+            filteredBirthdays = filteredBirthdays.filter(b => this.calculateDaysUntilBirthday(b.date) <= 7);
         } else if (filter === 'soon') {
-            // Em Breve: 8-30 dias
-            filteredBirthdays = this.birthdays.filter(b => {
+            filteredBirthdays = filteredBirthdays.filter(b => {
                 const days = this.calculateDaysUntilBirthday(b.date);
                 return days >= 8 && days <= 30;
             });
         } else if (filter === 'upcoming') {
-            // Próximos: 31-90 dias
-            filteredBirthdays = this.birthdays.filter(b => {
+            filteredBirthdays = filteredBirthdays.filter(b => {
                 const days = this.calculateDaysUntilBirthday(b.date);
                 return days >= 31 && days <= 90;
             });
         } else if (filter === 'distant') {
-            // Distantes: 90+ dias
-            filteredBirthdays = this.birthdays.filter(b => {
+            filteredBirthdays = filteredBirthdays.filter(b => {
                 const days = this.calculateDaysUntilBirthday(b.date);
                 return days > 90;
             });
         }
 
-        // Ordenar por proximidade do aniversário
-        filteredBirthdays.sort((a, b) => {
-            return this.calculateDaysUntilBirthday(a.date) - this.calculateDaysUntilBirthday(b.date);
-        });
+        // Aplicar ordenação
+        filteredBirthdays = this.sortBirthdays(filteredBirthdays, this.currentSort);
 
         if (filteredBirthdays.length === 0) {
             const emptyTitle = window.i18nManager ? 
@@ -498,6 +573,9 @@ class BirthdayManager {
         // Organizar por colunas baseado na proximidade
         // Renderizar com layout linear (linha por linha)
         container.innerHTML = this.renderLinearLayout(filteredBirthdays);
+        
+        // Reinicializar swipe para novos cards
+        this.initializeSwipeGestures();
     }
 
     organizeBirthdaysInColumns(birthdays) {
@@ -587,27 +665,54 @@ class BirthdayManager {
         const nextBirthdayDate = this.getNextBirthdayDate(birthday.date);
         const urgencyClass = this.getUrgencyClass(days);
         const daysText = this.getDaysLeftText(days);
+        
+        // Verificar se tem telefone para mostrar botão WhatsApp
+        const whatsappButton = birthday.phone ? `
+            <button class="btn-whatsapp" onclick="birthdayManager.showWhatsAppModal(birthdayManager.birthdays.find(b => b.id === ${birthday.id}))" title="Enviar Parabéns">
+                <i class="fab fa-whatsapp"></i>
+            </button>
+        ` : '';
+        
+        // Indicador de "Hoje é aniversário"
+        const todayBadge = days === 0 ? '<span class="today-badge">🎉 HOJE!</span>' : '';
 
         return `
             <div class="birthday-card ${urgencyClass}" data-id="${birthday.id}">
-                ${birthday.photo ? 
-                    `<img src="${birthday.photo}" alt="${birthday.name}" class="birthday-photo">` :
-                    `<div class="default-avatar">${birthday.name.charAt(0).toUpperCase()}</div>`
-                }
-                <div class="birthday-info">
-                    <h3>${birthday.name}</h3>
-                    ${birthday.description ? `<p class="birthday-description">${birthday.description}</p>` : ''}
-                    <p class="birthday-date">🎂 ${DateUtils.formatDateString(birthday.date)}</p>
-                    <div class="age-info">
-                        <span class="current-age">${currentAge} ${window.i18nManager ? window.i18nManager.translate('years_old') : 'anos'}</span>
-                        <span class="next-age">Fará ${nextAge} ${window.i18nManager ? window.i18nManager.translate('years_old') : 'anos'} em ${nextBirthdayDate}</span>
+                ${todayBadge}
+                <div class="swipe-container">
+                    <div class="card-main-content">
+                        ${birthday.photo ? 
+                            `<img src="${birthday.photo}" alt="${birthday.name}" class="birthday-photo">` :
+                            `<div class="default-avatar">${birthday.name.charAt(0).toUpperCase()}</div>`
+                        }
+                        <div class="birthday-info">
+                            <h3>${birthday.name}</h3>
+                            ${birthday.description ? `<p class="birthday-description">${birthday.description}</p>` : ''}
+                            <p class="birthday-date">🎂 ${DateUtils.formatDateString(birthday.date)}</p>
+                            <div class="age-info">
+                                <span class="current-age">${currentAge} ${window.i18nManager ? window.i18nManager.translate('years_old') : 'anos'}</span>
+                                <span class="next-age">Fará ${nextAge} ${window.i18nManager ? window.i18nManager.translate('years_old') : 'anos'} em ${nextBirthdayDate}</span>
+                            </div>
+                            <span class="days-left ${urgencyClass}">${daysText}</span>
+                        </div>
+                        <div class="birthday-actions">
+                            ${whatsappButton}
+                            <button class="btn-edit" onclick="birthdayManager.editBirthday(${birthday.id})" title="Editar">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-delete" onclick="birthdayManager.deleteBirthday(${birthday.id})" title="Excluir">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
                     </div>
-                    <span class="days-left ${urgencyClass}">${daysText}</span>
-                </div>
-                <div class="birthday-actions">
-                    <button class="btn-delete" onclick="birthdayManager.deleteBirthday(${birthday.id})">
-                        <i class="fas fa-trash"></i>
-                    </button>
+                    <div class="swipe-actions">
+                        <button class="swipe-edit" onclick="birthdayManager.editBirthday(${birthday.id})">
+                            <i class="fas fa-edit"></i> Editar
+                        </button>
+                        <button class="swipe-delete" onclick="birthdayManager.deleteBirthday(${birthday.id})">
+                            <i class="fas fa-trash"></i> Excluir
+                        </button>
+                    </div>
                 </div>
             </div>
         `;
@@ -1589,6 +1694,955 @@ class BirthdayManager {
         });
 
         console.log('Notificação de teste enviada');
+    }
+
+    // ==========================================
+    // IMPORTAÇÃO E EXPORTAÇÃO DE DADOS
+    // ==========================================
+
+    // Exportar backup completo (JSON)
+    exportBackup() {
+        const backup = {
+            version: '4.0.0',
+            exportDate: new Date().toISOString(),
+            birthdays: this.birthdays,
+            settings: this.advancedNotificationSettings
+        };
+        
+        const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `aniversarios-backup-${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        showFeedbackMessage(window.i18nManager?.translate('backup_exported') || 'Backup exportado com sucesso!', 'success');
+    }
+
+    // Importar backup (JSON)
+    importBackup(file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const backup = JSON.parse(e.target.result);
+                
+                if (backup.birthdays && Array.isArray(backup.birthdays)) {
+                    // Merge ou substituir
+                    const existingIds = new Set(this.birthdays.map(b => b.id));
+                    let imported = 0;
+                    
+                    backup.birthdays.forEach(birthday => {
+                        // Garantir que tem os campos necessários
+                        if (birthday.name && birthday.date) {
+                            if (!existingIds.has(birthday.id)) {
+                                birthday.id = birthday.id || Date.now() + Math.random();
+                                birthday.phone = birthday.phone || null;
+                                this.birthdays.push(birthday);
+                                imported++;
+                            }
+                        }
+                    });
+                    
+                    this.saveBirthdays();
+                    this.displayBirthdays();
+                    this.updateStats();
+                    
+                    showFeedbackMessage(
+                        `${imported} ${window.i18nManager?.translate('birthdays_imported') || 'aniversários importados com sucesso!'}`,
+                        'success'
+                    );
+                } else {
+                    throw new Error('Formato inválido');
+                }
+            } catch (error) {
+                showFeedbackMessage(
+                    window.i18nManager?.translate('import_error') || 'Erro ao importar arquivo. Verifique o formato.',
+                    'error'
+                );
+            }
+        };
+        reader.readAsText(file);
+    }
+
+    // Exportar para CSV
+    exportToCSV() {
+        const headers = ['Nome', 'Data de Nascimento', 'Descrição', 'Telefone'];
+        const rows = this.birthdays.map(b => [
+            `"${b.name}"`,
+            b.date,
+            `"${b.description || ''}"`,
+            `"${b.phone || ''}"`
+        ]);
+        
+        const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+        const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `aniversarios-${new Date().toISOString().split('T')[0]}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        showFeedbackMessage('CSV exportado com sucesso!', 'success');
+    }
+
+    // Importar de CSV
+    importFromCSV(file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const lines = e.target.result.split('\n').filter(line => line.trim());
+                const hasHeader = lines[0].toLowerCase().includes('nome') || lines[0].toLowerCase().includes('name');
+                const startIndex = hasHeader ? 1 : 0;
+                
+                let imported = 0;
+                const existingNames = new Set(this.birthdays.map(b => b.name.toLowerCase()));
+                
+                for (let i = startIndex; i < lines.length; i++) {
+                    const values = this.parseCSVLine(lines[i]);
+                    if (values.length >= 2) {
+                        const name = values[0].replace(/"/g, '').trim();
+                        const dateStr = values[1].replace(/"/g, '').trim();
+                        const description = values[2]?.replace(/"/g, '').trim() || null;
+                        const phone = values[3]?.replace(/"/g, '').trim() || null;
+                        
+                        // Converter data se necessário (DD/MM/YYYY para YYYY-MM-DD)
+                        let date = dateStr;
+                        if (dateStr.includes('/')) {
+                            const parts = dateStr.split('/');
+                            if (parts.length === 3) {
+                                if (parts[2].length === 4) {
+                                    date = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+                                }
+                            }
+                        }
+                        
+                        if (name && date && !existingNames.has(name.toLowerCase())) {
+                            this.birthdays.push({
+                                id: Date.now() + Math.random(),
+                                name,
+                                date,
+                                description,
+                                phone,
+                                photo: null,
+                                createdAt: new Date().toISOString()
+                            });
+                            existingNames.add(name.toLowerCase());
+                            imported++;
+                        }
+                    }
+                }
+                
+                this.saveBirthdays();
+                this.displayBirthdays();
+                this.updateStats();
+                
+                showFeedbackMessage(`${imported} aniversários importados do CSV!`, 'success');
+            } catch (error) {
+                showFeedbackMessage('Erro ao importar CSV. Verifique o formato.', 'error');
+            }
+        };
+        reader.readAsText(file);
+    }
+
+    // Auxiliar para parse de linha CSV
+    parseCSVLine(line) {
+        const result = [];
+        let current = '';
+        let inQuotes = false;
+        
+        for (let i = 0; i < line.length; i++) {
+            const char = line[i];
+            if (char === '"') {
+                inQuotes = !inQuotes;
+            } else if (char === ',' && !inQuotes) {
+                result.push(current);
+                current = '';
+            } else {
+                current += char;
+            }
+        }
+        result.push(current);
+        return result;
+    }
+
+    // Importar de VCF (Google Contacts)
+    importFromVCF(file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const content = e.target.result;
+                const vcards = content.split('BEGIN:VCARD').filter(v => v.trim());
+                
+                let imported = 0;
+                const existingNames = new Set(this.birthdays.map(b => b.name.toLowerCase()));
+                
+                vcards.forEach(vcard => {
+                    // Extrair nome
+                    const fnMatch = vcard.match(/FN[;:](.+)/i);
+                    const bdayMatch = vcard.match(/BDAY[;:](\d{4})-?(\d{2})-?(\d{2})/i) || 
+                                     vcard.match(/BDAY[;:](\d{4})(\d{2})(\d{2})/i);
+                    const telMatch = vcard.match(/TEL[;:].*?:?(\+?[\d\s-]+)/i);
+                    
+                    if (fnMatch && bdayMatch) {
+                        const name = fnMatch[1].trim();
+                        const date = `${bdayMatch[1]}-${bdayMatch[2]}-${bdayMatch[3]}`;
+                        const phone = telMatch ? telMatch[1].replace(/[\s-]/g, '') : null;
+                        
+                        if (!existingNames.has(name.toLowerCase())) {
+                            this.birthdays.push({
+                                id: Date.now() + Math.random(),
+                                name,
+                                date,
+                                description: null,
+                                phone,
+                                photo: null,
+                                createdAt: new Date().toISOString()
+                            });
+                            existingNames.add(name.toLowerCase());
+                            imported++;
+                        }
+                    }
+                });
+                
+                this.saveBirthdays();
+                this.displayBirthdays();
+                this.updateStats();
+                
+                showFeedbackMessage(`${imported} contactos importados do VCF!`, 'success');
+            } catch (error) {
+                showFeedbackMessage('Erro ao importar VCF. Verifique o formato.', 'error');
+            }
+        };
+        reader.readAsText(file);
+    }
+
+    // Exportar para ICS (Calendário)
+    exportToICS() {
+        let icsContent = [
+            'BEGIN:VCALENDAR',
+            'VERSION:2.0',
+            'PRODID:-//Lembrete de Aniversários//PT',
+            'CALSCALE:GREGORIAN',
+            'METHOD:PUBLISH'
+        ];
+        
+        this.birthdays.forEach(birthday => {
+            const birthDate = DateUtils.parseDate(birthday.date);
+            const currentYear = DateUtils.getToday().year;
+            
+            // Criar evento recorrente anual
+            const dtstart = `${currentYear}${String(birthDate.month).padStart(2, '0')}${String(birthDate.day).padStart(2, '0')}`;
+            
+            icsContent.push(
+                'BEGIN:VEVENT',
+                `UID:birthday-${birthday.id}@aniversarios`,
+                `DTSTART;VALUE=DATE:${dtstart}`,
+                `DTEND;VALUE=DATE:${dtstart}`,
+                `SUMMARY:🎂 Aniversário de ${birthday.name}`,
+                `DESCRIPTION:${birthday.description || `Aniversário de ${birthday.name}`}`,
+                'RRULE:FREQ=YEARLY',
+                `CREATED:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0]}Z`,
+                'END:VEVENT'
+            );
+        });
+        
+        icsContent.push('END:VCALENDAR');
+        
+        const blob = new Blob([icsContent.join('\r\n')], { type: 'text/calendar' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `aniversarios-${new Date().toISOString().split('T')[0]}.ics`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        showFeedbackMessage('Calendário ICS exportado com sucesso!', 'success');
+    }
+
+    // ==========================================
+    // INTEGRAÇÃO WHATSAPP + TEMPLATES
+    // ==========================================
+
+    // Templates de mensagens de parabéns
+    getMessageTemplates() {
+        return {
+            formal: [
+                'Desejo-lhe um feliz aniversário! Que este novo ciclo seja repleto de realizações e momentos especiais. Parabéns!',
+                'Feliz aniversário! Que a vida lhe reserve o melhor sempre. Muitas felicidades!',
+                'Parabéns pelo seu aniversário! Desejo-lhe muita saúde, paz e prosperidade neste novo ano de vida.',
+                'É com grande alegria que lhe desejo um feliz aniversário. Que todos os seus sonhos se realizem!'
+            ],
+            divertida: [
+                'Eeeee parabéns! 🎉🎂 Mais um ano de pura diversão pela frente! Aproveita muito!',
+                'Feliz aniversário! 🎈🥳 Que a festa seja épica e a ressaca leve! Haha',
+                'Parabéééns! 🎊 Hoje é seu dia de brilhar! Bora comemorar como se não houvesse amanhã! 🎉',
+                'Hey! Feliz aniversário! 🎂 Espero que ganhe muitos presentes e coma muito bolo! 🍰'
+            ],
+            curta: [
+                'Feliz aniversário! 🎂',
+                'Parabéns! 🎉',
+                'Tudo de bom! 🎈',
+                'Muitas felicidades! 🎊',
+                'Felicidades! 🥳'
+            ]
+        };
+    }
+
+    // Obter mensagem aleatória por tipo
+    getRandomMessage(type = 'divertida') {
+        const templates = this.getMessageTemplates();
+        const messages = templates[type] || templates.divertida;
+        return messages[Math.floor(Math.random() * messages.length)];
+    }
+
+    // Gerar link do WhatsApp
+    generateWhatsAppLink(phone, message) {
+        // Limpar número de telefone
+        const cleanPhone = phone.replace(/[^\d+]/g, '');
+        const encodedMessage = encodeURIComponent(message);
+        return `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
+    }
+
+    // Abrir modal de mensagem WhatsApp
+    showWhatsAppModal(birthday) {
+        const templates = this.getMessageTemplates();
+        
+        const modal = document.createElement('div');
+        modal.className = 'whatsapp-modal';
+        modal.innerHTML = `
+            <div class="whatsapp-modal-content">
+                <div class="whatsapp-modal-header">
+                    <h3><i class="fab fa-whatsapp"></i> Enviar Parabéns para ${birthday.name}</h3>
+                    <button class="close-whatsapp-modal">×</button>
+                </div>
+                <div class="whatsapp-modal-body">
+                    <p>Escolha o tipo de mensagem:</p>
+                    <div class="message-types">
+                        <button class="message-type-btn active" data-type="formal">
+                            <i class="fas fa-user-tie"></i> Formal
+                        </button>
+                        <button class="message-type-btn" data-type="divertida">
+                            <i class="fas fa-laugh"></i> Divertida
+                        </button>
+                        <button class="message-type-btn" data-type="curta">
+                            <i class="fas fa-bolt"></i> Curta
+                        </button>
+                    </div>
+                    <div class="message-preview">
+                        <label>Prévia da mensagem:</label>
+                        <textarea id="whatsapp-message" rows="4">${this.getRandomMessage('formal')}</textarea>
+                    </div>
+                    <button class="btn-shuffle-message">
+                        <i class="fas fa-random"></i> Outra mensagem
+                    </button>
+                </div>
+                <div class="whatsapp-modal-footer">
+                    <button class="btn-copy-message">
+                        <i class="fas fa-copy"></i> Copiar
+                    </button>
+                    <a href="${this.generateWhatsAppLink(birthday.phone, this.getRandomMessage('formal'))}" 
+                       target="_blank" class="btn-send-whatsapp" id="whatsapp-link">
+                        <i class="fab fa-whatsapp"></i> Enviar no WhatsApp
+                    </a>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        setTimeout(() => modal.classList.add('show'), 10);
+        
+        // Event listeners
+        let currentType = 'formal';
+        
+        modal.querySelector('.close-whatsapp-modal').onclick = () => {
+            modal.classList.remove('show');
+            setTimeout(() => modal.remove(), 300);
+        };
+        
+        modal.querySelectorAll('.message-type-btn').forEach(btn => {
+            btn.onclick = () => {
+                modal.querySelectorAll('.message-type-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentType = btn.dataset.type;
+                const message = this.getRandomMessage(currentType);
+                modal.querySelector('#whatsapp-message').value = message;
+                modal.querySelector('#whatsapp-link').href = this.generateWhatsAppLink(birthday.phone, message);
+            };
+        });
+        
+        modal.querySelector('.btn-shuffle-message').onclick = () => {
+            const message = this.getRandomMessage(currentType);
+            modal.querySelector('#whatsapp-message').value = message;
+            modal.querySelector('#whatsapp-link').href = this.generateWhatsAppLink(birthday.phone, message);
+        };
+        
+        modal.querySelector('.btn-copy-message').onclick = () => {
+            const message = modal.querySelector('#whatsapp-message').value;
+            navigator.clipboard.writeText(message);
+            showFeedbackMessage('Mensagem copiada!', 'success');
+        };
+        
+        // Atualizar link quando a mensagem for editada manualmente
+        modal.querySelector('#whatsapp-message').oninput = (e) => {
+            modal.querySelector('#whatsapp-link').href = this.generateWhatsAppLink(birthday.phone, e.target.value);
+        };
+    }
+
+    // ==========================================
+    // PESQUISA E ORDENAÇÃO
+    // ==========================================
+
+    // Pesquisar aniversários por nome
+    searchBirthdays(query) {
+        if (!query || query.trim() === '') {
+            return this.birthdays;
+        }
+        const lowerQuery = query.toLowerCase().trim();
+        return this.birthdays.filter(b => 
+            b.name.toLowerCase().includes(lowerQuery) ||
+            (b.description && b.description.toLowerCase().includes(lowerQuery))
+        );
+    }
+
+    // Ordenar aniversários
+    sortBirthdays(birthdays, sortType = 'proximity') {
+        const sorted = [...birthdays];
+        
+        switch (sortType) {
+            case 'alphabetical':
+                sorted.sort((a, b) => a.name.localeCompare(b.name));
+                break;
+            case 'alphabetical-desc':
+                sorted.sort((a, b) => b.name.localeCompare(a.name));
+                break;
+            case 'proximity':
+            default:
+                sorted.sort((a, b) => 
+                    this.calculateDaysUntilBirthday(a.date) - this.calculateDaysUntilBirthday(b.date)
+                );
+                break;
+        }
+        
+        return sorted;
+    }
+
+    // ==========================================
+    // ESTATÍSTICAS (DASHBOARD)
+    // ==========================================
+
+    getStatistics() {
+        if (this.birthdays.length === 0) {
+            return null;
+        }
+
+        // Contagem por mês
+        const monthCounts = {};
+        const monthNames = {
+            1: 'Janeiro', 2: 'Fevereiro', 3: 'Março', 4: 'Abril',
+            5: 'Maio', 6: 'Junho', 7: 'Julho', 8: 'Agosto',
+            9: 'Setembro', 10: 'Outubro', 11: 'Novembro', 12: 'Dezembro'
+        };
+        
+        let totalAge = 0;
+        let ageCount = 0;
+        const signCounts = {};
+
+        this.birthdays.forEach(birthday => {
+            const date = DateUtils.parseDate(birthday.date);
+            
+            // Contar por mês
+            monthCounts[date.month] = (monthCounts[date.month] || 0) + 1;
+            
+            // Calcular idade
+            const age = this.calculateCurrentAge(birthday.date);
+            if (age > 0 && age < 120) {
+                totalAge += age;
+                ageCount++;
+            }
+            
+            // Determinar signo
+            const sign = this.getZodiacSign(date.month, date.day);
+            signCounts[sign] = (signCounts[sign] || 0) + 1;
+        });
+
+        // Encontrar mês com mais aniversários
+        let maxMonth = 1;
+        let maxCount = 0;
+        for (const [month, count] of Object.entries(monthCounts)) {
+            if (count > maxCount) {
+                maxCount = count;
+                maxMonth = parseInt(month);
+            }
+        }
+
+        // Encontrar signo mais comum
+        let topSign = '';
+        let topSignCount = 0;
+        for (const [sign, count] of Object.entries(signCounts)) {
+            if (count > topSignCount) {
+                topSignCount = count;
+                topSign = sign;
+            }
+        }
+
+        // Próximos aniversários (7 dias)
+        const upcomingCount = this.birthdays.filter(b => 
+            this.calculateDaysUntilBirthday(b.date) <= 7
+        ).length;
+
+        return {
+            total: this.birthdays.length,
+            busiestMonth: monthNames[maxMonth],
+            busiestMonthCount: maxCount,
+            averageAge: ageCount > 0 ? Math.round(totalAge / ageCount) : 0,
+            topSign,
+            topSignCount,
+            upcomingCount,
+            monthDistribution: monthCounts
+        };
+    }
+
+    getZodiacSign(month, day) {
+        const signs = [
+            { sign: '♑ Capricórnio', start: [1, 1], end: [1, 19] },
+            { sign: '♒ Aquário', start: [1, 20], end: [2, 18] },
+            { sign: '♓ Peixes', start: [2, 19], end: [3, 20] },
+            { sign: '♈ Áries', start: [3, 21], end: [4, 19] },
+            { sign: '♉ Touro', start: [4, 20], end: [5, 20] },
+            { sign: '♊ Gêmeos', start: [5, 21], end: [6, 20] },
+            { sign: '♋ Câncer', start: [6, 21], end: [7, 22] },
+            { sign: '♌ Leão', start: [7, 23], end: [8, 22] },
+            { sign: '♍ Virgem', start: [8, 23], end: [9, 22] },
+            { sign: '♎ Libra', start: [9, 23], end: [10, 22] },
+            { sign: '♏ Escorpião', start: [10, 23], end: [11, 21] },
+            { sign: '♐ Sagitário', start: [11, 22], end: [12, 21] },
+            { sign: '♑ Capricórnio', start: [12, 22], end: [12, 31] }
+        ];
+
+        for (const { sign, start, end } of signs) {
+            if ((month === start[0] && day >= start[1]) || (month === end[0] && day <= end[1])) {
+                return sign;
+            }
+        }
+        return '♑ Capricórnio';
+    }
+
+    showStatisticsModal() {
+        const stats = this.getStatistics();
+        
+        if (!stats) {
+            showFeedbackMessage('Adicione alguns aniversários para ver estatísticas!', 'info');
+            return;
+        }
+
+        const modal = document.createElement('div');
+        modal.className = 'statistics-modal';
+        modal.innerHTML = `
+            <div class="statistics-modal-content">
+                <div class="statistics-modal-header">
+                    <h3><i class="fas fa-chart-pie"></i> Estatísticas Curiosas</h3>
+                    <button class="close-statistics-modal">×</button>
+                </div>
+                <div class="statistics-modal-body">
+                    <div class="stat-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">📊</div>
+                            <div class="stat-value">${stats.total}</div>
+                            <div class="stat-label">Aniversários Cadastrados</div>
+                        </div>
+                        <div class="stat-card highlight">
+                            <div class="stat-icon">📅</div>
+                            <div class="stat-value">${stats.busiestMonth}</div>
+                            <div class="stat-label">Mês com Mais Aniversários (${stats.busiestMonthCount})</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">🎂</div>
+                            <div class="stat-value">${stats.averageAge} anos</div>
+                            <div class="stat-label">Idade Média</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">${stats.topSign.split(' ')[0]}</div>
+                            <div class="stat-value">${stats.topSign.split(' ')[1]}</div>
+                            <div class="stat-label">Signo Mais Comum (${stats.topSignCount})</div>
+                        </div>
+                        <div class="stat-card ${stats.upcomingCount > 0 ? 'urgent' : ''}">
+                            <div class="stat-icon">⏰</div>
+                            <div class="stat-value">${stats.upcomingCount}</div>
+                            <div class="stat-label">Aniversários nos Próximos 7 Dias</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        setTimeout(() => modal.classList.add('show'), 10);
+        
+        modal.querySelector('.close-statistics-modal').onclick = () => {
+            modal.classList.remove('show');
+            setTimeout(() => modal.remove(), 300);
+        };
+        
+        modal.onclick = (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('show');
+                setTimeout(() => modal.remove(), 300);
+            }
+        };
+    }
+
+    // ==========================================
+    // EDITAR ANIVERSÁRIO
+    // ==========================================
+
+    editBirthday(id) {
+        const birthday = this.birthdays.find(b => b.id === id);
+        if (!birthday) return;
+
+        const modal = document.createElement('div');
+        modal.className = 'edit-birthday-modal';
+        modal.innerHTML = `
+            <div class="edit-modal-content">
+                <div class="edit-modal-header">
+                    <h3><i class="fas fa-edit"></i> Editar Aniversário</h3>
+                    <button class="close-edit-modal">×</button>
+                </div>
+                <div class="edit-modal-body">
+                    <form id="edit-birthday-form">
+                        <div class="form-group">
+                            <label>Nome *</label>
+                            <input type="text" id="edit-name" value="${birthday.name}" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Data de Nascimento *</label>
+                            <input type="date" id="edit-date" value="${birthday.date}" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Descrição</label>
+                            <textarea id="edit-description" rows="3">${birthday.description || ''}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Telefone (WhatsApp)</label>
+                            <input type="tel" id="edit-phone" value="${birthday.phone || ''}" placeholder="+55 11 99999-9999">
+                        </div>
+                    </form>
+                </div>
+                <div class="edit-modal-footer">
+                    <button class="btn-cancel-edit">Cancelar</button>
+                    <button class="btn-save-edit">
+                        <i class="fas fa-save"></i> Salvar
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        setTimeout(() => modal.classList.add('show'), 10);
+        
+        const closeModal = () => {
+            modal.classList.remove('show');
+            setTimeout(() => modal.remove(), 300);
+        };
+        
+        modal.querySelector('.close-edit-modal').onclick = closeModal;
+        modal.querySelector('.btn-cancel-edit').onclick = closeModal;
+        
+        modal.querySelector('.btn-save-edit').onclick = () => {
+            const newName = modal.querySelector('#edit-name').value.trim();
+            const newDate = modal.querySelector('#edit-date').value;
+            const newDescription = modal.querySelector('#edit-description').value.trim();
+            const newPhone = modal.querySelector('#edit-phone').value.trim();
+            
+            if (!newName || !newDate) {
+                showFeedbackMessage('Nome e data são obrigatórios!', 'error');
+                return;
+            }
+            
+            birthday.name = newName;
+            birthday.date = newDate;
+            birthday.description = newDescription || null;
+            birthday.phone = newPhone || null;
+            
+            this.saveBirthdays();
+            this.displayBirthdays();
+            this.updateStats();
+            
+            closeModal();
+            showFeedbackMessage('Aniversário atualizado com sucesso!', 'success');
+        };
+        
+        modal.onclick = (e) => {
+            if (e.target === modal) closeModal();
+        };
+    }
+
+    // ==========================================
+    // CONFETTI (Efeito de Celebração)
+    // ==========================================
+
+    checkAndShowConfetti() {
+        const todayBirthdays = this.birthdays.filter(b => 
+            this.calculateDaysUntilBirthday(b.date) === 0
+        );
+        
+        if (todayBirthdays.length > 0 && !sessionStorage.getItem('confettiShown')) {
+            this.showConfetti();
+            sessionStorage.setItem('confettiShown', 'true');
+            
+            // Mostrar banner especial
+            const names = todayBirthdays.map(b => b.name).join(', ');
+            this.showNotificationBanner(`🎉 Hoje é aniversário de: ${names}! 🎂`);
+        }
+    }
+
+    showConfetti() {
+        // Criar canvas para confetti
+        const canvas = document.createElement('canvas');
+        canvas.id = 'confetti-canvas';
+        canvas.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 99999;
+        `;
+        document.body.appendChild(canvas);
+        
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const particles = [];
+        const colors = ['#ff6b6b', '#4ecdc4', '#ffe66d', '#95e1d3', '#f38181', '#aa96da', '#fcbad3'];
+        
+        // Criar partículas
+        for (let i = 0; i < 150; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height - canvas.height,
+                w: Math.random() * 10 + 5,
+                h: Math.random() * 6 + 4,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                speed: Math.random() * 3 + 2,
+                angle: Math.random() * 360,
+                spin: Math.random() * 10 - 5
+            });
+        }
+        
+        let animationId;
+        const animate = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            let allDone = true;
+            particles.forEach(p => {
+                if (p.y < canvas.height) {
+                    allDone = false;
+                    p.y += p.speed;
+                    p.x += Math.sin(p.angle * Math.PI / 180) * 2;
+                    p.angle += p.spin;
+                    
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate(p.angle * Math.PI / 180);
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+                    ctx.restore();
+                }
+            });
+            
+            if (!allDone) {
+                animationId = requestAnimationFrame(animate);
+            } else {
+                canvas.remove();
+            }
+        };
+        
+        animate();
+        
+        // Remover após 5 segundos
+        setTimeout(() => {
+            cancelAnimationFrame(animationId);
+            canvas.remove();
+        }, 5000);
+    }
+
+    // ==========================================
+    // SWIPE GESTURES (Mobile Only)
+    // ==========================================
+
+    initializeSwipeGestures() {
+        // Detectar se é mobile
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        
+        if (!isMobile) return;
+        
+        // Observar novos cards adicionados
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                mutation.addedNodes.forEach((node) => {
+                    if (node.nodeType === 1 && node.classList?.contains('birthday-card')) {
+                        this.setupSwipeForCard(node);
+                    }
+                    if (node.nodeType === 1) {
+                        node.querySelectorAll?.('.birthday-card').forEach(card => {
+                            this.setupSwipeForCard(card);
+                        });
+                    }
+                });
+            });
+        });
+        
+        const birthdaysList = document.getElementById('birthdays-list');
+        if (birthdaysList) {
+            observer.observe(birthdaysList, { childList: true, subtree: true });
+        }
+        
+        // Setup para cards existentes
+        document.querySelectorAll('.birthday-card').forEach(card => {
+            this.setupSwipeForCard(card);
+        });
+    }
+
+    setupSwipeForCard(card) {
+        if (card.dataset.swipeInitialized) return;
+        card.dataset.swipeInitialized = 'true';
+        
+        const swipeContainer = card.querySelector('.swipe-container');
+        if (!swipeContainer) return;
+        
+        let startX = 0;
+        let currentX = 0;
+        let isDragging = false;
+        const threshold = 80;
+        
+        const cardContent = swipeContainer.querySelector('.card-main-content');
+        
+        swipeContainer.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            isDragging = true;
+            cardContent.style.transition = 'none';
+        }, { passive: true });
+        
+        swipeContainer.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            
+            currentX = e.touches[0].clientX;
+            const diff = currentX - startX;
+            
+            // Só permitir swipe para esquerda
+            if (diff < 0) {
+                const translateX = Math.max(diff, -150);
+                cardContent.style.transform = `translateX(${translateX}px)`;
+            }
+        }, { passive: true });
+        
+        swipeContainer.addEventListener('touchend', () => {
+            isDragging = false;
+            cardContent.style.transition = 'transform 0.3s ease';
+            
+            const diff = currentX - startX;
+            
+            if (diff < -threshold) {
+                // Mostrar ações
+                cardContent.style.transform = 'translateX(-120px)';
+                card.classList.add('swiped');
+            } else {
+                // Voltar ao normal
+                cardContent.style.transform = 'translateX(0)';
+                card.classList.remove('swiped');
+            }
+        });
+        
+        // Fechar ao clicar fora
+        document.addEventListener('touchstart', (e) => {
+            if (!card.contains(e.target) && card.classList.contains('swiped')) {
+                cardContent.style.transform = 'translateX(0)';
+                card.classList.remove('swiped');
+            }
+        });
+    }
+
+    // ==========================================
+    // INDICADOR OFFLINE
+    // ==========================================
+
+    initializeOfflineIndicator() {
+        // Criar indicador
+        const indicator = document.createElement('div');
+        indicator.id = 'offline-indicator';
+        indicator.className = 'offline-indicator hidden';
+        indicator.innerHTML = `
+            <i class="fas fa-cloud-slash"></i>
+            <span>Você está offline</span>
+        `;
+        document.body.appendChild(indicator);
+        
+        // Verificar status inicial
+        this.updateOfflineStatus();
+        
+        // Listeners para mudança de status
+        window.addEventListener('online', () => this.updateOfflineStatus());
+        window.addEventListener('offline', () => this.updateOfflineStatus());
+    }
+
+    updateOfflineStatus() {
+        const indicator = document.getElementById('offline-indicator');
+        const header = document.querySelector('.header');
+        
+        if (!navigator.onLine) {
+            indicator?.classList.remove('hidden');
+            indicator?.classList.add('show');
+            header?.classList.add('offline');
+            
+            showFeedbackMessage('Você está offline. As alterações serão salvas localmente.', 'info');
+        } else {
+            indicator?.classList.remove('show');
+            setTimeout(() => indicator?.classList.add('hidden'), 300);
+            header?.classList.remove('offline');
+        }
+    }
+
+    // ==========================================
+    // MÁSCARA DE INPUT PARA DATA
+    // ==========================================
+
+    static setupDateInputMask(input) {
+        input.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, '');
+            
+            if (value.length > 8) value = value.slice(0, 8);
+            
+            if (value.length >= 4) {
+                value = value.slice(0, 2) + '/' + value.slice(2, 4) + '/' + value.slice(4);
+            } else if (value.length >= 2) {
+                value = value.slice(0, 2) + '/' + value.slice(2);
+            }
+            
+            e.target.value = value;
+        });
+        
+        input.addEventListener('blur', (e) => {
+            const value = e.target.value;
+            const parts = value.split('/');
+            
+            if (parts.length === 3 && parts[2].length === 4) {
+                // Converter para formato YYYY-MM-DD para o input date hidden
+                const dateInput = document.getElementById('birth-date');
+                if (dateInput) {
+                    dateInput.value = `${parts[2]}-${parts[1]}-${parts[0]}`;
+                }
+            }
+        });
     }
 }
 

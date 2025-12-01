@@ -1,7 +1,7 @@
 {
   "name": "lembrete-aniversarios",
-  "version": "4.0.0",
-  "description": "Sistema completo de lembretes de aniversários com notificações em background",
+  "version": "4.1.0",
+  "description": "Sistema completo de lembretes de aniversários com notificações em background, importação/exportação, WhatsApp, estatísticas e mais",
   "type": "module",
   "dependencies": {
     "@vercel/analytics": "^1.5.0"
@@ -10,7 +10,7 @@
     "dev": "python -m http.server 8000",
     "start": "python -m http.server 8000"
   },
-  "keywords": ["aniversarios", "lembretes", "notificacoes", "pwa", "javascript"],
+  "keywords": ["aniversarios", "lembretes", "notificacoes", "pwa", "javascript", "whatsapp", "export", "import"],
   "author": "Parafodas",
   "license": "MIT"
 }

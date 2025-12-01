@@ -3605,3 +3605,738 @@ input[type="text"]:focus, input[type="date"]:focus, input[type="email"]:focus, t
         padding: 16px;
     }
 }
+
+/* ==========================================
+   NOVAS FUNCIONALIDADES - ESTILOS ADICIONAIS
+   ========================================== */
+
+/* === BARRA DE PESQUISA E AÇÕES === */
+.search-actions-bar {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.search-container {
+    flex: 1;
+    min-width: 200px;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-icon {
+    position: absolute;
+    left: 15px;
+    color: var(--text-secondary);
+    pointer-events: none;
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px 40px 12px 45px;
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    font-size: 1rem;
+    background: var(--card-background);
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+.clear-search-btn {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: color 0.3s ease;
+}
+
+.clear-search-btn:hover {
+    color: var(--error-color);
+}
+
+.sort-container {
+    display: flex;
+    align-items: center;
+}
+
+.sort-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: var(--card-background);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    color: var(--text-primary);
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.sort-btn:hover {
+    border-color: var(--primary-color);
+    background: var(--primary-color);
+    color: white;
+}
+
+.actions-dropdown {
+    position: relative;
+}
+
+.actions-btn {
+    padding: 12px 16px;
+    background: var(--card-background);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.actions-btn:hover {
+    border-color: var(--primary-color);
+    background: var(--primary-color);
+    color: white;
+}
+
+.actions-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 8px;
+    background: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    min-width: 220px;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.actions-menu button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 12px 16px;
+    border: none;
+    background: none;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    text-align: left;
+}
+
+.actions-menu button:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+.actions-menu hr {
+    border: none;
+    border-top: 1px solid var(--border-color);
+    margin: 5px 0;
+}
+
+/* === SWIPE GESTURES (Mobile) === */
+.swipe-container {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+}
+
+.card-main-content {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    background: var(--card-background);
+    position: relative;
+    z-index: 2;
+    transition: transform 0.3s ease;
+}
+
+.swipe-actions {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: stretch;
+    z-index: 1;
+}
+
+.swipe-edit,
+.swipe-delete {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px;
+    border: none;
+    color: white;
+    font-size: 0.8rem;
+    cursor: pointer;
+    gap: 5px;
+}
+
+.swipe-edit {
+    background: var(--primary-color);
+}
+
+.swipe-delete {
+    background: var(--error-color);
+}
+
+/* Mostrar swipe actions apenas em mobile */
+@media (max-width: 768px) {
+    .birthday-card .birthday-actions {
+        display: none;
+    }
+    
+    .swipe-edit,
+    .swipe-delete {
+        display: flex;
+    }
+    
+    .card-main-content {
+        grid-template-columns: auto 1fr;
+    }
+}
+
+/* === INDICADOR OFFLINE === */
+.offline-indicator {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: #f59e0b;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    z-index: 99999;
+    transform: translateY(-100%);
+    transition: transform 0.3s ease;
+}
+
+.offline-indicator.show {
+    transform: translateY(0);
+}
+
+.header.offline {
+    border-top: 3px solid #f59e0b;
+}
+
+/* === MODAL DE WHATSAPP === */
+.whatsapp-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    padding: 20px;
+}
+
+.whatsapp-modal.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.whatsapp-modal-content {
+    background: var(--card-background);
+    border-radius: 20px;
+    max-width: 500px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: slideInUp 0.3s ease;
+}
+
+.whatsapp-modal-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.whatsapp-modal-header h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #25d366;
+    margin: 0;
+}
+
+.close-whatsapp-modal {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-secondary);
+}
+
+.whatsapp-modal-body {
+    padding: 20px;
+}
+
+.message-types {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.message-type-btn {
+    flex: 1;
+    min-width: 100px;
+    padding: 12px;
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    background: var(--card-background);
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.message-type-btn.active,
+.message-type-btn:hover {
+    border-color: #25d366;
+    background: rgba(37, 211, 102, 0.1);
+    color: #25d366;
+}
+
+.message-preview {
+    margin-bottom: 15px;
+}
+
+.message-preview label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.message-preview textarea {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 1rem;
+    resize: vertical;
+    background: var(--card-background);
+    color: var(--text-primary);
+}
+
+.btn-shuffle-message {
+    width: 100%;
+    padding: 12px;
+    background: var(--card-background);
+    border: 2px dashed var(--border-color);
+    border-radius: 10px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-shuffle-message:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.whatsapp-modal-footer {
+    padding: 20px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    gap: 10px;
+}
+
+.btn-copy-message {
+    flex: 1;
+    padding: 14px;
+    background: var(--card-background);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    color: var(--text-primary);
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-copy-message:hover {
+    border-color: var(--primary-color);
+    background: var(--primary-color);
+    color: white;
+}
+
+.btn-send-whatsapp {
+    flex: 2;
+    padding: 14px 20px;
+    background: #25d366;
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn-send-whatsapp:hover {
+    background: #128c7e;
+    transform: translateY(-2px);
+}
+
+/* === MODAL DE ESTATÍSTICAS === */
+.statistics-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    padding: 20px;
+}
+
+.statistics-modal.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.statistics-modal-content {
+    background: var(--card-background);
+    border-radius: 20px;
+    max-width: 600px;
+    width: 100%;
+    animation: slideInUp 0.3s ease;
+}
+
+.statistics-modal-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.statistics-modal-header h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--primary-color);
+    margin: 0;
+}
+
+.close-statistics-modal {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-secondary);
+}
+
+.statistics-modal-body {
+    padding: 20px;
+}
+
+.stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+.stat-card {
+    background: var(--background-color);
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card.highlight {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+}
+
+.stat-card.urgent {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+}
+
+.stat-icon {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    opacity: 0.8;
+}
+
+/* === MODAL DE EDIÇÃO === */
+.edit-birthday-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    padding: 20px;
+}
+
+.edit-birthday-modal.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.edit-modal-content {
+    background: var(--card-background);
+    border-radius: 20px;
+    max-width: 500px;
+    width: 100%;
+    animation: slideInUp 0.3s ease;
+}
+
+.edit-modal-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.edit-modal-header h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--primary-color);
+    margin: 0;
+}
+
+.close-edit-modal {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-secondary);
+}
+
+.edit-modal-body {
+    padding: 20px;
+}
+
+.edit-modal-body .form-group {
+    margin-bottom: 15px;
+}
+
+.edit-modal-body label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.edit-modal-body input,
+.edit-modal-body textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    font-size: 1rem;
+    background: var(--card-background);
+    color: var(--text-primary);
+}
+
+.edit-modal-body input:focus,
+.edit-modal-body textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.edit-modal-footer {
+    padding: 20px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.btn-cancel-edit {
+    padding: 12px 20px;
+    background: var(--card-background);
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    color: var(--text-primary);
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.btn-save-edit {
+    padding: 12px 20px;
+    background: var(--primary-color);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-save-edit:hover {
+    background: var(--primary-hover);
+}
+
+/* === BOTÕES ADICIONAIS NO CARD === */
+.btn-whatsapp {
+    background: #25d366;
+    color: white;
+    border: none;
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-whatsapp:hover {
+    background: #128c7e;
+    transform: scale(1.1);
+}
+
+.btn-edit {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-edit:hover {
+    background: var(--primary-hover);
+    transform: scale(1.1);
+}
+
+.birthday-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* === BADGE "HOJE" === */
+.today-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    animation: pulse 2s infinite;
+    z-index: 10;
+}
+
+/* === RESPONSIVIDADE ADICIONAL === */
+@media (max-width: 600px) {
+    .search-actions-bar {
+        flex-direction: column;
+    }
+    
+    .search-container {
+        width: 100%;
+    }
+    
+    .sort-container,
+    .actions-dropdown {
+        width: 100%;
+    }
+    
+    .sort-btn,
+    .actions-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .stat-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .message-types {
+        flex-direction: column;
+    }
+    
+    .whatsapp-modal-footer {
+        flex-direction: column;
+    }
+    
+    .btn-copy-message,
+    .btn-send-whatsapp {
+        width: 100%;
+    }
+}

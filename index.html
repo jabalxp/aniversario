@@ -125,6 +125,16 @@
             box-shadow: 0 15px 35px rgba(240, 147, 251, 0.4);
         }
 
+        .tutorial-button {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            box-shadow: 0 8px 25px rgba(251, 191, 36, 0.3);
+        }
+
+        .tutorial-button:hover {
+            background: linear-gradient(135deg, #f59e0b, #fbbf24);
+            box-shadow: 0 15px 35px rgba(251, 191, 36, 0.4);
+        }
+
         .version-info {
             margin-top: 30px;
             padding-top: 20px;
@@ -295,6 +305,11 @@
                 Agendar Aniversário
             </a>
             
+            <button class="menu-button tutorial-button" onclick="openTutorial()">
+                <i class="fas fa-graduation-cap"></i>
+                Tutorial de Uso
+            </button>
+            
             <a href="feedback.html" class="menu-button feedback-button">
                 <i class="fas fa-comment-dots"></i>
                 Enviar Feedback
@@ -308,11 +323,552 @@
         
         <div class="version-info">
             <p>Sistema completo de lembretes com notificações</p>
-            <span class="version-badge">v4.0.0</span>
+            <span class="version-badge">v4.3.0</span>
         </div>
     </div>
 
+    <!-- Modal de Tutorial -->
+    <div class="tutorial-modal" id="tutorial-modal">
+        <div class="tutorial-content">
+            <div class="tutorial-header">
+                <h2><i class="fas fa-graduation-cap"></i> Tutorial de Uso</h2>
+                <button class="close-tutorial" onclick="closeTutorial()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="tutorial-body">
+                <!-- Página 1: Introdução -->
+                <div class="tutorial-page active" data-page="1">
+                    <div class="tutorial-section">
+                        <h3><i class="fas fa-star"></i> Bem-vindo ao Lembrete de Aniversários!</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 20px;">
+                            Este tutorial vai te ajudar a aproveitar ao máximo todas as funcionalidades do sistema.
+                        </p>
+                        
+                        <div class="tutorial-step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Cadastre seus aniversários</h4>
+                                <p>Adicione nome, data de nascimento, foto, telefone e notas pessoais (gostos, alergias, tamanho de roupa, etc.)</p>
+                            </div>
+                        </div>
+                        
+                        <div class="tutorial-step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Receba notificações</h4>
+                                <p>Configure alertas para 1 dia antes, 3 dias, 1 semana ou mais. Funciona mesmo com o navegador fechado!</p>
+                            </div>
+                        </div>
+                        
+                        <div class="tutorial-step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>Envie parabéns pelo WhatsApp</h4>
+                                <p>Com um clique, envie mensagens personalizadas (formal, divertida ou curta) direto pelo WhatsApp.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Página 2: Funcionalidades -->
+                <div class="tutorial-page" data-page="2">
+                    <div class="tutorial-section">
+                        <h3><i class="fas fa-magic"></i> Funcionalidades Principais</h3>
+                        
+                        <div class="tutorial-step">
+                            <div class="step-number"><i class="fas fa-search"></i></div>
+                            <div class="step-content">
+                                <h4>Pesquisa e Filtros</h4>
+                                <p>Use a barra de pesquisa para encontrar rapidamente. Filtre por "Urgentes", "Em breve", "Próximos" ou "Distantes".</p>
+                            </div>
+                        </div>
+                        
+                        <div class="tutorial-step">
+                            <div class="step-number"><i class="fas fa-chart-pie"></i></div>
+                            <div class="step-content">
+                                <h4>Estatísticas</h4>
+                                <p>Veja distribuição por signos, idades, meses mais populares e muito mais no painel de estatísticas.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="tutorial-step">
+                            <div class="step-number"><i class="fas fa-palette"></i></div>
+                            <div class="step-content">
+                                <h4>12 Temas Visuais</h4>
+                                <p>Escolha entre Claro, Escuro, Oceano, Floresta, Rosa, Lavanda, Meia-noite, Doce, Nórdico, Drácula, Daltônico ou crie o seu!</p>
+                            </div>
+                        </div>
+                        
+                        <div class="tutorial-step">
+                            <div class="step-number"><i class="fas fa-sticky-note"></i></div>
+                            <div class="step-content">
+                                <h4>Notas e Preferências</h4>
+                                <p>Anote gostos, alergias, tamanhos de roupa, hobbies e outras informações úteis para escolher presentes!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Página 3: Backup e Transferência -->
+                <div class="tutorial-page" data-page="3">
+                    <div class="tutorial-section">
+                        <h3><i class="fas fa-database"></i> Backup e Transferência de Dados</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 20px;">
+                            Seus dados ficam salvos no navegador (localStorage). Veja como fazer backup e transferir para outro dispositivo:
+                        </p>
+                        
+                        <div class="tutorial-step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Exportar Backup (JSON)</h4>
+                                <p>Clique no menu <code>⋮</code> → <code>Exportar Backup (JSON)</code>. Salve o arquivo em local seguro.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="tutorial-step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Importar em Outro Dispositivo</h4>
+                                <p>No novo dispositivo, clique em <code>⋮</code> → <code>Importar Backup</code> e selecione o arquivo JSON salvo.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="tutorial-tip">
+                            <i class="fas fa-lightbulb"></i>
+                            <p><strong>Dica:</strong> Você também pode exportar para CSV (Excel), ICS (calendários) ou importar contatos de arquivos VCF!</p>
+                        </div>
+                        
+                        <div class="tutorial-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p><strong>Atenção:</strong> Limpar dados do navegador apaga seus aniversários! Faça backup regularmente.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Página 4: Avançado -->
+                <div class="tutorial-page" data-page="4">
+                    <div class="tutorial-section">
+                        <h3><i class="fas fa-cog"></i> Dicas Avançadas</h3>
+                        
+                        <div class="tutorial-step">
+                            <div class="step-number"><i class="fas fa-mobile-alt"></i></div>
+                            <div class="step-content">
+                                <h4>Instale como App (PWA)</h4>
+                                <p>No Chrome: Menu → "Instalar aplicativo". O app funcionará offline e receberá notificações!</p>
+                            </div>
+                        </div>
+                        
+                        <div class="tutorial-step">
+                            <div class="step-number"><i class="fas fa-hand-pointer"></i></div>
+                            <div class="step-content">
+                                <h4>Gestos no Mobile</h4>
+                                <p>Deslize para a direita para editar, para a esquerda para excluir (apenas em dispositivos móveis).</p>
+                            </div>
+                        </div>
+                        
+                        <div class="tutorial-step">
+                            <div class="step-number"><i class="fas fa-bell"></i></div>
+                            <div class="step-content">
+                                <h4>Notificações em Background</h4>
+                                <p>Ative as notificações nas configurações do navegador para receber alertas mesmo com o site fechado.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="tutorial-tip">
+                            <i class="fas fa-lightbulb"></i>
+                            <p><strong>Dica:</strong> Use o modo ordenação "A-Z" para encontrar pessoas rapidamente em listas grandes!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tutorial-nav">
+                <button class="btn-tutorial-prev" onclick="prevTutorialPage()" id="btn-prev">
+                    <i class="fas fa-arrow-left"></i> Anterior
+                </button>
+                
+                <div class="tutorial-dots">
+                    <div class="tutorial-dot active" onclick="goToTutorialPage(1)"></div>
+                    <div class="tutorial-dot" onclick="goToTutorialPage(2)"></div>
+                    <div class="tutorial-dot" onclick="goToTutorialPage(3)"></div>
+                    <div class="tutorial-dot" onclick="goToTutorialPage(4)"></div>
+                </div>
+                
+                <button class="btn-tutorial-next" onclick="nextTutorialPage()" id="btn-next">
+                    Próximo <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Estilos do Tutorial Modal */
+        .tutorial-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .tutorial-modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .tutorial-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 700px;
+            width: 95%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideInUp 0.4s ease;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .tutorial-header {
+            padding: 25px 30px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 20px 20px 0 0;
+            color: white;
+        }
+
+        .tutorial-header h2 {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.4rem;
+            margin: 0;
+        }
+
+        .close-tutorial {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .close-tutorial:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .tutorial-body {
+            padding: 30px;
+        }
+
+        .tutorial-page {
+            display: none;
+        }
+
+        .tutorial-page.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .tutorial-section h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #667eea;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .tutorial-step {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 12px;
+            align-items: flex-start;
+        }
+
+        .step-number {
+            width: 30px;
+            height: 30px;
+            min-width: 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .step-content h4 {
+            color: #2d3748;
+            font-size: 0.95rem;
+            margin-bottom: 5px;
+        }
+
+        .step-content p {
+            color: #718096;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .step-content code {
+            display: inline-block;
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.8rem;
+            color: #667eea;
+        }
+
+        .tutorial-tip {
+            display: flex;
+            gap: 12px;
+            padding: 15px;
+            background: linear-gradient(135deg, rgba(72, 187, 120, 0.1), rgba(56, 161, 105, 0.05));
+            border-radius: 12px;
+            border-left: 4px solid #48bb78;
+            margin-top: 15px;
+        }
+
+        .tutorial-tip i {
+            color: #48bb78;
+            font-size: 1.1rem;
+        }
+
+        .tutorial-tip p {
+            color: #2d3748;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .tutorial-warning {
+            display: flex;
+            gap: 12px;
+            padding: 15px;
+            background: linear-gradient(135deg, rgba(237, 137, 54, 0.1), rgba(221, 107, 32, 0.05));
+            border-radius: 12px;
+            border-left: 4px solid #ed8936;
+            margin-top: 15px;
+        }
+
+        .tutorial-warning i {
+            color: #ed8936;
+            font-size: 1.1rem;
+        }
+
+        .tutorial-warning p {
+            color: #2d3748;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .tutorial-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            border-top: 1px solid #e2e8f0;
+            background: rgba(102, 126, 234, 0.03);
+            border-radius: 0 0 20px 20px;
+        }
+
+        .tutorial-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .tutorial-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tutorial-dot.active {
+            background: #667eea;
+            width: 25px;
+            border-radius: 5px;
+        }
+
+        .tutorial-nav button {
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-tutorial-prev {
+            background: white;
+            border: 2px solid #e2e8f0;
+            color: #4a5568;
+        }
+
+        .btn-tutorial-prev:hover {
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .btn-tutorial-next {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            color: white;
+        }
+
+        .btn-tutorial-next:hover {
+            transform: translateX(3px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        @media (max-width: 600px) {
+            .tutorial-content {
+                max-height: 95vh;
+            }
+            
+            .tutorial-header {
+                padding: 20px;
+            }
+            
+            .tutorial-header h2 {
+                font-size: 1.2rem;
+            }
+            
+            .tutorial-body {
+                padding: 20px;
+            }
+            
+            .tutorial-step {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .tutorial-nav {
+                padding: 15px 20px;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            
+            .tutorial-dots {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+
     <script>
+        let currentTutorialPage = 1;
+        const totalPages = 4;
+
+        function openTutorial() {
+            document.getElementById('tutorial-modal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+            goToTutorialPage(1);
+        }
+
+        function closeTutorial() {
+            document.getElementById('tutorial-modal').classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        function goToTutorialPage(page) {
+            currentTutorialPage = page;
+            
+            // Atualizar páginas
+            document.querySelectorAll('.tutorial-page').forEach((p, i) => {
+                p.classList.toggle('active', i + 1 === page);
+            });
+            
+            // Atualizar dots
+            document.querySelectorAll('.tutorial-dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i + 1 === page);
+            });
+            
+            // Atualizar botões
+            document.getElementById('btn-prev').style.visibility = page === 1 ? 'hidden' : 'visible';
+            const nextBtn = document.getElementById('btn-next');
+            if (page === totalPages) {
+                nextBtn.innerHTML = 'Concluir <i class="fas fa-check"></i>';
+            } else {
+                nextBtn.innerHTML = 'Próximo <i class="fas fa-arrow-right"></i>';
+            }
+        }
+
+        function nextTutorialPage() {
+            if (currentTutorialPage < totalPages) {
+                goToTutorialPage(currentTutorialPage + 1);
+            } else {
+                closeTutorial();
+            }
+        }
+
+        function prevTutorialPage() {
+            if (currentTutorialPage > 1) {
+                goToTutorialPage(currentTutorialPage - 1);
+            }
+        }
+
+        // Fechar ao clicar fora
+        document.getElementById('tutorial-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeTutorial();
+            }
+        });
+
+        // Fechar com ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeTutorial();
+            }
+        });
+
         // Animação de entrada
         document.addEventListener('DOMContentLoaded', function() {
             const container = document.querySelector('.menu-container');

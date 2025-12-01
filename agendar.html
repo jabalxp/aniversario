@@ -25,12 +25,21 @@
                     <p data-i18n="app_subtitle">Nunca mais esqueça um aniversário importante!</p>
                 </div>
                 <div class="header-actions">
-                    <!-- Seletor de Temas -->
+                    <!-- Seletor de Temas Compacto -->
                     <div class="theme-selector-container">
                         <select class="theme-selector" id="theme-select">
-                            <option value="light">☀️ Tema Claro</option>
-                            <option value="dark">🌙 Tema Escuro</option>
-                            <option value="colorblind">🎯 Tema Daltônico</option>
+                            <option value="light">☀️ Claro</option>
+                            <option value="dark">🌙 Escuro</option>
+                            <option value="ocean">🌊 Oceano</option>
+                            <option value="sunset">🌅 Pôr do Sol</option>
+                            <option value="forest">🌲 Floresta</option>
+                            <option value="rose">🌸 Rosa</option>
+                            <option value="lavender">💜 Lavanda</option>
+                            <option value="midnight">🌌 Meia-noite</option>
+                            <option value="candy">🍬 Doce</option>
+                            <option value="nord">❄️ Nórdico</option>
+                            <option value="dracula">🧛 Drácula</option>
+                            <option value="colorblind">🎯 Daltônico</option>
                             <option value="custom">🎨 Personalizado</option>
                         </select>
                     </div>
@@ -55,7 +64,108 @@
             </div>
         </header>
 
-        <!-- Custom Theme Panel (posição fixa) -->
+        <!-- Painel de Configuração de Temas Aprimorado -->
+        <div class="theme-config-section" id="theme-config-section" style="display: none;">
+            <div class="theme-config-content">
+                <div class="theme-selector-title">
+                    <i class="fas fa-palette"></i>
+                    <span>Escolha seu Tema</span>
+                </div>
+                
+                <!-- Grid de Temas Visuais -->
+                <div class="theme-grid" id="theme-grid">
+                    <!-- Os cards de tema são gerados dinamicamente pelo JS -->
+                </div>
+                
+                <!-- Seção de Tema Personalizado -->
+                <div class="custom-theme-section">
+                    <div class="custom-theme-toggle" id="custom-theme-toggle">
+                        <div class="toggle-text">
+                            <i class="fas fa-paint-brush"></i>
+                            <span>Criar Tema Personalizado</span>
+                        </div>
+                        <i class="fas fa-chevron-down toggle-icon"></i>
+                    </div>
+                    
+                    <div class="custom-colors-panel" id="custom-colors-panel">
+                        <div class="color-inputs-grid">
+                            <div class="color-input-group">
+                                <label>Cor Principal</label>
+                                <div class="color-input-wrapper">
+                                    <input type="color" id="custom-primary" value="#667eea">
+                                    <input type="text" class="color-hex-input" value="#667EEA" maxlength="7">
+                                </div>
+                            </div>
+                            <div class="color-input-group">
+                                <label>Cor Secundária</label>
+                                <div class="color-input-wrapper">
+                                    <input type="color" id="custom-secondary" value="#764ba2">
+                                    <input type="text" class="color-hex-input" value="#764BA2" maxlength="7">
+                                </div>
+                            </div>
+                            <div class="color-input-group">
+                                <label>Cor de Fundo</label>
+                                <div class="color-input-wrapper">
+                                    <input type="color" id="custom-background" value="#f7fafc">
+                                    <input type="text" class="color-hex-input" value="#F7FAFC" maxlength="7">
+                                </div>
+                            </div>
+                            <div class="color-input-group">
+                                <label>Cor dos Cards</label>
+                                <div class="color-input-wrapper">
+                                    <input type="color" id="custom-card" value="#ffffff">
+                                    <input type="text" class="color-hex-input" value="#FFFFFF" maxlength="7">
+                                </div>
+                            </div>
+                            <div class="color-input-group">
+                                <label>Cor do Texto</label>
+                                <div class="color-input-wrapper">
+                                    <input type="color" id="custom-text" value="#2d3748">
+                                    <input type="text" class="color-hex-input" value="#2D3748" maxlength="7">
+                                </div>
+                            </div>
+                            <div class="color-input-group">
+                                <label>Cor das Bordas</label>
+                                <div class="color-input-wrapper">
+                                    <input type="color" id="custom-border" value="#e2e8f0">
+                                    <input type="text" class="color-hex-input" value="#E2E8F0" maxlength="7">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Preview em Tempo Real -->
+                        <div class="live-preview-section">
+                            <div class="live-preview-title">
+                                <i class="fas fa-eye"></i>
+                                Preview em Tempo Real
+                            </div>
+                            <div class="preview-elements">
+                                <button class="preview-btn primary">Botão Principal</button>
+                                <button class="preview-btn secondary">Secundário</button>
+                                <span class="preview-text primary-text">Texto Principal</span>
+                                <span class="preview-text secondary-text">Texto Secundário</span>
+                                <span class="preview-badge success">Sucesso</span>
+                                <span class="preview-badge warning">Aviso</span>
+                                <span class="preview-badge error">Erro</span>
+                            </div>
+                        </div>
+                        
+                        <div class="custom-theme-actions">
+                            <button class="btn-apply-custom" id="btn-apply-custom">
+                                <i class="fas fa-check"></i>
+                                Aplicar Tema
+                            </button>
+                            <button class="btn-reset-custom" id="btn-reset-custom">
+                                <i class="fas fa-undo"></i>
+                                Resetar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Custom Theme Panel (mantido para compatibilidade) -->
         <div class="custom-theme-panel hidden" id="custom-theme-panel">
             <div class="custom-theme-content">
                 <h4 data-i18n="customize_theme_title">🎨 Personalizar Tema</h4>
@@ -106,7 +216,7 @@
 
                 <div class="form-group">
                     <label for="person-description" data-i18n="description_label">Descrição (opcional)</label>
-                    <textarea id="person-description" data-i18n="description_placeholder" placeholder="Ex: Melhor amigo, irmã, colega de trabalho, primo..." rows="3"></textarea>
+                    <textarea id="person-description" placeholder="Ex: Melhor amigo, irmã, colega de trabalho, primo..." rows="3"></textarea>
                     <small class="form-help" data-i18n="description_help">Adicione uma descrição para lembrar quem é esta pessoa</small>
                 </div>
 
@@ -119,9 +229,57 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="person-phone" data-i18n="phone_label">Telefone/WhatsApp (opcional)</label>
+                    <label for="person-phone" data-i18n="Número de Celular da pessoa">Telefone/WhatsApp (opcional)</label>
                     <input type="tel" id="person-phone" data-i18n="phone_placeholder" placeholder="+55 11 99999-9999">
                     <small class="form-help" data-i18n="phone_help">Adicione o número para enviar parabéns pelo WhatsApp</small>
+                </div>
+
+                <!-- Seção de Notas e Preferências -->
+                <div class="notes-section">
+                    <button type="button" class="notes-toggle" id="notes-toggle">
+                        <i class="fas fa-sticky-note"></i>
+                        <span>Adicionar Notas e Preferências (gostos, alergias, tamanhos...)</span>
+                        <i class="fas fa-chevron-down" style="margin-left: auto;"></i>
+                    </button>
+                    
+                    <div class="notes-panel" id="notes-panel">
+                        <div class="notes-grid">
+                            <div class="notes-field">
+                                <label><i class="fas fa-heart"></i> Gostos / Hobbies</label>
+                                <input type="text" id="person-likes" placeholder="Ex: Música, viagens, livros...">
+                            </div>
+                            
+                            <div class="notes-field">
+                                <label><i class="fas fa-ban"></i> Não Gosta / Alergias</label>
+                                <input type="text" id="person-dislikes" placeholder="Ex: Alergia a amendoim, não gosta de doces...">
+                            </div>
+                            
+                            <div class="notes-field">
+                                <label><i class="fas fa-tshirt"></i> Tamanho de Roupa</label>
+                                <input type="text" id="person-clothing-size" placeholder="Ex: M, G, 42...">
+                            </div>
+                            
+                            <div class="notes-field">
+                                <label><i class="fas fa-shoe-prints"></i> Tamanho de Calçado</label>
+                                <input type="text" id="person-shoe-size" placeholder="Ex: 38, 42...">
+                            </div>
+                            
+                            <div class="notes-field">
+                                <label><i class="fas fa-palette"></i> Cor Favorita</label>
+                                <input type="text" id="person-favorite-color" placeholder="Ex: Azul, verde...">
+                            </div>
+                            
+                            <div class="notes-field">
+                                <label><i class="fas fa-gift"></i> Ideias de Presentes</label>
+                                <input type="text" id="person-gift-ideas" placeholder="Ex: Livros, perfumes, eletrônicos...">
+                            </div>
+                            
+                            <div class="notes-field full-width">
+                                <label><i class="fas fa-clipboard"></i> Observações Gerais</label>
+                                <textarea id="person-notes" placeholder="Outras informações importantes..." rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <button type="submit" class="btn-add">

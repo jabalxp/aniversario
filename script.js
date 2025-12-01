@@ -362,6 +362,21 @@ class BirthdayManager {
 
         // Carregar configurações na interface
         this.loadSettingsToInterface();
+        
+        // Toggle do painel de notas
+        const notesToggle = document.getElementById('notes-toggle');
+        const notesPanel = document.getElementById('notes-panel');
+        
+        if (notesToggle && notesPanel) {
+            notesToggle.addEventListener('click', () => {
+                notesPanel.classList.toggle('show');
+                notesToggle.classList.toggle('active');
+                const chevron = notesToggle.querySelector('.fa-chevron-down');
+                if (chevron) {
+                    chevron.style.transform = notesPanel.classList.contains('show') ? 'rotate(180deg)' : '';
+                }
+            });
+        }
     }
 
     // Adicionar novo aniversário
@@ -372,6 +387,20 @@ class BirthdayManager {
         const phone = document.getElementById('person-phone')?.value.trim() || null;
         const photoInput = document.getElementById('person-photo');
         const addButton = document.querySelector('.btn-add');
+        
+        // Coletar notas e preferências
+        const preferences = {
+            likes: document.getElementById('person-likes')?.value.trim() || null,
+            dislikes: document.getElementById('person-dislikes')?.value.trim() || null,
+            clothingSize: document.getElementById('person-clothing-size')?.value.trim() || null,
+            shoeSize: document.getElementById('person-shoe-size')?.value.trim() || null,
+            favoriteColor: document.getElementById('person-favorite-color')?.value.trim() || null,
+            giftIdeas: document.getElementById('person-gift-ideas')?.value.trim() || null,
+            notes: document.getElementById('person-notes')?.value.trim() || null
+        };
+        
+        // Verificar se tem alguma preferência preenchida
+        const hasPreferences = Object.values(preferences).some(v => v !== null);
 
         if (!name || !date) {
             shakeElement(addButton);
@@ -396,6 +425,7 @@ class BirthdayManager {
             description: description || null,
             phone: phone,
             photo: null,
+            preferences: hasPreferences ? preferences : null,
             createdAt: new Date().toISOString()
         };
 
@@ -463,6 +493,20 @@ class BirthdayManager {
     resetForm() {
         document.getElementById('birthday-form').reset();
         document.getElementById('photo-preview').classList.add('hidden');
+        
+        // Fechar painel de notas se estiver aberto
+        const notesPanel = document.getElementById('notes-panel');
+        const notesToggle = document.getElementById('notes-toggle');
+        if (notesPanel) {
+            notesPanel.classList.remove('show');
+        }
+        if (notesToggle) {
+            notesToggle.classList.remove('active');
+            const chevron = notesToggle.querySelector('.fa-chevron-down');
+            if (chevron) {
+                chevron.style.transform = '';
+            }
+        }
     }
 
     // Obter texto dos dias restantes
@@ -675,34 +719,44 @@ class BirthdayManager {
         
         // Indicador de "Hoje é aniversário"
         const todayBadge = days === 0 ? '<span class="today-badge">🎉 HOJE!</span>' : '';
+        
+        // Renderizar notas/preferências se existirem
+        const notesPreview = this.renderNotesPreview(birthday.preferences);
 
         return `
             <div class="birthday-card ${urgencyClass}" data-id="${birthday.id}">
                 ${todayBadge}
                 <div class="swipe-container">
                     <div class="card-main-content">
-                        ${birthday.photo ? 
-                            `<img src="${birthday.photo}" alt="${birthday.name}" class="birthday-photo">` :
-                            `<div class="default-avatar">${birthday.name.charAt(0).toUpperCase()}</div>`
-                        }
-                        <div class="birthday-info">
-                            <h3>${birthday.name}</h3>
-                            ${birthday.description ? `<p class="birthday-description">${birthday.description}</p>` : ''}
-                            <p class="birthday-date">🎂 ${DateUtils.formatDateString(birthday.date)}</p>
-                            <div class="age-info">
-                                <span class="current-age">${currentAge} ${window.i18nManager ? window.i18nManager.translate('years_old') : 'anos'}</span>
-                                <span class="next-age">Fará ${nextAge} ${window.i18nManager ? window.i18nManager.translate('years_old') : 'anos'} em ${nextBirthdayDate}</span>
-                            </div>
-                            <span class="days-left ${urgencyClass}">${daysText}</span>
+                        <div class="card-left-section">
+                            ${birthday.photo ? 
+                                `<img src="${birthday.photo}" alt="${birthday.name}" class="birthday-photo">` :
+                                `<div class="default-avatar">${birthday.name.charAt(0).toUpperCase()}</div>`
+                            }
                         </div>
-                        <div class="birthday-actions">
-                            ${whatsappButton}
-                            <button class="btn-edit" onclick="birthdayManager.editBirthday(${birthday.id})" title="Editar">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn-delete" onclick="birthdayManager.deleteBirthday(${birthday.id})" title="Excluir">
-                                <i class="fas fa-trash"></i>
-                            </button>
+                        <div class="card-center-section">
+                            <div class="birthday-info">
+                                <h3>${birthday.name}</h3>
+                                ${birthday.description ? `<p class="birthday-description">${birthday.description}</p>` : ''}
+                                <p class="birthday-date">🎂 ${DateUtils.formatDateString(birthday.date)}</p>
+                                <div class="age-info">
+                                    <span class="current-age">${currentAge} ${window.i18nManager ? window.i18nManager.translate('years_old') : 'anos'}</span>
+                                    <span class="next-age">Fará ${nextAge} ${window.i18nManager ? window.i18nManager.translate('years_old') : 'anos'} em ${nextBirthdayDate}</span>
+                                </div>
+                                <span class="days-left ${urgencyClass}">${daysText}</span>
+                            </div>
+                            ${notesPreview}
+                        </div>
+                        <div class="card-right-section">
+                            <div class="birthday-actions">
+                                ${whatsappButton}
+                                <button class="btn-edit" onclick="birthdayManager.editBirthday(${birthday.id})" title="Editar">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-delete" onclick="birthdayManager.deleteBirthday(${birthday.id})" title="Excluir">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <div class="swipe-actions">
@@ -713,6 +767,47 @@ class BirthdayManager {
                             <i class="fas fa-trash"></i> Excluir
                         </button>
                     </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    // Renderizar preview das notas/preferências no card
+    renderNotesPreview(preferences) {
+        if (!preferences) return '';
+        
+        const items = [];
+        
+        if (preferences.likes) {
+            items.push(`<span class="note-item"><i class="fas fa-heart"></i> ${preferences.likes}</span>`);
+        }
+        if (preferences.dislikes) {
+            items.push(`<span class="note-item"><i class="fas fa-ban"></i> ${preferences.dislikes}</span>`);
+        }
+        if (preferences.clothingSize) {
+            items.push(`<span class="note-item"><i class="fas fa-tshirt"></i> ${preferences.clothingSize}</span>`);
+        }
+        if (preferences.shoeSize) {
+            items.push(`<span class="note-item"><i class="fas fa-shoe-prints"></i> ${preferences.shoeSize}</span>`);
+        }
+        if (preferences.favoriteColor) {
+            items.push(`<span class="note-item"><i class="fas fa-palette"></i> ${preferences.favoriteColor}</span>`);
+        }
+        if (preferences.giftIdeas) {
+            items.push(`<span class="note-item"><i class="fas fa-gift"></i> ${preferences.giftIdeas}</span>`);
+        }
+        if (preferences.notes) {
+            items.push(`<span class="note-item"><i class="fas fa-clipboard"></i> ${preferences.notes.substring(0, 50)}${preferences.notes.length > 50 ? '...' : ''}</span>`);
+        }
+        
+        if (items.length === 0) return '';
+        
+        return `
+            <div class="birthday-notes-preview">
+                <h5><i class="fas fa-sticky-note"></i> Notas e Preferências</h5>
+                <div class="notes-content">
+                    ${items.slice(0, 4).join('')}
+                    ${items.length > 4 ? `<span class="note-item">+${items.length - 4} mais</span>` : ''}
                 </div>
             </div>
         `;
@@ -2307,6 +2402,9 @@ class BirthdayManager {
         const birthday = this.birthdays.find(b => b.id === id);
         if (!birthday) return;
 
+        // Extrair preferências existentes
+        const prefs = birthday.preferences || {};
+
         const modal = document.createElement('div');
         modal.className = 'edit-birthday-modal';
         modal.innerHTML = `
@@ -2333,6 +2431,45 @@ class BirthdayManager {
                             <label>Telefone (WhatsApp)</label>
                             <input type="tel" id="edit-phone" value="${birthday.phone || ''}" placeholder="+55 11 99999-9999">
                         </div>
+                        
+                        <!-- Seção de Notas e Preferências -->
+                        <div class="notes-preferences-section edit-notes-section">
+                            <button type="button" class="notes-toggle-btn edit-notes-toggle">
+                                <i class="fas fa-sticky-note"></i>
+                                Notas e Preferências
+                                <i class="fas fa-chevron-down toggle-icon"></i>
+                            </button>
+                            <div class="notes-form-grid edit-notes-panel" style="display: ${Object.keys(prefs).length > 0 ? 'grid' : 'none'};">
+                                <div class="form-group">
+                                    <label><i class="fas fa-heart"></i> O que gosta</label>
+                                    <input type="text" id="edit-likes" value="${prefs.likes || ''}" placeholder="Chocolate, flores, livros...">
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-ban"></i> O que não gosta</label>
+                                    <input type="text" id="edit-dislikes" value="${prefs.dislikes || ''}" placeholder="Perfumes fortes...">
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-tshirt"></i> Tamanho de roupa</label>
+                                    <input type="text" id="edit-clothing-size" value="${prefs.clothingSize || ''}" placeholder="M, G, 42...">
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-shoe-prints"></i> Tamanho de calçado</label>
+                                    <input type="text" id="edit-shoe-size" value="${prefs.shoeSize || ''}" placeholder="38, 40...">
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-palette"></i> Cor favorita</label>
+                                    <input type="text" id="edit-favorite-color" value="${prefs.favoriteColor || ''}" placeholder="Azul, verde...">
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-gift"></i> Ideias de presente</label>
+                                    <input type="text" id="edit-gift-ideas" value="${prefs.giftIdeas || ''}" placeholder="Livro X, jogo Y...">
+                                </div>
+                                <div class="form-group full-width">
+                                    <label><i class="fas fa-clipboard"></i> Outras notas</label>
+                                    <textarea id="edit-notes" rows="2" placeholder="Informações adicionais...">${prefs.notes || ''}</textarea>
+                                </div>
+                            </div>
+                        </div>
                     </form>
                 </div>
                 <div class="edit-modal-footer">
@@ -2346,6 +2483,18 @@ class BirthdayManager {
         
         document.body.appendChild(modal);
         setTimeout(() => modal.classList.add('show'), 10);
+        
+        // Toggle notas
+        const notesToggle = modal.querySelector('.edit-notes-toggle');
+        const notesPanel = modal.querySelector('.edit-notes-panel');
+        notesToggle.onclick = () => {
+            const isVisible = notesPanel.style.display === 'grid';
+            notesPanel.style.display = isVisible ? 'none' : 'grid';
+            notesToggle.classList.toggle('active', !isVisible);
+        };
+        if (Object.keys(prefs).length > 0) {
+            notesToggle.classList.add('active');
+        }
         
         const closeModal = () => {
             modal.classList.remove('show');
@@ -2370,6 +2519,29 @@ class BirthdayManager {
             birthday.date = newDate;
             birthday.description = newDescription || null;
             birthday.phone = newPhone || null;
+            
+            // Salvar preferências
+            const likes = modal.querySelector('#edit-likes').value.trim();
+            const dislikes = modal.querySelector('#edit-dislikes').value.trim();
+            const clothingSize = modal.querySelector('#edit-clothing-size').value.trim();
+            const shoeSize = modal.querySelector('#edit-shoe-size').value.trim();
+            const favoriteColor = modal.querySelector('#edit-favorite-color').value.trim();
+            const giftIdeas = modal.querySelector('#edit-gift-ideas').value.trim();
+            const notes = modal.querySelector('#edit-notes').value.trim();
+            
+            if (likes || dislikes || clothingSize || shoeSize || favoriteColor || giftIdeas || notes) {
+                birthday.preferences = {
+                    likes: likes || null,
+                    dislikes: dislikes || null,
+                    clothingSize: clothingSize || null,
+                    shoeSize: shoeSize || null,
+                    favoriteColor: favoriteColor || null,
+                    giftIdeas: giftIdeas || null,
+                    notes: notes || null
+                };
+            } else {
+                birthday.preferences = null;
+            }
             
             this.saveBirthdays();
             this.displayBirthdays();
@@ -2800,10 +2972,105 @@ function showFeedbackMessage(message, type = 'success', duration = 3000) {
     }, duration);
 }
 
-// === SISTEMA DE TEMAS ===
+// === SISTEMA DE TEMAS APRIMORADO ===
 
 class ThemeManager {
     constructor() {
+        // Lista de temas disponíveis
+        this.themes = {
+            light: {
+                name: 'Claro',
+                nameEn: 'Light',
+                icon: '☀️',
+                description: 'Tema claro padrão',
+                colors: ['#667eea', '#764ba2', '#f7fafc', '#ffffff']
+            },
+            dark: {
+                name: 'Escuro',
+                nameEn: 'Dark', 
+                icon: '🌙',
+                description: 'Escuro para uso noturno',
+                colors: ['#805ad5', '#553c9a', '#0d1117', '#161b22']
+            },
+            ocean: {
+                name: 'Oceano',
+                nameEn: 'Ocean',
+                icon: '🌊',
+                description: 'Azul profundo marítimo',
+                colors: ['#0ea5e9', '#06b6d4', '#0c1929', '#164e63']
+            },
+            sunset: {
+                name: 'Pôr do Sol',
+                nameEn: 'Sunset',
+                icon: '🌅',
+                description: 'Laranja e rosa quente',
+                colors: ['#f97316', '#ec4899', '#1f1523', '#7c2d12']
+            },
+            forest: {
+                name: 'Floresta',
+                nameEn: 'Forest',
+                icon: '🌲',
+                description: 'Verde natural relaxante',
+                colors: ['#22c55e', '#84cc16', '#0f1f14', '#166534']
+            },
+            rose: {
+                name: 'Rosa',
+                nameEn: 'Rose',
+                icon: '🌸',
+                description: 'Rosa elegante e suave',
+                colors: ['#ec4899', '#f472b6', '#1f1318', '#9d174d']
+            },
+            lavender: {
+                name: 'Lavanda',
+                nameEn: 'Lavender',
+                icon: '💜',
+                description: 'Lilás claro e delicado',
+                colors: ['#a78bfa', '#8b5cf6', '#faf5ff', '#ede9fe']
+            },
+            midnight: {
+                name: 'Meia-noite',
+                nameEn: 'Midnight',
+                icon: '🌌',
+                description: 'Azul escuro profundo',
+                colors: ['#6366f1', '#818cf8', '#020617', '#1e1b4b']
+            },
+            candy: {
+                name: 'Doce',
+                nameEn: 'Candy',
+                icon: '🍬',
+                description: 'Rosa doce e alegre',
+                colors: ['#f472b6', '#c084fc', '#fdf4ff', '#fae8ff']
+            },
+            nord: {
+                name: 'Nórdico',
+                nameEn: 'Nord',
+                icon: '❄️',
+                description: 'Inspirado no ártico',
+                colors: ['#88c0d0', '#5e81ac', '#2e3440', '#3b4252']
+            },
+            dracula: {
+                name: 'Drácula',
+                nameEn: 'Dracula',
+                icon: '🧛',
+                description: 'Tema de programação popular',
+                colors: ['#bd93f9', '#ff79c6', '#282a36', '#44475a']
+            },
+            colorblind: {
+                name: 'Daltônico',
+                nameEn: 'Colorblind',
+                icon: '🎯',
+                description: 'Acessível para todos',
+                colors: ['#0173b2', '#de8f05', '#ffffff', '#f8f9fa']
+            },
+            custom: {
+                name: 'Personalizado',
+                nameEn: 'Custom',
+                icon: '🎨',
+                description: 'Crie seu próprio tema',
+                colors: ['#805ad5', '#553c9a', '#ffffff', '#f7fafc']
+            }
+        };
+        
         this.currentTheme = this.getSavedTheme();
         console.log('Tema salvo:', this.currentTheme);
         this.initializeTheme();
@@ -2820,7 +3087,30 @@ class ThemeManager {
 
     initializeTheme() {
         this.applyTheme(this.currentTheme);
-        this.updateThemeSelector();
+        this.updateThemeCards();
+        this.detectSystemTheme();
+    }
+
+    detectSystemTheme() {
+        // Detectar preferência do sistema
+        if (window.matchMedia) {
+            const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+            
+            // Se nunca foi configurado, usar preferência do sistema
+            if (!localStorage.getItem('selectedTheme')) {
+                if (darkModeQuery.matches) {
+                    this.applyTheme('dark');
+                }
+            }
+            
+            // Escutar mudanças na preferência do sistema
+            darkModeQuery.addEventListener('change', (e) => {
+                const autoTheme = localStorage.getItem('autoTheme');
+                if (autoTheme === 'true') {
+                    this.applyTheme(e.matches ? 'dark' : 'light');
+                }
+            });
+        }
     }
 
     applyTheme(theme) {
@@ -2841,7 +3131,6 @@ class ThemeManager {
         // Aplicar novo tema
         if (theme === 'custom') {
             console.log('Carregando tema personalizado');
-            // Carregar tema personalizado do localStorage
             this.loadCustomTheme();
         } else if (theme !== 'light') {
             console.log('Aplicando tema padrão:', theme);
@@ -2850,6 +3139,7 @@ class ThemeManager {
 
         this.currentTheme = theme;
         this.saveTheme(theme);
+        this.updateThemeCards();
 
         // Atualizar meta theme-color
         const metaThemeColor = document.querySelector('meta[name="theme-color"]');
@@ -2860,6 +3150,16 @@ class ThemeManager {
         }
     }
 
+    updateThemeCards() {
+        // Atualizar visual dos cards de tema
+        document.querySelectorAll('.theme-card').forEach(card => {
+            card.classList.remove('active');
+            if (card.dataset.theme === this.currentTheme) {
+                card.classList.add('active');
+            }
+        });
+    }
+
     updateThemeSelector() {
         const themeSelect = document.getElementById('theme-select');
         if (themeSelect && this.currentTheme !== 'custom') {
@@ -2868,84 +3168,243 @@ class ThemeManager {
     }
 
     setupThemeSelector() {
+        // Setup para o novo grid de temas
+        this.renderThemeGrid();
+        this.setupCustomThemePanel();
+        
+        // Manter compatibilidade com o select antigo
         const themeSelect = document.getElementById('theme-select');
-        const customPanel = document.getElementById('custom-theme-panel');
-        const applyCustomBtn = document.getElementById('apply-custom');
-        const closeCustomBtn = document.getElementById('close-custom');
+        if (themeSelect) {
+            themeSelect.value = this.currentTheme;
+            themeSelect.addEventListener('change', (e) => {
+                const theme = e.target.value;
+                if (theme === 'custom') {
+                    this.showCustomThemePanel();
+                } else {
+                    this.hideCustomThemePanel();
+                    this.applyTheme(theme);
+                    this.showThemeToast(theme);
+                }
+            });
+        }
+    }
 
-        console.log('Setup theme selector, elemento encontrado:', themeSelect);
+    renderThemeGrid() {
+        const container = document.getElementById('theme-grid');
+        if (!container) return;
 
-        if (!themeSelect) {
-            console.warn('Theme select element not found!');
-            return;
+        container.innerHTML = '';
+
+        Object.entries(this.themes).forEach(([themeKey, themeData]) => {
+            const card = document.createElement('div');
+            card.className = `theme-card ${this.currentTheme === themeKey ? 'active' : ''}`;
+            card.dataset.theme = themeKey;
+            
+            // Criar preview com cores
+            const colorsHtml = themeData.colors.map((color, i) => 
+                `<div class="color-strip" style="background: ${color}"></div>`
+            ).join('');
+
+            card.innerHTML = `
+                <div class="theme-preview">
+                    <div class="theme-preview-colors">
+                        ${colorsHtml}
+                    </div>
+                </div>
+                <div class="theme-name">${themeData.icon} ${themeData.name}</div>
+                <div class="theme-description">${themeData.description}</div>
+            `;
+
+            card.addEventListener('click', () => {
+                if (themeKey === 'custom') {
+                    this.toggleCustomThemePanel();
+                } else {
+                    this.applyTheme(themeKey);
+                    this.showThemeToast(themeKey);
+                }
+            });
+
+            container.appendChild(card);
+        });
+    }
+
+    showThemeToast(theme) {
+        const themeData = this.themes[theme];
+        if (themeData) {
+            const message = window.i18nManager ? 
+                `${themeData.icon} ${window.i18nManager.translate('theme_applied').replace('{theme}', themeData.name)}` : 
+                `${themeData.icon} ${themeData.name} aplicado!`;
+            showFeedbackMessage(message, 'success', 2000);
+        }
+    }
+
+    setupCustomThemePanel() {
+        const toggle = document.getElementById('custom-theme-toggle');
+        const panel = document.getElementById('custom-colors-panel');
+        const applyBtn = document.getElementById('btn-apply-custom');
+        const resetBtn = document.getElementById('btn-reset-custom');
+        const colorInputs = document.querySelectorAll('.color-input-wrapper input[type="color"]');
+
+        if (toggle && panel) {
+            toggle.addEventListener('click', () => {
+                this.toggleCustomThemePanel();
+            });
         }
 
-        // Set current theme in select
-        themeSelect.value = this.currentTheme;
-
-        themeSelect.addEventListener('change', (e) => {
-            const theme = e.target.value;
-            console.log('Mudando para tema:', theme);
-            
-            if (theme === 'custom') {
-                this.showCustomThemePanel();
-            } else {
-                this.hideCustomThemePanel();
-                this.applyTheme(theme);
-                
-                // Feedback visual
-                const themeName = window.i18nManager ? 
-                    window.i18nManager.translate('theme_' + theme) : 
-                    this.getThemeName(theme);
-                const appliedText = window.i18nManager ? 
-                    window.i18nManager.translate('theme_applied') : 
-                    'aplicado!';
-                showFeedbackMessage(`${themeName} ${appliedText}`, 'success', 2000);
-            }
-        });
-
-        // Custom theme panel handlers
-        if (applyCustomBtn) {
-            applyCustomBtn.addEventListener('click', () => {
+        if (applyBtn) {
+            applyBtn.addEventListener('click', () => {
                 this.applyCustomTheme();
             });
         }
 
-        if (closeCustomBtn) {
-            closeCustomBtn.addEventListener('click', () => {
-                this.hideCustomThemePanel();
-                themeSelect.value = this.currentTheme; // Reset to current theme
+        if (resetBtn) {
+            resetBtn.addEventListener('click', () => {
+                this.resetCustomTheme();
             });
+        }
+
+        // Atualizar preview em tempo real ao mudar cores
+        colorInputs.forEach(input => {
+            input.addEventListener('input', () => {
+                this.updateLivePreview();
+                this.syncHexInput(input);
+            });
+        });
+
+        // Sincronizar inputs de hex com color pickers
+        document.querySelectorAll('.color-hex-input').forEach(hexInput => {
+            hexInput.addEventListener('input', () => {
+                this.syncColorPicker(hexInput);
+            });
+        });
+    }
+
+    syncHexInput(colorInput) {
+        const hexInput = colorInput.parentElement.querySelector('.color-hex-input');
+        if (hexInput) {
+            hexInput.value = colorInput.value.toUpperCase();
         }
     }
 
-    getThemeName(theme) {
-        const names = {
-            light: 'Claro',
-            dark: 'Escuro',
-            colorblind: 'Daltônico',
-            custom: 'Personalizado'
-        };
-        return names[theme] || theme;
+    syncColorPicker(hexInput) {
+        const colorInput = hexInput.parentElement.querySelector('input[type="color"]');
+        let value = hexInput.value.trim();
+        
+        // Adicionar # se não tiver
+        if (!value.startsWith('#')) {
+            value = '#' + value;
+        }
+        
+        // Validar formato hex
+        if (/^#[0-9A-Fa-f]{6}$/.test(value) && colorInput) {
+            colorInput.value = value;
+            this.updateLivePreview();
+        }
     }
 
-    showCustomThemePanel() {
-        const panel = document.getElementById('custom-theme-panel');
+    toggleCustomThemePanel() {
+        const panel = document.getElementById('custom-colors-panel');
+        const toggleIcon = document.querySelector('.toggle-icon');
+        
         if (panel) {
-            panel.classList.remove('hidden');
+            panel.classList.toggle('show');
+            if (toggleIcon) {
+                toggleIcon.classList.toggle('open');
+            }
             
-            // Load current colors if custom theme is already applied
-            if (this.currentTheme === 'custom') {
-                this.loadCustomColors();
+            // Carregar cores atuais se estiver abrindo
+            if (panel.classList.contains('show')) {
+                this.loadCurrentColorsToPanel();
             }
         }
     }
 
-    hideCustomThemePanel() {
-        const panel = document.getElementById('custom-theme-panel');
+    showCustomThemePanel() {
+        const panel = document.getElementById('custom-colors-panel');
+        const toggleIcon = document.querySelector('.toggle-icon');
+        
         if (panel) {
-            panel.classList.add('hidden');
+            panel.classList.add('show');
+            if (toggleIcon) {
+                toggleIcon.classList.add('open');
+            }
+            this.loadCurrentColorsToPanel();
         }
+    }
+
+    hideCustomThemePanel() {
+        const panel = document.getElementById('custom-colors-panel');
+        const toggleIcon = document.querySelector('.toggle-icon');
+        
+        if (panel) {
+            panel.classList.remove('show');
+            if (toggleIcon) {
+                toggleIcon.classList.remove('open');
+            }
+        }
+    }
+
+    loadCurrentColorsToPanel() {
+        const root = document.documentElement;
+        const style = getComputedStyle(root);
+        
+        const colorMappings = {
+            'custom-primary': '--primary-color',
+            'custom-secondary': '--secondary-color',
+            'custom-background': '--background-color',
+            'custom-card': '--card-background',
+            'custom-text': '--text-primary',
+            'custom-border': '--border-color'
+        };
+
+        Object.entries(colorMappings).forEach(([inputId, cssVar]) => {
+            const colorInput = document.getElementById(inputId);
+            const hexInput = colorInput?.parentElement?.querySelector('.color-hex-input');
+            
+            if (colorInput) {
+                let value = style.getPropertyValue(cssVar).trim();
+                
+                // Converter rgba para hex se necessário
+                if (value.startsWith('rgba') || value.startsWith('rgb')) {
+                    value = this.rgbaToHex(value);
+                }
+                
+                if (value && value.startsWith('#')) {
+                    colorInput.value = value;
+                    if (hexInput) {
+                        hexInput.value = value.toUpperCase();
+                    }
+                }
+            }
+        });
+    }
+
+    updateLivePreview() {
+        const primaryColor = document.getElementById('custom-primary')?.value;
+        const backgroundColor = document.getElementById('custom-background')?.value;
+        const textColor = document.getElementById('custom-text')?.value;
+        
+        const previewSection = document.querySelector('.live-preview-section');
+        if (previewSection && primaryColor && backgroundColor && textColor) {
+            // Atualizar preview elements
+            const primaryBtn = previewSection.querySelector('.preview-btn.primary');
+            const secondaryBtn = previewSection.querySelector('.preview-btn.secondary');
+            const primaryText = previewSection.querySelector('.preview-text.primary-text');
+            const secondaryText = previewSection.querySelector('.preview-text.secondary-text');
+            
+            if (primaryBtn) primaryBtn.style.background = primaryColor;
+            if (secondaryBtn) {
+                secondaryBtn.style.background = backgroundColor;
+                secondaryBtn.style.color = textColor;
+            }
+            if (primaryText) primaryText.style.color = textColor;
+            if (secondaryText) secondaryText.style.color = this.adjustOpacity(textColor, 0.7);
+        }
+    }
+
+    getThemeName(theme) {
+        const themeData = this.themes[theme];
+        return themeData ? themeData.name : theme;
     }
 
     loadCustomColors() {
@@ -2999,7 +3458,6 @@ class ThemeManager {
             '--primary-gradient'
         ];
         
-        console.log('Limpando propriedades personalizadas:', customProperties);
         customProperties.forEach(prop => {
             root.style.removeProperty(prop);
         });
@@ -3029,67 +3487,79 @@ class ThemeManager {
     }
 
     applyCustomTheme() {
-        const primaryColor = document.getElementById('primary-color')?.value || '#805ad5';
-        const backgroundColor = document.getElementById('background-color')?.value || '#ffffff';
-        const textColor = document.getElementById('text-color')?.value || '#2d3748';
+        const primaryColor = document.getElementById('custom-primary')?.value || '#805ad5';
+        const secondaryColor = document.getElementById('custom-secondary')?.value || '#553c9a';
+        const backgroundColor = document.getElementById('custom-background')?.value || '#ffffff';
+        const cardColor = document.getElementById('custom-card')?.value || '#ffffff';
+        const textColor = document.getElementById('custom-text')?.value || '#2d3748';
+        const borderColor = document.getElementById('custom-border')?.value || '#e2e8f0';
 
         const root = document.documentElement;
         
         // Primeiro limpa todas as propriedades existentes
         this.clearCustomProperties();
         
-        // Apply custom colors with specific custom prefix
-        root.style.setProperty('--custom-primary-color', primaryColor);
-        root.style.setProperty('--custom-primary-hover', this.lightenColor(primaryColor, 10));
-        root.style.setProperty('--custom-background-color', backgroundColor);
-        root.style.setProperty('--custom-text-primary', textColor);
-        root.style.setProperty('--custom-text-secondary', this.adjustOpacity(textColor, 0.7));
-        
-        // Set card background based on background color brightness
-        const isLight = this.isLightColor(backgroundColor);
-        const cardBg = isLight ? 
-            this.adjustOpacity(backgroundColor, 0.8) : 
-            this.lightenColor(backgroundColor, 5);
-            
-        root.style.setProperty('--custom-card-background', cardBg);
-        root.style.setProperty('--custom-border-color', this.adjustOpacity(textColor, 0.2));
-        root.style.setProperty('--custom-secondary-color', this.lightenColor(primaryColor, 20));
-        
-        // Apply to actual CSS variables
+        // Apply custom colors
         root.style.setProperty('--primary-color', primaryColor);
         root.style.setProperty('--primary-hover', this.lightenColor(primaryColor, 10));
+        root.style.setProperty('--secondary-color', secondaryColor);
         root.style.setProperty('--background-color', backgroundColor);
+        root.style.setProperty('--card-background', cardColor);
         root.style.setProperty('--text-primary', textColor);
         root.style.setProperty('--text-secondary', this.adjustOpacity(textColor, 0.7));
-        root.style.setProperty('--card-background', cardBg);
-        root.style.setProperty('--border-color', this.adjustOpacity(textColor, 0.2));
-        root.style.setProperty('--secondary-color', this.lightenColor(primaryColor, 20));
+        root.style.setProperty('--border-color', borderColor);
+        root.style.setProperty('--gradient-bg', `linear-gradient(135deg, ${backgroundColor} 0%, ${this.lightenColor(backgroundColor, 5)} 100%)`);
+        root.style.setProperty('--primary-gradient', `linear-gradient(135deg, ${primaryColor}, ${secondaryColor})`);
 
         // Update current theme and save
         this.currentTheme = 'custom';
         localStorage.setItem('selectedTheme', 'custom');
         
-        // Save custom colors with custom prefix
+        // Save custom colors
         const customTheme = {
-            'custom-primary-color': primaryColor,
-            'custom-background-color': backgroundColor,
-            'custom-text-primary': textColor,
-            'custom-card-background': cardBg,
-            'custom-secondary-color': this.lightenColor(primaryColor, 20)
+            'primary-color': primaryColor,
+            'primary-hover': this.lightenColor(primaryColor, 10),
+            'secondary-color': secondaryColor,
+            'background-color': backgroundColor,
+            'card-background': cardColor,
+            'text-primary': textColor,
+            'text-secondary': this.adjustOpacity(textColor, 0.7),
+            'border-color': borderColor
         };
         localStorage.setItem('custom-theme', JSON.stringify(customTheme));
 
-        // Switch theme selector to custom
-        const themeSelector = document.getElementById('theme-selector');
-        if (themeSelector) {
-            themeSelector.value = 'custom';
-        }
-
+        this.updateThemeCards();
         this.hideCustomThemePanel();
+        
         const message = window.i18nManager ? 
             window.i18nManager.translate('custom_theme_applied') : 
-            'Tema personalizado aplicado!';
+            '🎨 Tema personalizado aplicado!';
         showFeedbackMessage(message, 'success', 2000);
+    }
+
+    resetCustomTheme() {
+        // Resetar para tema claro
+        this.applyTheme('light');
+        
+        // Limpar tema salvo
+        localStorage.removeItem('custom-theme');
+        
+        // Recarregar cores padrão no painel
+        this.loadCurrentColorsToPanel();
+        
+        showFeedbackMessage('🔄 Cores resetadas!', 'info', 2000);
+    }
+
+    rgbaToHex(rgba) {
+        // Converter rgba(r, g, b, a) ou rgb(r, g, b) para hex
+        const match = rgba.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+        if (match) {
+            const r = parseInt(match[1]).toString(16).padStart(2, '0');
+            const g = parseInt(match[2]).toString(16).padStart(2, '0');
+            const b = parseInt(match[3]).toString(16).padStart(2, '0');
+            return `#${r}${g}${b}`;
+        }
+        return '#000000';
     }
 
     lightenColor(color, percent) {
@@ -3102,6 +3572,17 @@ class ThemeManager {
         return "#" + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
             (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 +
             (B < 255 ? B < 1 ? 0 : B : 255)).toString(16).slice(1);
+    }
+
+    darkenColor(color, percent) {
+        const num = parseInt(color.replace("#", ""), 16);
+        const amt = Math.round(2.55 * percent);
+        const R = (num >> 16) - amt;
+        const G = (num >> 8 & 0x00FF) - amt;
+        const B = (num & 0x0000FF) - amt;
+        return "#" + (0x1000000 + (R > 0 ? R : 0) * 0x10000 +
+            (G > 0 ? G : 0) * 0x100 +
+            (B > 0 ? B : 0)).toString(16).slice(1);
     }
 
     adjustOpacity(color, opacity) {
@@ -3158,7 +3639,6 @@ class I18nManager {
                 'person_name_placeholder': 'Digite o nome...',
                 'birth_date_label': 'Data de Nascimento',
                 'description_label': 'Descrição (opcional)',
-                'description_placeholder': 'Digite uma descrição...',
                 'photo_label': 'Foto (opcional)',
                 'add_btn': 'Adicionar Aniversário',
                 'processing': 'Processando...',
@@ -3190,18 +3670,34 @@ class I18nManager {
                 'and': 'e',
                 
                 // Themes
-                'theme_light': '☀️ Tema Claro',
-                'theme_dark': '🌙 Tema Escuro',
-                'theme_colorblind': '🎯 Tema Daltônico',
+                'theme_light': '☀️ Claro',
+                'theme_dark': '🌙 Escuro',
+                'theme_ocean': '🌊 Oceano',
+                'theme_sunset': '🌅 Pôr do Sol',
+                'theme_forest': '🌲 Floresta',
+                'theme_rose': '🌸 Rosa',
+                'theme_lavender': '💜 Lavanda',
+                'theme_midnight': '🌌 Meia-noite',
+                'theme_candy': '🍬 Doce',
+                'theme_nord': '❄️ Nórdico',
+                'theme_dracula': '🧛 Drácula',
+                'theme_colorblind': '🎯 Daltônico',
                 'theme_custom': '🎨 Personalizado',
-                'theme_applied': 'aplicado!',
-                'custom_theme_applied': 'Tema personalizado aplicado!',
+                'theme_applied': '{theme} aplicado!',
+                'custom_theme_applied': '🎨 Tema personalizado aplicado!',
                 'customize_theme_title': '🎨 Personalizar Tema',
                 'primary_color_label': 'Cor Principal:',
+                'secondary_color_label': 'Cor Secundária:',
                 'background_color_label': 'Cor de Fundo:',
+                'card_color_label': 'Cor dos Cards:',
                 'text_color_label': 'Cor do Texto:',
-                'apply_btn': 'Aplicar',
+                'border_color_label': 'Cor das Bordas:',
+                'apply_btn': 'Aplicar Tema',
+                'reset_btn': 'Resetar',
                 'close_btn': 'Fechar',
+                'choose_theme': 'Escolha seu Tema',
+                'create_custom_theme': 'Criar Tema Personalizado',
+                'live_preview': 'Preview em Tempo Real',
                 
                 // Months
                 'january': 'Janeiro',
@@ -3245,7 +3741,6 @@ class I18nManager {
                 'person_name_placeholder': 'Enter name...',
                 'birth_date_label': 'Birth Date',
                 'description_label': 'Description (optional)',
-                'description_placeholder': 'Enter description...',
                 'photo_label': 'Photo (optional)',
                 'add_btn': 'Add Birthday',
                 'processing': 'Processing...',
@@ -3277,18 +3772,34 @@ class I18nManager {
                 'and': 'and',
                 
                 // Themes
-                'theme_light': '☀️ Light Theme',
-                'theme_dark': '🌙 Dark Theme',
-                'theme_colorblind': '🎯 Colorblind-Friendly',
+                'theme_light': '☀️ Light',
+                'theme_dark': '🌙 Dark',
+                'theme_ocean': '🌊 Ocean',
+                'theme_sunset': '🌅 Sunset',
+                'theme_forest': '🌲 Forest',
+                'theme_rose': '🌸 Rose',
+                'theme_lavender': '💜 Lavender',
+                'theme_midnight': '🌌 Midnight',
+                'theme_candy': '🍬 Candy',
+                'theme_nord': '❄️ Nord',
+                'theme_dracula': '🧛 Dracula',
+                'theme_colorblind': '🎯 Colorblind',
                 'theme_custom': '🎨 Custom',
-                'theme_applied': 'applied!',
-                'custom_theme_applied': 'Custom theme applied!',
+                'theme_applied': '{theme} applied!',
+                'custom_theme_applied': '🎨 Custom theme applied!',
                 'customize_theme_title': '🎨 Customize Theme',
                 'primary_color_label': 'Primary Color:',
+                'secondary_color_label': 'Secondary Color:',
                 'background_color_label': 'Background Color:',
+                'card_color_label': 'Card Color:',
                 'text_color_label': 'Text Color:',
-                'apply_btn': 'Apply',
+                'border_color_label': 'Border Color:',
+                'apply_btn': 'Apply Theme',
+                'reset_btn': 'Reset',
                 'close_btn': 'Close',
+                'choose_theme': 'Choose your Theme',
+                'create_custom_theme': 'Create Custom Theme',
+                'live_preview': 'Live Preview',
                 
                 // Months
                 'january': 'January',
@@ -3388,7 +3899,6 @@ class I18nManager {
                 'person_name_placeholder': 'Digite o nome...',
                 'birth_date_label': 'Data de Nascimento',
                 'description_label': 'Descrição (opcional)',
-                'description_placeholder': 'Digite uma descrição...',
                 'photo_label': 'Foto (opcional)',
                 'add_btn': 'Adicionar Aniversário',
                 'processing': 'Processando...',
@@ -3420,18 +3930,34 @@ class I18nManager {
                 'and': 'e',
                 
                 // Themes
-                'theme_light': '☀️ Tema Claro',
-                'theme_dark': '🌙 Tema Escuro',
-                'theme_colorblind': '🎯 Tema Daltônico',
+                'theme_light': '☀️ Claro',
+                'theme_dark': '🌙 Escuro',
+                'theme_ocean': '🌊 Oceano',
+                'theme_sunset': '🌅 Pôr do Sol',
+                'theme_forest': '🌲 Floresta',
+                'theme_rose': '🌸 Rosa',
+                'theme_lavender': '💜 Lavanda',
+                'theme_midnight': '🌌 Meia-noite',
+                'theme_candy': '🍬 Doce',
+                'theme_nord': '❄️ Nórdico',
+                'theme_dracula': '🧛 Drácula',
+                'theme_colorblind': '🎯 Daltônico',
                 'theme_custom': '🎨 Personalizado',
-                'theme_applied': 'aplicado!',
-                'custom_theme_applied': 'Tema personalizado aplicado!',
+                'theme_applied': '{theme} aplicado!',
+                'custom_theme_applied': '🎨 Tema personalizado aplicado!',
                 'customize_theme_title': '🎨 Personalizar Tema',
                 'primary_color_label': 'Cor Principal:',
+                'secondary_color_label': 'Cor Secundária:',
                 'background_color_label': 'Cor de Fundo:',
+                'card_color_label': 'Cor dos Cards:',
                 'text_color_label': 'Cor do Texto:',
-                'apply_btn': 'Aplicar',
+                'border_color_label': 'Cor das Bordas:',
+                'apply_btn': 'Aplicar Tema',
+                'reset_btn': 'Resetar',
                 'close_btn': 'Fechar',
+                'choose_theme': 'Escolha seu Tema',
+                'create_custom_theme': 'Criar Tema Personalizado',
+                'live_preview': 'Preview em Tempo Real',
                 
                 // Months
                 'january': 'Janeiro',

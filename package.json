@@ -1,7 +1,7 @@
 {
   "name": "lembrete-aniversarios",
-  "version": "4.1.0",
-  "description": "Sistema completo de lembretes de aniversários com notificações em background, importação/exportação, WhatsApp, estatísticas e mais",
+  "version": "4.2.0",
+  "description": "Sistema completo de lembretes de aniversários com notificações em background, importação/exportação, WhatsApp, estatísticas, 12 temas visuais e temas personalizados",
   "type": "module",
   "dependencies": {
     "@vercel/analytics": "^1.5.0"

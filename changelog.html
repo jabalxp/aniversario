@@ -551,7 +551,7 @@
         <!-- Estatísticas -->
         <div class="stats-section">
             <div class="stat-item">
-                <div class="stat-number">10</div>
+                <div class="stat-number">11</div>
                 <div class="stat-label">Versões</div>
             </div>
             <div class="stat-item">
@@ -559,7 +559,7 @@
                 <div class="stat-label">Versões Major</div>
             </div>
             <div class="stat-item">
-                <div class="stat-number">37+</div>
+                <div class="stat-number">48+</div>
                 <div class="stat-label">Melhorias</div>
             </div>
             <div class="stat-item">
@@ -641,6 +641,231 @@
         let currentL = localStorage.getItem('selectedLanguage') || 'pt';
 
         const changelogData = [
+            {
+                version: "4.3.0",
+                date: "2025-09-21",
+                type: "minor",
+                description: {
+                    'pt': "Notas e Preferências: Campo para anotar gostos, alergias, tamanhos + Tutorial interativo + UI/UX melhorada",
+                    'en': "Notes and Preferences: Field to note likes, allergies, sizes + Interactive tutorial + Improved UI/UX"
+                },
+                changes: [
+                    {
+                        type: "added",
+                        text: {
+                            'pt': "📝 **NOTAS E PREFERÊNCIAS**: Novo campo colapsável para registrar informações detalhadas de cada pessoa",
+                            'en': "📝 **NOTES AND PREFERENCES**: New collapsible field to record detailed information for each person"
+                        }
+                    },
+                    {
+                        type: "added",
+                        text: {
+                            'pt': "❤️ **O QUE GOSTA/NÃO GOSTA**: Campos para registrar preferências e aversões da pessoa",
+                            'en': "❤️ **LIKES/DISLIKES**: Fields to record person's preferences and aversions"
+                        }
+                    },
+                    {
+                        type: "added",
+                        text: {
+                            'pt': "👕 **TAMANHOS DE ROUPA E CALÇADO**: Anote os tamanhos para facilitar presentes",
+                            'en': "👕 **CLOTHING AND SHOE SIZES**: Note sizes to make gift giving easier"
+                        }
+                    },
+                    {
+                        type: "added",
+                        text: {
+                            'pt': "🎨 **COR FAVORITA**: Campo para registrar a cor preferida",
+                            'en': "🎨 **FAVORITE COLOR**: Field to record favorite color"
+                        }
+                    },
+                    {
+                        type: "added",
+                        text: {
+                            'pt': "🎁 **IDEIAS DE PRESENTE**: Anote ideias de presentes para cada pessoa",
+                            'en': "🎁 **GIFT IDEAS**: Note gift ideas for each person"
+                        }
+                    },
+                    {
+                        type: "added",
+                        text: {
+                            'pt': "📋 **PREVIEW NO CARD**: Notas são exibidas diretamente no card do aniversário",
+                            'en': "📋 **CARD PREVIEW**: Notes are displayed directly on the birthday card"
+                        }
+                    },
+                    {
+                        type: "added",
+                        text: {
+                            'pt': "📚 **BOTÃO TUTORIAL**: Novo botão que explica transferência de dados e funcionalidades",
+                            'en': "📚 **TUTORIAL BUTTON**: New button explaining data transfer and features"
+                        }
+                    },
+                    {
+                        type: "added",
+                        text: {
+                            'pt': "💾 **EXPORTAR DADOS**: Tutorial inclui função para exportar localStorage como backup",
+                            'en': "💾 **EXPORT DATA**: Tutorial includes function to export localStorage as backup"
+                        }
+                    },
+                    {
+                        type: "improved",
+                        text: {
+                            'pt': "🎨 **ESTILO SELETORES TEMA/IDIOMA**: Botões com melhor contraste e legibilidade em todos os temas",
+                            'en': "🎨 **THEME/LANGUAGE SELECTOR STYLE**: Buttons with better contrast and readability across all themes"
+                        }
+                    },
+                    {
+                        type: "improved",
+                        text: {
+                            'pt': "🌗 **NOMES DE TEMAS LEGÍVEIS**: Cores de texto dos temas ajustadas para cada tema visual",
+                            'en': "🌗 **READABLE THEME NAMES**: Theme text colors adjusted for each visual theme"
+                        }
+                    },
+                    {
+                        type: "improved",
+                        text: {
+                            'pt': "✏️ **MODAL DE EDIÇÃO EXPANDIDO**: Modal agora inclui todos os campos de notas e preferências",
+                            'en': "✏️ **EXPANDED EDIT MODAL**: Modal now includes all notes and preferences fields"
+                        }
+                    }
+                ]
+            },
+            {
+                version: "4.2.0",
+                date: "2025-09-21",
+                type: "minor",
+                description: {
+                    'pt': "Sistema de Temas Completo: 12 temas visuais pré-definidos + Personalização avançada de cores",
+                    'en': "Complete Theme System: 12 pre-defined visual themes + Advanced color customization"
+                },
+                changes: [
+                    {
+                        type: "added",
+                        text: {
+                            'pt': "🎨 **12 TEMAS VISUAIS PRÉ-DEFINIDOS**: Claro, Escuro, Oceano, Pôr do Sol, Floresta, Rosa, Lavanda, Meia-noite, Doce, Nórdico, Drácula e Daltônico",
+                            'en': "🎨 **12 PRE-DEFINED VISUAL THEMES**: Light, Dark, Ocean, Sunset, Forest, Rose, Lavender, Midnight, Candy, Nord, Dracula and Colorblind"
+                        }
+                    },
+                    {
+                        type: "added",
+                        text: {
+                            'pt': "🌊 **TEMA OCEANO**: Azul profundo marítimo com tons de ciano e azul escuro",
+                            'en': "🌊 **OCEAN THEME**: Deep maritime blue with cyan and dark blue tones"
+                        }
+                    },
+                    {
+                        type: "added",
+                        text: {
+                            'pt': "🌅 **TEMA PÔR DO SOL**: Gradiente quente de laranja para rosa",
+                            'en': "🌅 **SUNSET THEME**: Warm orange to pink gradient"
+                        }
+                    },
+                    {
+                        type: "added",
+                        text: {
+                            'pt': "🌲 **TEMA FLORESTA**: Verde natural relaxante inspirado na natureza",
+                            'en': "🌲 **FOREST THEME**: Natural relaxing green inspired by nature"
+                        }
+                    },
+                    {
+                        type: "added",
+                        text: {
+                            'pt': "🌸 **TEMA ROSA**: Rosa elegante e suave para um visual delicado",
+                            'en': "🌸 **ROSE THEME**: Elegant and soft rose for a delicate look"
+                        }
+                    },
+                    {
+                        type: "added",
+                        text: {
+                            'pt': "💜 **TEMA LAVANDA**: Lilás claro e delicado, perfeito para tema claro alternativo",
+                            'en': "💜 **LAVENDER THEME**: Light and delicate lilac, perfect for alternative light theme"
+                        }
+                    },
+                    {
+                        type: "added",
+                        text: {
+                            'pt': "🌌 **TEMA MEIA-NOITE**: Azul escuro profundo com acentos índigo",
+                            'en': "🌌 **MIDNIGHT THEME**: Deep dark blue with indigo accents"
+                        }
+                    },
+                    {
+                        type: "added",
+                        text: {
+                            'pt': "🍬 **TEMA DOCE**: Rosa doce e alegre, inspirado em doces e balas",
+                            'en': "🍬 **CANDY THEME**: Sweet and cheerful pink, inspired by candies"
+                        }
+                    },
+                    {
+                        type: "added",
+                        text: {
+                            'pt': "❄️ **TEMA NÓRDICO**: Inspirado no famoso tema Nord do Ártico",
+                            'en': "❄️ **NORD THEME**: Inspired by the famous Arctic Nord theme"
+                        }
+                    },
+                    {
+                        type: "added",
+                        text: {
+                            'pt': "🧛 **TEMA DRÁCULA**: Popular tema de programação com roxo e ciano",
+                            'en': "🧛 **DRACULA THEME**: Popular programming theme with purple and cyan"
+                        }
+                    },
+                    {
+                        type: "improved",
+                        text: {
+                            'pt': "🎯 **TEMA DALTÔNICO APRIMORADO**: Cores cientificamente testadas para deuteranopia e protanopia",
+                            'en': "🎯 **ENHANCED COLORBLIND THEME**: Scientifically tested colors for deuteranopia and protanopia"
+                        }
+                    },
+                    {
+                        type: "added",
+                        text: {
+                            'pt': "🎨 **PERSONALIZAÇÃO AVANÇADA**: 6 cores configuráveis - Principal, Secundária, Fundo, Cards, Texto e Bordas",
+                            'en': "🎨 **ADVANCED CUSTOMIZATION**: 6 configurable colors - Primary, Secondary, Background, Cards, Text and Borders"
+                        }
+                    },
+                    {
+                        type: "added",
+                        text: {
+                            'pt': "👁️ **PREVIEW EM TEMPO REAL**: Visualize as cores antes de aplicar o tema personalizado",
+                            'en': "👁️ **REAL-TIME PREVIEW**: Preview colors before applying the custom theme"
+                        }
+                    },
+                    {
+                        type: "added",
+                        text: {
+                            'pt': "🔄 **BOTÃO RESETAR**: Restaure facilmente as cores padrão do tema claro",
+                            'en': "🔄 **RESET BUTTON**: Easily restore default light theme colors"
+                        }
+                    },
+                    {
+                        type: "improved",
+                        text: {
+                            'pt': "🎭 **SELETOR DE TEMAS APRIMORADO**: Dropdown com todos os 12 temas + opção personalizado",
+                            'en': "🎭 **ENHANCED THEME SELECTOR**: Dropdown with all 12 themes + custom option"
+                        }
+                    },
+                    {
+                        type: "added",
+                        text: {
+                            'pt': "🌙 **DETECÇÃO DE TEMA DO SISTEMA**: Detecta automaticamente preferência dark/light do dispositivo",
+                            'en': "🌙 **SYSTEM THEME DETECTION**: Automatically detects device dark/light preference"
+                        }
+                    },
+                    {
+                        type: "improved",
+                        text: {
+                            'pt': "💾 **PERSISTÊNCIA DE TEMA**: Tema escolhido é salvo e carregado automaticamente",
+                            'en': "💾 **THEME PERSISTENCE**: Chosen theme is saved and loaded automatically"
+                        }
+                    },
+                    {
+                        type: "added",
+                        text: {
+                            'pt': "🎯 **INPUT HEX MANUAL**: Digite cores em hexadecimal diretamente, além do color picker",
+                            'en': "🎯 **MANUAL HEX INPUT**: Type colors in hexadecimal directly, in addition to color picker"
+                        }
+                    }
+                ]
+            },
             {
                 version: "4.1.0",
                 date: "2025-09-20",

@@ -1,20 +1,34 @@
-// Vercel Analytics - Configuração para projeto vanilla JavaScript
-import { analytics } from '@vercel/analytics';
+// Vercel Analytics - Script para websites estáticos
+// O Vercel injeta automaticamente o script quando detecta o pacote,
+// mas para HTML puro, usamos o Web Analytics via script externo
 
-// Inicializar o analytics
-analytics.track('page_view', {
-    page: window.location.pathname,
-    title: document.title,
-    timestamp: new Date().toISOString()
-});
+// Inicializar analytics quando a página carregar
+(function() {
+    // Vercel Web Analytics - será injetado automaticamente pelo Vercel
+    // Para desenvolvimento local, criamos um fallback
+    
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    
+    // Rastrear visualização de página
+    if (typeof window.va === 'function') {
+        window.va('track', 'pageview');
+    }
+})();
 
 // Função para rastrear eventos personalizados
 window.trackEvent = function(eventName, properties = {}) {
-    analytics.track(eventName, {
-        ...properties,
-        timestamp: new Date().toISOString(),
-        page: window.location.pathname
-    });
+    if (typeof window.va === 'function') {
+        window.va('track', eventName, {
+            ...properties,
+            timestamp: new Date().toISOString(),
+            page: window.location.pathname
+        });
+    }
+    
+    // Log para debug em desenvolvimento
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        console.log('📊 Analytics Event:', eventName, properties);
+    }
 };
 
 // Auto-rastrear cliques em botões importantes

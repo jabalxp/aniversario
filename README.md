@@ -1,8 +1,8 @@
-# 🎂 Lembrete de Aniversários v4.0.0
+# 🎂 Lembrete de Aniversários v4.3.0
 
 Sistema completo de lembretes de aniversários com notificações inteligentes em background e PWA nativo.
 
-## ✨ Novidades da v4.0.0
+## ✨ Novidades da v4.3.0
 
 ### 🔔 **Notificações em Background**
 - **Service Worker avançado** que funciona 24/7

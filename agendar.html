@@ -15,6 +15,253 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
+<style>
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --background-color: #f7fafc;
+            --card-background: #ffffff;
+            --text-primary: #2d3748;
+            --text-secondary: #718096;
+            --border-color: #e2e8f0;
+            --success-color: #48bb78;
+            --warning-color: #ed8936;
+            --error-color: #f56565;
+            --gradient-bg: linear-gradient(333deg, #2d2e43, #5b554d);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--gradient-bg);
+            min-height: 100vh;
+            color: var(--text-primary);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Cabeçalho Simplificado para Demo */
+        .header {
+            background: var(--card-background);
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: var(--text-primary);
+            font-size: 1.8rem;
+        }
+
+        /* ==============================================
+           ESTILOS DO CARD (ONDE O PROBLEMA ESTAVA)
+           ============================================== */
+        
+        .birthdays-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .birthday-card {
+            background: var(--card-background);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            position: relative;
+            animation: slideInUp 0.5s ease-out;
+        }
+
+        /* Container principal do conteúdo do card */
+        .card-main-content {
+            display: grid;
+            grid-template-columns: auto 1fr auto; /* Layout Desktop Padrão */
+            gap: 20px;
+            padding: 20px;
+            align-items: center;
+            background: white;
+            position: relative;
+            z-index: 2;
+        }
+
+        .card-left-section {
+            flex-shrink: 0;
+        }
+
+        .birthday-photo, .default-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            font-weight: bold;
+        }
+
+        .card-center-section {
+            flex-grow: 1;
+            min-width: 0; /* Impede que texto quebre o grid */
+        }
+
+        .birthday-info h3 {
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .birthday-date {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .age-info {
+            font-size: 0.85rem;
+            margin-top: 5px;
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .card-right-section {
+            display: flex;
+            gap: 10px;
+        }
+
+        .birthday-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-action {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: none;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+        }
+
+        .btn-action:active {
+            transform: scale(0.95);
+        }
+
+        .btn-whatsapp { background: #25D366; }
+        .btn-edit { background: #667eea; }
+        .btn-delete { background: #f56565; }
+
+        /* Elementos que causavam o bug (Swipe Actions) */
+        .swipe-actions {
+            display: none; /* Escondido por padrão no desktop */
+        }
+
+        /* Animações */
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ==============================================
+           CORREÇÃO RESPONSIVA (AQUI ESTÁ A MÁGICA)
+           ============================================== */
+        
+        @media (max-width: 768px) {
+            /* 1. Resetar o Grid para Flex Column (Layout Vertical) */
+            .card-main-content {
+                display: flex !important;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                padding: 20px 15px;
+                gap: 15px;
+            }
+
+            /* 2. Remover bordas e espaçamentos laterais do desktop */
+            .card-left-section, 
+            .card-center-section, 
+            .card-right-section {
+                width: 100%;
+                padding: 0;
+                border: none;
+                margin: 0;
+            }
+
+            /* 3. Aumentar foto no mobile */
+            .birthday-photo, .default-avatar {
+                width: 80px;
+                height: 80px;
+                font-size: 2rem;
+                margin: 0 auto;
+            }
+
+            /* 4. Melhorar tipografia para leitura no mobile */
+            .birthday-info h3 {
+                font-size: 1.3rem;
+                margin-bottom: 8px;
+            }
+
+            .birthday-date {
+                justify-content: center;
+                font-size: 1rem;
+            }
+
+            /* 5. A CORREÇÃO CRÍTICA: Forçar os botões a aparecerem embaixo */
+            .birthday-card .card-right-section,
+            .birthday-card .birthday-actions {
+                display: flex !important; /* Força exibição caso estivesse hidden */
+                flex-direction: row;
+                justify-content: center;
+                gap: 15px;
+                margin-top: 10px;
+                width: 100%;
+            }
+
+            /* Botões maiores para toque (Touch Target) */
+            .btn-action {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+                border-radius: 12px;
+                flex: 1; /* Botões ocupam largura igual */
+                max-width: 80px;
+            }
+
+            /* 6. GARANTIR que os elementos 'swipe' bugados sumam */
+            .swipe-actions, 
+            .swipe-edit, 
+            .swipe-delete {
+                display: none !important;
+                position: static !important;
+                width: 0 !important;
+                height: 0 !important;
+                opacity: 0 !important;
+                pointer-events: none !important;
+            }
+        }
+</style>
 <body>
     <div class="container">
         <!-- Header -->
@@ -58,7 +305,7 @@
                     </a>
                     <a href="changelog.html" class="changelog-btn" title="Ver Histórico de Versões">
                         <i class="fas fa-history"></i>
-                        <span data-i18n="version_btn">v4.0.0</span>
+                        <span data-i18n="version_btn">v4.3.0</span>
                     </a>
                 </div>
             </div>
@@ -614,6 +861,7 @@
     <script src="script.js"></script>
     
     <!-- Vercel Analytics -->
-    <script type="module" src="analytics.js"></script>
+    <script defer src="/_vercel/insights/script.js"></script>
+    <script src="analytics.js"></script>
 </body>
 </html>

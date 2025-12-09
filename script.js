@@ -82,6 +82,7 @@ class BirthdayManager {
         this.notificationSettings = this.loadNotificationSettings();
         this.currentSort = 'proximity'; // proximity | alphabetical
         this.currentSearch = '';
+        this.currentFilter = 'all'; // Rastrear filtro ativo
         this.setupAdvancedNotifications();
         this.initializeEventListeners();
         this.checkNotificationPermissionStatus();
@@ -234,7 +235,7 @@ class BirthdayManager {
                 clearTimeout(searchTimeout);
                 searchTimeout = setTimeout(() => {
                     this.currentSearch = e.target.value;
-                    this.displayBirthdays();
+                    this.displayBirthdays(this.currentFilter);
                     
                     // Mostrar/ocultar botão de limpar
                     if (clearSearchBtn) {
@@ -248,7 +249,7 @@ class BirthdayManager {
             clearSearchBtn.addEventListener('click', () => {
                 searchInput.value = '';
                 this.currentSearch = '';
-                this.displayBirthdays();
+                this.displayBirthdays(this.currentFilter);
                 clearSearchBtn.classList.add('hidden');
             });
         }
@@ -269,7 +270,7 @@ class BirthdayManager {
                     text.textContent = 'Proximidade';
                 }
                 
-                this.displayBirthdays();
+                this.displayBirthdays(this.currentFilter);
             });
         }
 
@@ -425,6 +426,7 @@ class BirthdayManager {
             description: description || null,
             phone: phone,
             photo: null,
+            priority: 0, // 0-3 estrelas de prioridade
             preferences: hasPreferences ? preferences : null,
             createdAt: new Date().toISOString()
         };
@@ -459,11 +461,11 @@ class BirthdayManager {
         this.displayBirthdays('all'); // Forçar exibição de todos
         this.updateStats();
         
-        // Feedback visual de sucesso
+        // Feedback visual de sucesso com toast
         setTimeout(() => {
             setButtonLoading(addButton, false);
             pulseElement(addButton);
-            showFeedbackMessage(`${birthday.name} ${window.i18nManager.translate('birthday_added')}`, 'success');
+            this.showToast(`🎉 ${birthday.name} foi adicionado com sucesso!`, 'success');
             this.resetForm();
         }, 500); // Simula tempo de processamento
         
@@ -720,12 +722,25 @@ class BirthdayManager {
         // Indicador de "Hoje é aniversário"
         const todayBadge = days === 0 ? '<span class="today-badge">🎉 HOJE!</span>' : '';
         
+        // Sistema de Prioridade (Estrelas)
+        const priority = birthday.priority || 0;
+        const stars = ['☆', '☆', '☆'];
+        for (let i = 0; i < priority; i++) {
+            stars[i] = '⭐';
+        }
+        const priorityHTML = `
+            <div class="priority-stars" onclick="birthdayManager.togglePriority(${birthday.id})" title="Definir prioridade">
+                ${stars.join('')}
+            </div>
+        `;
+        
         // Renderizar notas/preferências se existirem
         const notesPreview = this.renderNotesPreview(birthday.preferences);
 
         return `
             <div class="birthday-card ${urgencyClass}" data-id="${birthday.id}">
                 ${todayBadge}
+                ${priorityHTML}
                 <div class="swipe-container">
                     <div class="card-main-content">
                         <div class="card-left-section">
@@ -851,6 +866,9 @@ class BirthdayManager {
             activeButton.classList.add('active');
         }
 
+        // Salvar filtro atual
+        this.currentFilter = filter;
+
         // Renderizar com filtro
         this.displayBirthdays(filter);
     }
@@ -881,7 +899,7 @@ class BirthdayManager {
         setTimeout(() => {
             this.birthdays = this.birthdays.filter(b => b.id !== this.deleteId);
             this.saveBirthdays();
-            this.displayBirthdays();
+            this.displayBirthdays(this.currentFilter);
             this.updateStats();
             this.hideModal();
             
@@ -889,10 +907,8 @@ class BirthdayManager {
                 setButtonLoading(deleteButton, false);
             }
             
-            const deleteMessage = window.i18nManager ? 
-                `${birthday.name} ${window.i18nManager.translate('birthday_deleted')}` :
-                `Aniversário de ${birthday.name} removido com sucesso!`;
-            showFeedbackMessage(deleteMessage, 'success');
+            // Toast notification ao deletar
+            this.showToast(`🗑️ ${birthday.name} foi removido com sucesso!`, 'info');
             delete this.deleteId;
         }, 300); // Simula tempo de processamento
     }
@@ -1842,7 +1858,7 @@ class BirthdayManager {
                     });
                     
                     this.saveBirthdays();
-                    this.displayBirthdays();
+                    this.displayBirthdays(this.currentFilter);
                     this.updateStats();
                     
                     showFeedbackMessage(
@@ -1934,7 +1950,7 @@ class BirthdayManager {
                 }
                 
                 this.saveBirthdays();
-                this.displayBirthdays();
+                this.displayBirthdays(this.currentFilter);
                 this.updateStats();
                 
                 showFeedbackMessage(`${imported} aniversários importados do CSV!`, 'success');
@@ -2006,7 +2022,7 @@ class BirthdayManager {
                 });
                 
                 this.saveBirthdays();
-                this.displayBirthdays();
+                this.displayBirthdays(this.currentFilter);
                 this.updateStats();
                 
                 showFeedbackMessage(`${imported} contactos importados do VCF!`, 'success');
@@ -2211,12 +2227,25 @@ class BirthdayManager {
     sortBirthdays(birthdays, sortType = 'proximity') {
         const sorted = [...birthdays];
         
+        console.log('Ordenando por:', sortType);
+        
         switch (sortType) {
             case 'alphabetical':
-                sorted.sort((a, b) => a.name.localeCompare(b.name));
+                sorted.sort((a, b) => {
+                    const nameA = a.name.toLowerCase().trim();
+                    const nameB = b.name.toLowerCase().trim();
+                    const result = nameA.localeCompare(nameB, 'pt-BR', { sensitivity: 'base' });
+                    console.log(`Comparando: "${nameA}" vs "${nameB}" = ${result}`);
+                    return result;
+                });
+                console.log('Resultado ordenado:', sorted.map(b => b.name));
                 break;
             case 'alphabetical-desc':
-                sorted.sort((a, b) => b.name.localeCompare(a.name));
+                sorted.sort((a, b) => {
+                    const nameA = a.name.toLowerCase();
+                    const nameB = b.name.toLowerCase();
+                    return nameB.localeCompare(nameA, 'pt-BR');
+                });
                 break;
             case 'proximity':
             default:
@@ -2544,7 +2573,7 @@ class BirthdayManager {
             }
             
             this.saveBirthdays();
-            this.displayBirthdays();
+            this.displayBirthdays(this.currentFilter);
             this.updateStats();
             
             closeModal();
@@ -2815,6 +2844,60 @@ class BirthdayManager {
                 }
             }
         });
+    }
+
+    // Sistema de Toast Notifications
+    showToast(message, type = 'success') {
+        // Criar container de toasts se não existir
+        let toastContainer = document.getElementById('toast-container');
+        if (!toastContainer) {
+            toastContainer = document.createElement('div');
+            toastContainer.id = 'toast-container';
+            toastContainer.className = 'toast-container';
+            document.body.appendChild(toastContainer);
+        }
+
+        // Criar toast
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        
+        // Ícone baseado no tipo
+        let icon = '✓';
+        if (type === 'error') icon = '✕';
+        if (type === 'warning') icon = '⚠';
+        if (type === 'info') icon = 'ℹ';
+        
+        toast.innerHTML = `
+            <div class="toast-icon">${icon}</div>
+            <div class="toast-message">${message}</div>
+            <button class="toast-close" onclick="this.parentElement.remove()">×</button>
+        `;
+        
+        toastContainer.appendChild(toast);
+        
+        // Animação de entrada
+        setTimeout(() => toast.classList.add('show'), 10);
+        
+        // Auto-remover após 4 segundos
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 300);
+        }, 4000);
+    }
+
+    // Toggle de Prioridade (Estrelas)
+    togglePriority(id) {
+        const birthday = this.birthdays.find(b => b.id === id);
+        if (!birthday) return;
+        
+        // Ciclo: 0 → 1 → 2 → 3 → 0
+        birthday.priority = (birthday.priority + 1) % 4;
+        
+        this.saveBirthdays();
+        this.displayBirthdays(this.currentFilter);
+        
+        const priorityLabels = ['Nenhuma', 'Baixa', 'Média', 'Alta'];
+        this.showToast(`⭐ Prioridade: ${priorityLabels[birthday.priority]}`, 'info');
     }
 }
 

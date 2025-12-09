@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7064723761599341"
+     crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Visualize todos os aniversários em um calendário mensal">
+    <meta name="theme-color" content="#667eea">
+    <title>📅 Calendário de Aniversários</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --background-color: #f7fafc;
+            --card-background: #ffffff;
+            --text-primary: #2d3748;
+            --text-secondary: #718096;
+            --border-color: #e2e8f0;
+            --gradient-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-primary);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            background: var(--card-background);
+            padding: 25px 30px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-left h1 {
+            font-size: 1.8rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-header {
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+        }
+
+        /* Controles do Calendário */
+        .calendar-controls {
+            background: var(--card-background);
+            padding: 20px 25px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .calendar-navigation {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: none;
+            background: var(--primary-color);
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-btn:hover {
+            background: var(--secondary-color);
+            transform: scale(1.1);
+        }
+
+        .current-month {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            min-width: 220px;
+            text-align: center;
+        }
+
+        .view-options {
+            display: flex;
+            gap: 10px;
+        }
+
+        .view-btn {
+            padding: 10px 18px;
+            border-radius: 10px;
+            border: 2px solid var(--border-color);
+            background: white;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .view-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .view-btn:hover:not(.active) {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        /* Calendário */
+        .calendar-wrapper {
+            background: var(--card-background);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+        }
+
+        .calendar-header {
+            text-align: center;
+            font-weight: 600;
+            color: var(--primary-color);
+            padding: 15px 5px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            background: white;
+            padding: 10px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .calendar-day:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.2);
+        }
+
+        .calendar-day.other-month {
+            opacity: 0.3;
+            background: #f7fafc;
+        }
+
+        .calendar-day.today {
+            border-color: var(--primary-color);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+        }
+
+        .calendar-day.has-birthday {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.15), rgba(118, 75, 162, 0.15));
+            border-color: var(--primary-color);
+        }
+
+        .day-number {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .today .day-number {
+            color: var(--primary-color);
+        }
+
+        .birthday-indicators {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .birthday-indicator {
+            font-size: 0.75rem;
+            padding: 4px 6px;
+            border-radius: 6px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .birthday-count {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: var(--primary-color);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Modal de Detalhes */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            padding: 25px 30px;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .modal-header h2 {
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .close-modal {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .close-modal:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .birthday-list-modal {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .birthday-item-modal {
+            padding: 20px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .birthday-item-modal:hover {
+            transform: translateX(5px);
+            border-color: var(--primary-color);
+        }
+
+        .birthday-avatar-modal {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .birthday-avatar-modal img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .birthday-info-modal {
+            flex: 1;
+        }
+
+        .birthday-info-modal h3 {
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            margin-bottom: 5px;
+        }
+
+        .birthday-info-modal p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .birthday-age {
+            font-size: 0.85rem;
+            color: var(--primary-color);
+            font-weight: 500;
+            margin-top: 5px;
+        }
+
+        /* Stats */
+        .calendar-stats {
+            background: var(--card-background);
+            padding: 25px;
+            border-radius: 16px;
+            margin-top: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            padding: 20px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border: 2px solid var(--border-color);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Responsivo */
+        @media (max-width: 1200px) {
+            .calendar {
+                gap: 8px;
+            }
+            
+            .calendar-day {
+                padding: 8px;
+            }
+            
+            .day-number {
+                font-size: 1rem;
+            }
+            
+            .birthday-indicator {
+                font-size: 0.7rem;
+                padding: 3px 5px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .header-left {
+                flex-direction: column;
+            }
+            
+            .calendar-controls {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .calendar-navigation {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .view-options {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 0;
+            }
+            
+            .header {
+                padding: 20px 15px;
+            }
+            
+            .header-left h1 {
+                font-size: 1.4rem;
+            }
+            
+            .calendar-wrapper {
+                padding: 15px;
+            }
+            
+            .calendar {
+                gap: 5px;
+            }
+            
+            .calendar-header {
+                font-size: 0.75rem;
+                padding: 10px 2px;
+            }
+            
+            .calendar-day {
+                padding: 5px;
+                border-radius: 8px;
+            }
+            
+            .day-number {
+                font-size: 0.9rem;
+                margin-bottom: 5px;
+            }
+            
+            .birthday-indicator {
+                font-size: 0.65rem;
+                padding: 2px 4px;
+                border-radius: 4px;
+            }
+            
+            .birthday-count {
+                width: 20px;
+                height: 20px;
+                font-size: 0.7rem;
+                top: 5px;
+                right: 5px;
+            }
+            
+            .current-month {
+                font-size: 1.2rem;
+                min-width: auto;
+            }
+            
+            .nav-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
+            }
+            
+            .modal-content {
+                max-width: 95%;
+            }
+            
+            .modal-header {
+                padding: 20px 15px;
+            }
+            
+            .modal-body {
+                padding: 15px;
+            }
+            
+            .birthday-item-modal {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .calendar-stats {
+                grid-template-columns: 1fr;
+                gap: 15px;
+                padding: 20px 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .btn-header {
+                padding: 10px 15px;
+                font-size: 0.85rem;
+            }
+            
+            .calendar-day {
+                padding: 3px;
+            }
+            
+            .day-number {
+                font-size: 0.8rem;
+            }
+            
+            .birthday-indicator {
+                font-size: 0.6rem;
+                gap: 2px;
+            }
+            
+            .view-btn {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <h1>
+                    <i class="fas fa-calendar-alt"></i>
+                    Calendário de Aniversários
+                </h1>
+            </div>
+            <div class="header-actions">
+                <a href="agendar.html" class="btn-header btn-secondary">
+                    <i class="fas fa-plus-circle"></i>
+                    Adicionar
+                </a>
+                <a href="index.html" class="btn-header btn-primary">
+                    <i class="fas fa-home"></i>
+                    Menu
+                </a>
+            </div>
+        </div>
+
+        <!-- Controles do Calendário -->
+        <div class="calendar-controls">
+            <div class="calendar-navigation">
+                <button class="nav-btn" id="prev-month" title="Mês anterior">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="current-month" id="current-month">Janeiro 2025</div>
+                <button class="nav-btn" id="next-month" title="Próximo mês">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            <div class="view-options">
+                <button class="view-btn active" id="month-view">
+                    <i class="fas fa-calendar"></i> Mês
+                </button>
+                <button class="view-btn" id="today-btn">
+                    <i class="fas fa-calendar-day"></i> Hoje
+                </button>
+            </div>
+        </div>
+
+        <!-- Calendário -->
+        <div class="calendar-wrapper">
+            <div class="calendar" id="calendar">
+                <!-- Cabeçalho dos dias da semana -->
+                <div class="calendar-header">Dom</div>
+                <div class="calendar-header">Seg</div>
+                <div class="calendar-header">Ter</div>
+                <div class="calendar-header">Qua</div>
+                <div class="calendar-header">Qui</div>
+                <div class="calendar-header">Sex</div>
+                <div class="calendar-header">Sáb</div>
+                <!-- Dias do mês serão gerados dinamicamente -->
+            </div>
+        </div>
+
+        <!-- Estatísticas -->
+        <div class="calendar-stats">
+            <div class="stat-card">
+                <div class="stat-number" id="total-birthdays">0</div>
+                <div class="stat-label">Total de Aniversários</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="month-birthdays">0</div>
+                <div class="stat-label">Neste Mês</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="next-birthday">-</div>
+                <div class="stat-label">Próximo em</div>
+            </div>
+        </div>
+
+        <!-- Modal de Detalhes do Dia -->
+        <div class="modal" id="day-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="modal-date">
+                        <i class="fas fa-birthday-cake"></i>
+                        <span>Aniversários do Dia</span>
+                    </h2>
+                    <button class="close-modal" onclick="closeModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="birthday-list-modal" id="modal-birthdays">
+                        <!-- Lista de aniversários do dia -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Classe de Calendário
+        class BirthdayCalendar {
+            constructor() {
+                this.currentDate = new Date();
+                this.birthdays = this.loadBirthdays();
+                this.init();
+            }
+
+            init() {
+                this.renderCalendar();
+                this.updateStats();
+                this.setupEventListeners();
+            }
+
+            loadBirthdays() {
+                try {
+                    return JSON.parse(localStorage.getItem('birthdays')) || [];
+                } catch {
+                    return [];
+                }
+            }
+
+            setupEventListeners() {
+                document.getElementById('prev-month').addEventListener('click', () => {
+                    this.currentDate.setMonth(this.currentDate.getMonth() - 1);
+                    this.renderCalendar();
+                    this.updateStats();
+                });
+
+                document.getElementById('next-month').addEventListener('click', () => {
+                    this.currentDate.setMonth(this.currentDate.getMonth() + 1);
+                    this.renderCalendar();
+                    this.updateStats();
+                });
+
+                document.getElementById('today-btn').addEventListener('click', () => {
+                    this.currentDate = new Date();
+                    this.renderCalendar();
+                    this.updateStats();
+                });
+
+                // Fechar modal ao clicar fora
+                document.getElementById('day-modal').addEventListener('click', (e) => {
+                    if (e.target.id === 'day-modal') {
+                        closeModal();
+                    }
+                });
+            }
+
+            renderCalendar() {
+                const year = this.currentDate.getFullYear();
+                const month = this.currentDate.getMonth();
+                
+                // Atualizar título
+                const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+                                   'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+                document.getElementById('current-month').textContent = `${monthNames[month]} ${year}`;
+
+                // Primeiro dia do mês e total de dias
+                const firstDay = new Date(year, month, 1).getDay();
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+                const daysInPrevMonth = new Date(year, month, 0).getDate();
+
+                const calendar = document.getElementById('calendar');
+                
+                // Remover apenas os dias (manter cabeçalhos)
+                const dayElements = calendar.querySelectorAll('.calendar-day');
+                dayElements.forEach(el => el.remove());
+
+                // Dias do mês anterior
+                for (let i = firstDay - 1; i >= 0; i--) {
+                    const day = daysInPrevMonth - i;
+                    this.createDayElement(day, month - 1, year, true);
+                }
+
+                // Dias do mês atual
+                const today = new Date();
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const isToday = today.getDate() === day && 
+                                   today.getMonth() === month && 
+                                   today.getFullYear() === year;
+                    this.createDayElement(day, month, year, false, isToday);
+                }
+
+                // Dias do próximo mês
+                const remainingDays = 42 - (firstDay + daysInMonth);
+                for (let day = 1; day <= remainingDays; day++) {
+                    this.createDayElement(day, month + 1, year, true);
+                }
+            }
+
+            createDayElement(day, month, year, otherMonth = false, isToday = false) {
+                const calendar = document.getElementById('calendar');
+                const dayEl = document.createElement('div');
+                dayEl.className = 'calendar-day';
+                
+                if (otherMonth) dayEl.classList.add('other-month');
+                if (isToday) dayEl.classList.add('today');
+
+                // Verificar aniversários neste dia
+                const birthdays = this.getBirthdaysForDay(day, month);
+                if (birthdays.length > 0) {
+                    dayEl.classList.add('has-birthday');
+                }
+
+                dayEl.innerHTML = `
+                    <div class="day-number">${day}</div>
+                    ${birthdays.length > 0 ? `<div class="birthday-count">${birthdays.length}</div>` : ''}
+                    <div class="birthday-indicators">
+                        ${birthdays.slice(0, 3).map(b => `
+                            <div class="birthday-indicator">
+                                🎂 ${b.name}
+                            </div>
+                        `).join('')}
+                        ${birthdays.length > 3 ? `<div class="birthday-indicator">+${birthdays.length - 3} mais</div>` : ''}
+                    </div>
+                `;
+
+                // Adicionar evento de clique
+                if (birthdays.length > 0) {
+                    dayEl.addEventListener('click', () => {
+                        this.showDayModal(day, month, year, birthdays);
+                    });
+                }
+
+                calendar.appendChild(dayEl);
+            }
+
+            getBirthdaysForDay(day, month) {
+                return this.birthdays.filter(b => {
+                    const [year, m, d] = b.date.split('-');
+                    return parseInt(d) === day && parseInt(m) === month + 1;
+                });
+            }
+
+            showDayModal(day, month, year, birthdays) {
+                const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+                                   'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+                
+                document.getElementById('modal-date').querySelector('span').textContent = 
+                    `${day} de ${monthNames[month]} de ${year}`;
+
+                const modalBirthdays = document.getElementById('modal-birthdays');
+                modalBirthdays.innerHTML = birthdays.map(b => {
+                    const age = this.calculateAge(b.date);
+                    return `
+                        <div class="birthday-item-modal">
+                            <div class="birthday-avatar-modal">
+                                ${b.photo ? `<img src="${b.photo}" alt="${b.name}">` : b.name.charAt(0).toUpperCase()}
+                            </div>
+                            <div class="birthday-info-modal">
+                                <h3>${b.name}</h3>
+                                ${b.description ? `<p>${b.description}</p>` : ''}
+                                <div class="birthday-age">Fazendo ${age} anos 🎉</div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                document.getElementById('day-modal').classList.add('show');
+            }
+
+            calculateAge(dateString) {
+                const [year, month, day] = dateString.split('-').map(Number);
+                const birthDate = new Date(year, month - 1, day);
+                const today = new Date();
+                let age = today.getFullYear() - birthDate.getFullYear();
+                const m = today.getMonth() - birthDate.getMonth();
+                if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
+                }
+                return age;
+            }
+
+            updateStats() {
+                // Total de aniversários
+                document.getElementById('total-birthdays').textContent = this.birthdays.length;
+
+                // Aniversários neste mês
+                const currentMonth = this.currentDate.getMonth();
+                const monthBirthdays = this.birthdays.filter(b => {
+                    const [, m] = b.date.split('-');
+                    return parseInt(m) === currentMonth + 1;
+                });
+                document.getElementById('month-birthdays').textContent = monthBirthdays.length;
+
+                // Próximo aniversário
+                const nextBirthday = this.getNextBirthday();
+                if (nextBirthday) {
+                    document.getElementById('next-birthday').textContent = `${nextBirthday.days} dias`;
+                } else {
+                    document.getElementById('next-birthday').textContent = '-';
+                }
+            }
+
+            getNextBirthday() {
+                if (this.birthdays.length === 0) return null;
+
+                const today = new Date();
+                const sorted = this.birthdays.map(b => {
+                    const [, month, day] = b.date.split('-').map(Number);
+                    const nextDate = new Date(today.getFullYear(), month - 1, day);
+                    if (nextDate < today) {
+                        nextDate.setFullYear(today.getFullYear() + 1);
+                    }
+                    const days = Math.ceil((nextDate - today) / (1000 * 60 * 60 * 24));
+                    return { ...b, days };
+                }).sort((a, b) => a.days - b.days);
+
+                return sorted[0];
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('day-modal').classList.remove('show');
+        }
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', () => {
+            new BirthdayCalendar();
+        });
+    </script>
+
+    <!-- Vercel Analytics -->
+    <script src="analytics.js"></script>
+</body>
+</html>
